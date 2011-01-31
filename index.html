@@ -1,124 +1,169 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-
+	<link type="text/css" href="styleUI.css" rel="Stylesheet" />
+	<link type="text/css" href="jqueryui/css/ui-lightness/jquery-ui-1.8.9.custom.css" rel="Stylesheet" />
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="jqueryui/js/jquery-1.4.4.min.js"></script>
+	<script type="text/javascript" src="jqueryui/js/jquery-ui-1.8.9.custom.min.js"></script>
 	<script language="javascript">
-	
-	//Global Constants
-	var		_WIDTH				=	640;
-	var		_HEIGHT				=	480;
-	
-	//Global Variables
-	var		_LoopID;
-	
-	//Circle 1 Properties
-	var		_Circle1X			=	_WIDTH / 2;
-	var		_Circle1Y			=	_HEIGHT / 2;
-	var		_Circle1Radius		=	(_HEIGHT / 4);
-	
-	//Circle 2 Properties
-	var		_Circle2X			=	0;
-	var		_Circle2Y			=	0;
-	var		_Circle2Radius		=	20;
-	var		_Circle2Angle		=	0;
-	var		_Circle2dAngle		=	0.01;
-	
-	//Line Properties
-	var		_Line1X				=	0;
-	var		_Line1Y				=	0;
-	var		_Line2X				=	0;
-	var		_Line2Y				=	0;
-	var		_LineDistance		=	40;
-	var		_LineAngle			=	0;
-	var		_LinedAngle			=	0.1;
-	
-	//Draw Variables
-	var		_PointX				=	0.0;
-	var		_PointY				=	0.0;
-	
-	function initDraw()
-	{
-		_Circle2X			=	(_Circle1Radius + _Circle2Radius) * Math.cos(_Circle2Angle) + _Circle1X;
-		_Circle2Y			=	(_Circle1Radius + _Circle2Radius) * Math.sin(_Circle2Angle) + _Circle1Y;
-			
-		_Line1X				=	_Circle2X + _Circle2Radius * Math.cos(_Circle2Angle + _LineAngle);
-		_Line1Y				=	_Circle2Y + _Circle2Radius * Math.sin(_Circle2Angle + _LineAngle);
-		_Line2X				=	_Circle2X + (_Circle2Radius + _LineDistance) * Math.cos(_Circle2Angle + _LineAngle);
-		_Line2Y				=	_Circle2Y + (_Circle2Radius + _LineDistance) * Math.sin(_Circle2Angle + _LineAngle);
-			
-		_LoopID				=	setInterval(draw, 20);
-	}
-	
-	function draw()
-	{
-		var canvasRotor			=	document.getElementById('canvasRotor');
-		var canvasPaper			=	document.getElementById('canvasPaper');
-		
-        if (canvasRotor.getContext && canvasPaper.getContext)
+		(function( $ )
 		{
-			//Update - Start			
-			_Circle2Angle		+=	_Circle2dAngle;
-			_LineAngle			+=	_LinedAngle;
-			
-			if(_Circle2Angle > Math.PI * 2.0)
+			$.fn.center = function ()
 			{
-				clearInterval(_LoopID);
+				this.css("position","absolute");
+				this.css("top",  ( $(window).height() - this.outerHeight() ) / 2 + $(window).scrollTop()  + "px");
+				this.css("left", ( $(window).width()  - this.outerWidth()  ) / 2 + $(window).scrollLeft() + "px");
+				return this;
+			};
+			$.fn.leftCenter = function ()
+			{
+				this.css("position","absolute");
+				this.css("top",  ( $(window).height() - this.outerHeight() ) / 2 + $(window).scrollTop()  + "px");
+				this.css("left", ( "0px" ));
+				return this;
+			};
+		})( jQuery );
+		
+		$(function()
+		{
+			$( "#canvasDiv" ).resizable
+			({
+				aspectRatio: 4 / 3,
+				minWidth: 400,
+				minHeight: 300
+			});
+			$( "#canvasDiv" ).bind
+			(
+				"resize", function(event, ui)
+				{
+					$("#canvasDiv").center();
+				}
+			);
+		});
+		
+		
+		$(function() {
+		$( "#circle1RadiusSlider" ).slider({
+			orientation: "vertical",
+			range: "min",
+			min: 0,
+			max: 100,
+			value: 60,
+			slide: function( event, ui ) {
+				$( "#circle1RadiusLabel" ).html( ui.value );
 			}
-			
-			_Circle2X			=	(_Circle1Radius + _Circle2Radius) * Math.cos(_Circle2Angle) + _Circle1X;
-			_Circle2Y			=	(_Circle1Radius + _Circle2Radius) * Math.sin(_Circle2Angle) + _Circle1Y;
-			
-			_PointX				=	_Line2X;
-			_PointY				=	_Line2Y;
-			_Line1X				=	_Circle2X + _Circle2Radius * Math.cos(_Circle2Angle + _LineAngle);
-			_Line1Y				=	_Circle2Y + _Circle2Radius * Math.sin(_Circle2Angle + _LineAngle);
-			_Line2X				=	_Circle2X + (_Circle2Radius + _LineDistance) * Math.cos(_Circle2Angle + _LineAngle);
-			_Line2Y				=	_Circle2Y + (_Circle2Radius + _LineDistance) * Math.sin(_Circle2Angle + _LineAngle);
-			//Update - End
+		});
+		$( "#circle1RadiusLabel" ).html( $( "#circle1RadiusSlider" ).slider( "value" ) );
+		});
 		
 		
-			//Draw - Start
-			var ctx				=	canvasRotor.getContext('2d');
-			var cty				=	canvasPaper.getContext('2d');
-			
-			ctx.clearRect(0, 0, _WIDTH, _HEIGHT);
-			
-			//Draw Outer Circle
-			ctx.beginPath();
-			ctx.arc(_Circle1X, _Circle1Y, _Circle1Radius, 0, Math.PI * 2, true);
-			ctx.stroke();
-			
-			//Draw Inner Circle
-			ctx.beginPath();
-			ctx.arc(_Circle2X, _Circle2Y, _Circle2Radius, 0, Math.PI * 2, true);
-			ctx.stroke();
-			
-			//DrawLine
-			ctx.beginPath();
-			ctx.moveTo(_Line1X, _Line1Y);
-			ctx.lineTo(_Line2X, _Line2Y);
-			ctx.stroke();
-			
-			//Draw Spiro
-			cty.beginPath();
-			cty.moveTo(_PointX, _PointY);
-			cty.lineTo(_Line2X, _Line2Y);
-			cty.stroke();
-			//Draw - End
-        }  
-	}
-	</script>
-	
+		
+		$(function() {
+		$( "#circle2RadiusSlider" ).slider({
+			orientation: "vertical",
+			range: "min",
+			min: 0,
+			max: 100,
+			value: 60,
+			slide: function( event, ui ) {
+				$( "#circle2RadiusLabel" ).html( ui.value );
+			}
+		});
+		$( "#circle2RadiusLabel" ).html( $( "#circle2RadiusSlider" ).slider( "value" ) );
+		});
+		
+		
+		
+		$(function() {
+		$( "#circle3RadiusSlider" ).slider({
+			orientation: "vertical",
+			range: "min",
+			min: 0,
+			max: 100,
+			value: 60,
+			slide: function( event, ui ) {
+				$( "#circle3RadiusLabel" ).html( ui.value );
+			}
+		});
+		$( "#circle3RadiusLabel" ).html( $( "#circle3RadiusSlider" ).slider( "value" ) );
+		});
+		
+		
+		
+		function onMouseMove(e)
+		{
+		}
+		
+		function onMouseDown(e)
+		{
+		}
+		
+		function onMouseUp(e)
+		{
+		}
+		
+		function init()
+		{	
+			$("#canvasDiv").center();
+			$("#toolBox").leftCenter();
+		}
+		
+		document.onmousedown 		=	onMouseDown;
+		document.onmouseup 			=	onMouseUp;
+		document.onmousemove		=	onMouseMove;
+	</script>	
 </head>
 
-<body onLoad="initDraw();">
+<body onload="init();"> 
 
-	<canvas width="640" height="480" id="canvasRotor" style="border: 1px solid; position: absolute; left: 0; top: 0; z-index: 0;">
+<div id="statusDiv">
+	<div id="statusRightPanel">
+		developed by <a href="http://saiy2k.blogspot.com" target="_blank">Saiyasodharan</a>
+	</div>
+	<div id="statusRightPanel">
+		FB SHARE
+	</div>
+	<div id="statusRightPanel">
+		TWEET
+	</div>
+	<div id="statusRightPanel">
+		SAVE
+	</div>
+	<div id="statusLeftPanel">
+		RADIUS
+	</div>
+	<div id="statusLeftPanel">
+		FORECOLOR
+	</div>
+	<div id="statusLeftPanel">
+		BGCOLOR
+	</div>
+</div>
+
+<div id="canvasDiv">
+	<canvas id="canvasBase" style="width:100%; height:100%;">
 	Sorry! You are using an outdated browser and cant view this content.
 	Upgrade to latest browsers to view this page.
 	</canvas>
-	
-	<canvas width="640" height="480" id="canvasPaper" style="border: 1px solid; position: absolute; left: 0; top: 0; z-index: -1;"></canvas>
+</div>
+
+<div id="toolBox">
+	<div id="toolBoxVerticalPanel">
+		<div id="toolBoxHorizontalPanel">
+			<div id="circle1RadiusSlider" style="height:100px;"></div>
+			<div id="circle1RadiusLabel" style="border:0; color:#f6931f; font-weight:bold;">50</div>
+		</div>
+		<div id="toolBoxHorizontalPanel">
+			<div id="circle2RadiusSlider" style="height:100px;"></div>
+			<div id="circle2RadiusLabel" style="border:0; color:#f6931f; font-weight:bold;">50</div>
+		</div>
+		<div id="toolBoxHorizontalPanel">
+			<div id="circle3RadiusSlider" style="height:100px;"></div>
+			<div id="circle3RadiusLabel" style="border:0; color:#f6931f; font-weight:bold;">50</div>
+		</div>
+	</div>
+</div>
 
 </body>
 </html>

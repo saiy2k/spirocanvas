@@ -1,0 +1,76 @@
+body
+{
+	background-color: 		#eee;
+	font-family:			georgia;
+	font-size:				12px;
+}
+a
+{
+	color:					#ff0000;
+}
+
+
+
+
+
+#canvasDiv
+{
+	width:					800px;
+	height:					600px;
+	margin:					auto;
+	background-color: 		#fff;
+	border:					2px solid #bbb;
+}
+
+
+
+
+
+#toolBox
+{
+	position:				absolute;
+	width:					150px;
+	height:					400px;
+	background-color:		#ddd;
+	border:					1px solid #bbb;
+}
+#toolBoxVerticalPanel
+{
+	margin:					4px;
+}
+#toolBoxHorizontalPanel
+{
+	float:					left;
+	width:					30px;
+	margin:					4px;
+	padding:				4px;
+}
+
+
+
+
+
+#statusDiv
+{
+	position:				absolute;
+	bottom:					0px;
+	left:					0px;
+	right:					0px;
+	height:					30px;
+	background-color: 		#ddd;
+	border-top:				1px solid #bbb;
+}
+#statusRightPanel
+{
+	float:					right;
+	margin:					4px;
+	padding:				2px 8px 2px 8px;
+	background-color:		#eee;
+}
+#statusLeftPanel
+{
+	float:					left;
+	margin:					4px;
+	padding:				2px 8px 2px 8px;
+	background-color:		#eee;
+}
