@@ -2,10 +2,10 @@
 <html>
 <head>
 	<link type="text/css" href="styleUI.css" rel="Stylesheet" />
-	<link type="text/css" href="jqueryui/css/ui-lightness/jquery-ui-1.8.9.custom.css" rel="Stylesheet" />
-	<script type="text/javascript" src="jquery.js"></script>
-	<script type="text/javascript" src="jqueryui/js/jquery-1.4.4.min.js"></script>
-	<script type="text/javascript" src="jqueryui/js/jquery-ui-1.8.9.custom.min.js"></script>
+	<link type="text/css" href="scripts/jqueryui/css/ui-lightness/jquery-ui-1.8.9.custom.css" rel="Stylesheet" />
+	<script type="text/javascript" src="scripts/jquery.js"></script>
+	<script type="text/javascript" src="scripts/jqueryui/js/jquery-1.4.4.min.js"></script>
+	<script type="text/javascript" src="scripts/jqueryui/js/jquery-ui-1.8.9.custom.min.js"></script>
 	<script language="javascript">
 		(function( $ )
 		{
@@ -38,6 +38,8 @@
 				"resize", function(event, ui)
 				{
 					$("#canvasDiv").center();
+					$("#canvasBase").width($("#canvasDiv").width());
+					$("#canvasBase").height($("#canvasDiv").height());
 				}
 			);
 		});
@@ -88,30 +90,142 @@
 		});
 		$( "#circle3RadiusLabel" ).html( $( "#circle3RadiusSlider" ).slider( "value" ) );
 		});
+	</script>
+	
+	<script language="javascript">
+		var isHypo = true;
+		var t = 0.0;
+		var dt = 0.1;
+		var R = 60.0;
+		var rr = 50.0;
+		var p = 60.0;
 		
+		var x = 0.0;
+		var y = 0.0;
+		var canvasWidth;
+		var canvasHeight;
+		var angleStep;
+		var NumRevolutions;
+		var NumPoints;
+		var radiansPerCircle = 2 * Math.PI;
+		var PointsPerCurve = 16;
+		var oldPoint	=	{x:0, y:0};
+		var newPoint	=	{x:0, y:0};
+		var ptOrigin	=	{x:0, y:0};
+		var angle = 0;
+		var aMinusb;
+		var aMinusbOverb;
+		var aPlusb;
+		var aPlusbOverb;
+		var count;
+		var loopID;
 		
-		
-		function onMouseMove(e)
+		function drawH()
 		{
+			var canvasBase		=	document.getElementById('canvasBase');
+			var	ct				=	canvasBase.getContext('2d');			
+			angle += angleStep;
+			newPoint.x = ptOrigin.x + aMinusb * Math.cos(angle) + p * Math.cos(angle * aMinusbOverb);
+			newPoint.y = ptOrigin.y + aMinusb * Math.sin(angle) - p * Math.sin(angle * aMinusbOverb);
+			ct.beginPath();
+			ct.moveTo(oldPoint.x, oldPoint.y);
+			ct.lineTo(newPoint.x, newPoint.y);
+			ct.stroke();
+			oldPoint.x = newPoint.x;
+			oldPoint.y = newPoint.y;
+			
+			count++;
+			if(count > NumPoints)
+				self.clearInterval(loopID);
 		}
 		
-		function onMouseDown(e)
+		function drawE()
 		{
+			var canvasBase		=	document.getElementById('canvasBase');
+			var	ct				=	canvasBase.getContext('2d');			
+			angle += angleStep;
+			newPoint.x = ptOrigin.x + aPlusb * Math.cos(angle) - p * Math.cos(angle * aPlusbOverb);
+			newPoint.y = ptOrigin.y + aPlusb * Math.sin(angle) - p * Math.sin(angle * aPlusbOverb);
+			ct.beginPath();
+			ct.moveTo(oldPoint.x, oldPoint.y);
+			ct.lineTo(newPoint.x, newPoint.y);
+			ct.stroke();
+			oldPoint.x = newPoint.x;
+			oldPoint.y = newPoint.y;
+			
+			count++;
+			if(count > NumPoints)
+				self.clearInterval(loopID);
 		}
 		
-		function onMouseUp(e)
+		function HCF(a, b)
 		{
+			var i = 0;
+			var j = 0;
+			var hcf = 0;
+
+			// Euclid's algorithm for finding the highest common factor
+			// of two integers A and B.
+			if (a < b)
+			{
+				hcf = a;
+				i = b;
+			}
+			else
+			{
+				hcf = b;
+				i = a;
+			}
+			do
+			{
+				j = i % hcf;
+				if (j != 0)
+				{
+					i = hcf;
+					hcf = j;
+				}
+			} while (j != 0);
+			return hcf;
 		}
 		
 		function init()
 		{	
 			$("#canvasDiv").center();
 			$("#toolBox").leftCenter();
+			
+			var canvasBase		=	document.getElementById('canvasBase');
+			ptOrigin.x = canvasBase.width / 2;
+			ptOrigin.y = canvasBase.height / 2;
+			
+			angleStep = radiansPerCircle / PointsPerCurve;
+
+			// Compute number of revolutions.
+			NumRevolutions = rr/HCF (R, rr);
+
+			// Total number of points to generate
+			NumPoints = PointsPerCurve * NumRevolutions;
+			// x = (a-b)*cos(t) + h*cos(t*(a-b)/b)
+			// y = (a-b)*cos(t) - h*sin(t*(a-b)/b)
+			
+			aMinusb = R - rr;
+			aMinusbOverb = aMinusb / rr;
+			aPlusb = R + rr;
+			aPlusbOverb = aPlusb / rr;
+			
+			count = 0;
+			if (isHypo)
+			{
+				oldPoint.x = ptOrigin.x + R - rr + p;
+				oldPoint.y = ptOrigin.y;
+				loopID = self.setInterval(drawH, 50);
+			}
+			else
+			{
+				oldPoint.x = ptOrigin.x + R + rr - p;
+				oldPoint.y = ptOrigin.y;
+				loopID = self.setInterval(drawE, 50);
+			}
 		}
-		
-		document.onmousedown 		=	onMouseDown;
-		document.onmouseup 			=	onMouseUp;
-		document.onmousemove		=	onMouseMove;
 	</script>	
 </head>
 
@@ -142,7 +256,7 @@
 </div>
 
 <div id="canvasDiv">
-	<canvas id="canvasBase" style="width:100%; height:100%;">
+	<canvas id="canvasBase" width="800" height="600">
 	Sorry! You are using an outdated browser and cant view this content.
 	Upgrade to latest browsers to view this page.
 	</canvas>

@@ -21,7 +21,11 @@ a
 	background-color: 		#fff;
 	border:					2px solid #bbb;
 }
-
+#canvasBase
+{
+	width:					800px;
+	height:					600px;
+}
 
 
 
