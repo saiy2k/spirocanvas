@@ -6,6 +6,10 @@
 	<script type="text/javascript" src="scripts/jquery.js"></script>
 	<script type="text/javascript" src="scripts/jqueryui/js/jquery-1.4.4.min.js"></script>
 	<script type="text/javascript" src="scripts/jqueryui/js/jquery-ui-1.8.9.custom.min.js"></script>
+	<script type="text/javascript" src="scripts/MMath.js"></script>
+	<script type="text/javascript" src="scripts/spiroCanvasUI.js"></script>
+	<script type="text/javascript" src="scripts/spiroCanvasCore.js"></script>
+	
 	<script language="javascript">
 		(function( $ )
 		{
@@ -24,207 +28,13 @@
 				return this;
 			};
 		})( jQuery );
-		
-		$(function()
-		{
-			$( "#canvasDiv" ).resizable
-			({
-				aspectRatio: 4 / 3,
-				minWidth: 400,
-				minHeight: 300
-			});
-			$( "#canvasDiv" ).bind
-			(
-				"resize", function(event, ui)
-				{
-					$("#canvasDiv").center();
-					$("#canvasBase").width($("#canvasDiv").width());
-					$("#canvasBase").height($("#canvasDiv").height());
-				}
-			);
-		});
-		
-		
-		$(function() {
-		$( "#circle1RadiusSlider" ).slider({
-			orientation: "vertical",
-			range: "min",
-			min: 0,
-			max: 100,
-			value: 60,
-			slide: function( event, ui ) {
-				$( "#circle1RadiusLabel" ).html( ui.value );
-			}
-		});
-		$( "#circle1RadiusLabel" ).html( $( "#circle1RadiusSlider" ).slider( "value" ) );
-		});
-		
-		
-		
-		$(function() {
-		$( "#circle2RadiusSlider" ).slider({
-			orientation: "vertical",
-			range: "min",
-			min: 0,
-			max: 100,
-			value: 60,
-			slide: function( event, ui ) {
-				$( "#circle2RadiusLabel" ).html( ui.value );
-			}
-		});
-		$( "#circle2RadiusLabel" ).html( $( "#circle2RadiusSlider" ).slider( "value" ) );
-		});
-		
-		
-		
-		$(function() {
-		$( "#circle3RadiusSlider" ).slider({
-			orientation: "vertical",
-			range: "min",
-			min: 0,
-			max: 100,
-			value: 60,
-			slide: function( event, ui ) {
-				$( "#circle3RadiusLabel" ).html( ui.value );
-			}
-		});
-		$( "#circle3RadiusLabel" ).html( $( "#circle3RadiusSlider" ).slider( "value" ) );
-		});
 	</script>
 	
-	<script language="javascript">
-		var isHypo = true;
-		var t = 0.0;
-		var dt = 0.1;
-		var R = 60.0;
-		var rr = 50.0;
-		var p = 60.0;
-		
-		var x = 0.0;
-		var y = 0.0;
-		var canvasWidth;
-		var canvasHeight;
-		var angleStep;
-		var NumRevolutions;
-		var NumPoints;
-		var radiansPerCircle = 2 * Math.PI;
-		var PointsPerCurve = 16;
-		var oldPoint	=	{x:0, y:0};
-		var newPoint	=	{x:0, y:0};
-		var ptOrigin	=	{x:0, y:0};
-		var angle = 0;
-		var aMinusb;
-		var aMinusbOverb;
-		var aPlusb;
-		var aPlusbOverb;
-		var count;
-		var loopID;
-		
-		function drawH()
-		{
-			var canvasBase		=	document.getElementById('canvasBase');
-			var	ct				=	canvasBase.getContext('2d');			
-			angle += angleStep;
-			newPoint.x = ptOrigin.x + aMinusb * Math.cos(angle) + p * Math.cos(angle * aMinusbOverb);
-			newPoint.y = ptOrigin.y + aMinusb * Math.sin(angle) - p * Math.sin(angle * aMinusbOverb);
-			ct.beginPath();
-			ct.moveTo(oldPoint.x, oldPoint.y);
-			ct.lineTo(newPoint.x, newPoint.y);
-			ct.stroke();
-			oldPoint.x = newPoint.x;
-			oldPoint.y = newPoint.y;
-			
-			count++;
-			if(count > NumPoints)
-				self.clearInterval(loopID);
-		}
-		
-		function drawE()
-		{
-			var canvasBase		=	document.getElementById('canvasBase');
-			var	ct				=	canvasBase.getContext('2d');			
-			angle += angleStep;
-			newPoint.x = ptOrigin.x + aPlusb * Math.cos(angle) - p * Math.cos(angle * aPlusbOverb);
-			newPoint.y = ptOrigin.y + aPlusb * Math.sin(angle) - p * Math.sin(angle * aPlusbOverb);
-			ct.beginPath();
-			ct.moveTo(oldPoint.x, oldPoint.y);
-			ct.lineTo(newPoint.x, newPoint.y);
-			ct.stroke();
-			oldPoint.x = newPoint.x;
-			oldPoint.y = newPoint.y;
-			
-			count++;
-			if(count > NumPoints)
-				self.clearInterval(loopID);
-		}
-		
-		function HCF(a, b)
-		{
-			var i = 0;
-			var j = 0;
-			var hcf = 0;
-
-			// Euclid's algorithm for finding the highest common factor
-			// of two integers A and B.
-			if (a < b)
-			{
-				hcf = a;
-				i = b;
-			}
-			else
-			{
-				hcf = b;
-				i = a;
-			}
-			do
-			{
-				j = i % hcf;
-				if (j != 0)
-				{
-					i = hcf;
-					hcf = j;
-				}
-			} while (j != 0);
-			return hcf;
-		}
-		
+	<script language="javascript">	
 		function init()
-		{	
-			$("#canvasDiv").center();
-			$("#toolBox").leftCenter();
-			
-			var canvasBase		=	document.getElementById('canvasBase');
-			ptOrigin.x = canvasBase.width / 2;
-			ptOrigin.y = canvasBase.height / 2;
-			
-			angleStep = radiansPerCircle / PointsPerCurve;
-
-			// Compute number of revolutions.
-			NumRevolutions = rr/HCF (R, rr);
-
-			// Total number of points to generate
-			NumPoints = PointsPerCurve * NumRevolutions;
-			// x = (a-b)*cos(t) + h*cos(t*(a-b)/b)
-			// y = (a-b)*cos(t) - h*sin(t*(a-b)/b)
-			
-			aMinusb = R - rr;
-			aMinusbOverb = aMinusb / rr;
-			aPlusb = R + rr;
-			aPlusbOverb = aPlusb / rr;
-			
-			count = 0;
-			if (isHypo)
-			{
-				oldPoint.x = ptOrigin.x + R - rr + p;
-				oldPoint.y = ptOrigin.y;
-				loopID = self.setInterval(drawH, 50);
-			}
-			else
-			{
-				oldPoint.x = ptOrigin.x + R + rr - p;
-				oldPoint.y = ptOrigin.y;
-				loopID = self.setInterval(drawE, 50);
-			}
+		{					
+			spiroCanvasUI.initUI();
+			spiroCanvasCore.drawSpiro('canvasBase');
 		}
 	</script>	
 </head>
@@ -266,15 +76,15 @@
 	<div id="toolBoxVerticalPanel">
 		<div id="toolBoxHorizontalPanel">
 			<div id="circle1RadiusSlider" style="height:100px;"></div>
-			<div id="circle1RadiusLabel" style="border:0; color:#f6931f; font-weight:bold;">50</div>
+			<div id="circle1RadiusLabel" style="border:0; color:#f6931f; font-weight:bold;">60</div>
 		</div>
 		<div id="toolBoxHorizontalPanel">
 			<div id="circle2RadiusSlider" style="height:100px;"></div>
-			<div id="circle2RadiusLabel" style="border:0; color:#f6931f; font-weight:bold;">50</div>
+			<div id="circle2RadiusLabel" style="border:0; color:#f6931f; font-weight:bold;">60</div>
 		</div>
 		<div id="toolBoxHorizontalPanel">
 			<div id="circle3RadiusSlider" style="height:100px;"></div>
-			<div id="circle3RadiusLabel" style="border:0; color:#f6931f; font-weight:bold;">50</div>
+			<div id="circle3RadiusLabel" style="border:0; color:#f6931f; font-weight:bold;">60</div>
 		</div>
 	</div>
 </div>
