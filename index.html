@@ -1,11 +1,31 @@
-<!DOCTYPE HTML>
+<!--
+Copyright 2011 Saiyasodharan (http://saiy2k.blogspot.com/)
+
+This file is part of SpiroCanvas (http://code.google.com/p/spirocanvas/)
+
+SpiroCanvas is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+SpiroCanvas is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
 <html>
 <head>
 	<link type="text/css" href="styleUI.css" rel="Stylesheet" />
 	<link type="text/css" href="scripts/jqueryui/css/ui-lightness/jquery-ui-1.8.9.custom.css" rel="Stylesheet" />
+	<link type="text/css" href="scripts/css/jPicker-1.1.6.min.css" rel="Stylesheet" />
 	<script type="text/javascript" src="scripts/jquery.js"></script>
 	<script type="text/javascript" src="scripts/jqueryui/js/jquery-1.4.4.min.js"></script>
 	<script type="text/javascript" src="scripts/jqueryui/js/jquery-ui-1.8.9.custom.min.js"></script>
+	<script type="text/javascript" src="scripts/jpicker-1.1.6.min.js"></script>
 	<script type="text/javascript" src="scripts/MMath.js"></script>
 	<script type="text/javascript" src="scripts/spiroCanvasUI.js"></script>
 	<script type="text/javascript" src="scripts/spiroCanvasCore.js"></script>
@@ -13,6 +33,7 @@
 	<script language="javascript">
 		(function( $ )
 		{
+			//a jquery extension to move an element to the center of the screen
 			$.fn.center = function ()
 			{
 				this.css("position","absolute");
@@ -20,6 +41,8 @@
 				this.css("left", ( $(window).width()  - this.outerWidth()  ) / 2 + $(window).scrollLeft() + "px");
 				return this;
 			};
+			
+			//a jquery extension to move an element to the left-center of the screen
 			$.fn.leftCenter = function ()
 			{
 				this.css("position","absolute");
@@ -28,18 +51,10 @@
 				return this;
 			};
 		})( jQuery );
-	</script>
-	
-	<script language="javascript">	
-		function init()
-		{					
-			spiroCanvasUI.initUI();
-			spiroCanvasCore.drawSpiro('canvasBase');
-		}
 	</script>	
 </head>
 
-<body onload="init();"> 
+<body onload="spiroCanvasUI.initUI();"> 
 
 <div id="statusDiv">
 	<div id="statusRightPanel">
@@ -57,11 +72,14 @@
 	<div id="statusLeftPanel">
 		RADIUS
 	</div>
-	<div id="statusLeftPanel">
-		FORECOLOR
+	<div id="statusLeftPanel" style="margin:1px; padding:2px 2px 2px 2px;">
+		<span id="foregroundColorDiv"></span>
+	</div>
+	<div id="statusLeftPanel" style="margin:1px; padding:2px 2px 2px 2px;">
+		<span id="backgroundColorDiv"></span>
 	</div>
 	<div id="statusLeftPanel">
-		BGCOLOR
+		<a href="#" id="reDrawButton">ReDraw</a>
 	</div>
 </div>
 
@@ -83,8 +101,12 @@
 			<div id="circle2RadiusLabel" style="border:0; color:#f6931f; font-weight:bold;">60</div>
 		</div>
 		<div id="toolBoxHorizontalPanel">
-			<div id="circle3RadiusSlider" style="height:100px;"></div>
-			<div id="circle3RadiusLabel" style="border:0; color:#f6931f; font-weight:bold;">60</div>
+			<div id="pointDistanceSlider" style="height:100px;"></div>
+			<div id="pointDistanceLabel" style="border:0; color:#f6931f; font-weight:bold;">60</div>
+		</div>
+		<div id="toolBoxHorizontalPanel">
+			<div id="speedSlider" style="height:100px;"></div>
+			<div id="speedLabel" style="border:0; color:#f6931f; font-weight:bold;">5</div>
 		</div>
 	</div>
 </div>
