@@ -69,9 +69,6 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	<div id="statusRightPanel">
 		SAVE
 	</div>
-	<div id="statusLeftPanel">
-		RADIUS
-	</div>
 	<div id="statusLeftPanel" style="margin:1px; padding:2px 2px 2px 2px;">
 		<span id="foregroundColorDiv"></span>
 	</div>
@@ -79,7 +76,10 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 		<span id="backgroundColorDiv"></span>
 	</div>
 	<div id="statusLeftPanel">
-		<a href="#" id="reDrawButton">ReDraw</a>
+		<a href="#" id="clearButton">Clear</a>
+	</div>
+	<div id="statusLeftPanel">
+		<a href="#" id="drawButton">Draw</a>
 	</div>
 </div>
 
@@ -111,12 +111,12 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 		</div>
 		<div id="toolBoxHorizontalPanel">
 			<div id="resolutionSlider" style="width:100px; float:left;"></div>
-			<div id="resolutionLabel" style="border:0; color:#f6931f; font-weight:bold; float:right">32</div>
+			<div id="resolutionLabel" style="border:0; color:#f6931f; font-weight:bold; float:right">64</div>
 			<br> Resolution
 		</div>
 		<div id="toolBoxHorizontalPanel">
 			<div id="speedSlider" style="width:100px; float:left;"></div>
-			<div id="speedLabel" style="border:0; color:#f6931f; font-weight:bold; float:right">5</div>
+			<div id="speedLabel" style="border:0; color:#f6931f; font-weight:bold; float:right">20</div>
 			<br> Animation Speed
 		</div>
 		

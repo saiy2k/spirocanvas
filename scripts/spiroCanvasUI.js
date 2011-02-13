@@ -38,50 +38,71 @@ var spiroCanvasUI = (function()
 			
 			//click handler for reDraw Button. Calls the the drawSpiro function in spiroCanvasCore
 			//to draw a new spirograph with appropriate parameters
-			$( "#reDrawButton" ).click
+			$( "#drawButton" ).click
 			(
 				function()
 				{
 					var R 			=	$('#circle1RadiusSlider').slider('value');
 					var r 			=	$('#circle2RadiusSlider').slider('value');
 					var p 			=	$('#pointDistanceSlider').slider('value');
-					var foreColor	=	$.jPicker.List[0].color.active.val('hex');
-					var bgColor		=	$.jPicker.List[1].color.active.val('hex');
+					var foreColor	=	$.jPicker.List[0].color.active.val('hsv');
+					var bgColor		=	$.jPicker.List[1].color.active.val('hsv');
 					var speed		=	$('#speedSlider').slider('value');
 					var res			=	$('#resolutionSlider').slider('value');
-	
-					var hsv			=	$.jPicker.List[1].color.active.val('hsv');
-					spiroCanvasCore.drawSpiro('canvasSpiro', 'canvasBG', speed, R, r, p, foreColor, bgColor, res, hsv);
+					spiroCanvasCore.drawSpiro('canvasSpiro', 'canvasBG', speed, R, r, p, foreColor, bgColor, res);
+				}
+			);
+			
+			//click handler for clear Button. clears the spirocanvas
+			$( "#clearButton" ).click
+			(
+				function()
+				{
+					spiroCanvasCore.clearSpiro('canvasSpiro');
 				}
 			);
 			
 			//transforms the foregroundColorDiv to a colorpicker
 			$('#foregroundColorDiv').jPicker
-			({
-				window:
+			(
 				{
-					expandable: true
-				},
-				color:
-				{
-					alphaSupport: true,
-					active: new $.jPicker.Color({ ahex: '000000ff' })
+					window:
+					{
+						expandable: true
+					},
+					color:
+					{
+						alphaSupport: true,
+						active: new $.jPicker.Color({ ahex: '000000ff' })
+					}
 				}
-			});
+			);
 			
 			//transforms the backgroundColorDiv to a colorpicker
 			$('#backgroundColorDiv').jPicker
-			({
-				window:
+			(
 				{
-					expandable: true
+					window:
+					{
+						expandable: true
+					},
+					color:
+					{
+						alphaSupport: true,
+						active: new $.jPicker.Color({ ahex: 'ffffffff' })
+					}
 				},
-				color:
+				function(color, context)
 				{
-					alphaSupport: true,
-					active: new $.jPicker.Color({ ahex: 'ffffffff' })
+				},
+				function(color, context)
+				{
+					spiroCanvasCore.drawBG('canvasBG', color.val('hsv'));
+				},
+				function(color, context)
+				{
 				}
-			});
+			);
 
 			//transforms the canvasContainer to a resizable panel with a fixed aspect ratio
 			$( "#canvasContainer" ).resizable
@@ -103,6 +124,8 @@ var spiroCanvasUI = (function()
 								$("#canvasSpiro").height($("#canvasContaine").height());
 								$("#canvasBG").width($("#canvasContainer").width());
 								$("#canvasBG").height($("#canvasContaine").height());
+								$("#canvasCircle").width($("#canvasContainer").width());
+								$("#canvasCircle").height($("#canvasContaine").height());
 							}
 			);
 		
@@ -114,7 +137,7 @@ var spiroCanvasUI = (function()
 				orientation		:	"horizontal",
 				range			:	"min",
 				min				:	1,
-				max				:	100,
+				max				:	200,
 				value			:	60,
 				slide			:	function( event, ui )
 									{
@@ -167,7 +190,7 @@ var spiroCanvasUI = (function()
 				range			:	"min",
 				min				:	1,
 				max				:	25,
-				value			:	5,
+				value			:	20,
 				slide			:	function( event, ui )
 									{
 										$( "#speedLabel" ).html( ui.value );
@@ -184,7 +207,7 @@ var spiroCanvasUI = (function()
 				range			:	"min",
 				min				:	2,
 				max				:	128,
-				value			:	32,
+				value			:	64,
 				slide			:	function( event, ui )
 									{
 										$( "#resolutionLabel" ).html( ui.value );

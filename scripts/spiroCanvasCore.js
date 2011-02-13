@@ -33,8 +33,10 @@ var spiroCanvasCore = (function()
 	var my 			=	{};
 	var angleStep;					//amount of angle to increment on each loop (derived from Points/Curve)
 	var angle;						//current angle	
-	var currentPoint;				//keeps track of the number of points drawn	
+	var currentPointID;				//keeps track of the number of points drawn	
 	var loopID		=	-1;			//keeps track of the ID of the Loop. It will be -1, if curve drawing is not happening
+	var oldPoint	=	{x:0, y:0}; //previous point of the spirograph
+	var penColorRGB	=	{r:0, g:0, b:0};	//color of the spirograph
 	
 	var aMinusb;					//=(R - r), pre-calculated to optimize performance
 	var aMinusbOverb;				//=(R - r) / r, pre-calculated to optimize performance
@@ -55,22 +57,37 @@ var spiroCanvasCore = (function()
 		newPoint.x 	=	originPoint.x + aMinusb * Math.cos(angle) + p * Math.cos(angle * aMinusbOverb);
 		newPoint.y 	=	originPoint.y + aMinusb * Math.sin(angle) - p * Math.sin(angle * aMinusbOverb);
 		
-		drawCircles(originPoint, newPoint, R, r, true);
+		//draw the "drawing circles"
+		my.drawCircles(originPoint, newPoint, R, r, true);
 
-		//plots a line to the new point
+		//draw a shadow behind the spirograph line
+		ct.save();
+		ct.strokeStyle	=	'rgba(125, 125, 125, 0.2)';
+		ct.lineWidth	=	5;
+		ct.beginPath();
+		ct.moveTo(oldPoint.x, oldPoint.y);
 		ct.lineTo(newPoint.x, newPoint.y);
 		ct.stroke();
+		ct.closePath();
+		ct.restore();
+		
+		//plot a line to the new point
+		ct.beginPath();
+		ct.moveTo(oldPoint.x, oldPoint.y);
+		ct.lineTo(Math.floor(newPoint.x), Math.floor(newPoint.y));
+		ct.stroke();
+		ct.closePath();
 		
 		//check if all the points are drawn. if yes, it clears the loop.
-		currentPoint++;
-		if(currentPoint >= maxPoints)
+		currentPointID++;
+		if(currentPointID >= maxPoints)
 		{
 			ct.closePath();
 			self.clearInterval(loopID);
 			loopID 	=	-1;
 		}
 		
-		//console.log(angle * 180 / 3.14);
+		oldPoint	=	newPoint;
 	};
 	
 	//This Epitrochoid function will be invoked repeatedly at a rate set by the user.
@@ -86,26 +103,42 @@ var spiroCanvasCore = (function()
 		newPoint.x	=	originPoint.x + aPlusb * Math.cos(angle) - p * Math.cos(angle * aPlusbOverb);
 		newPoint.y	=	originPoint.y + aPlusb * Math.sin(angle) - p * Math.sin(angle * aPlusbOverb);
 		
-		drawCircles(originPoint, newPoint, R, r, false);
+		//draw the "drawing circles"
+		my.drawCircles(originPoint, newPoint, R, r, false);
 		
-		//plots a line to the new point
+		//draw a shadow behind the spirograph line
+		ct.save();
+		ct.strokeStyle		=	'rgba(125, 125, 125, 0.2)';
+		ct.lineWidth	=	5;
+		ct.beginPath();
+		ct.moveTo(oldPoint.x, oldPoint.y);
+		ct.lineTo(newPoint.x, newPoint.y);
+		ct.stroke();
+		ct.closePath();
+		ct.restore();
+		
+		
+		//plot a line to the new point
+		ct.beginPath();
+		ct.moveTo(oldPoint.x, oldPoint.y);
 		ct.lineTo(Math.floor(newPoint.x), Math.floor(newPoint.y));
 		ct.stroke();
+		ct.closePath();
 		
 		//check if all the points are drawn. if yes, it clears the loop.
-		currentPoint++;
-		if(currentPoint >= maxPoints)
+		currentPointID++;
+		if(currentPointID >= maxPoints)
 		{
 			ct.closePath();
 			self.clearInterval(loopID);
 			loopID 	=	-1;
 		}
 		
-		//console.log(angle * 180 / 3.14);
+		oldPoint	=	newPoint;
 	};
 
 	//This function is invoked when the Redraw button is pressed
-	my.drawSpiro 	=	function (canvasSpiroID, canvasBGID, speed, R, r, p, foreColor, bgColor, res, hsv)	
+	my.drawSpiro 	=	function (canvasSpiroID, canvasBGID, speed, R, r, p, foreColorHSV, bgColorHSV, res)	
 	{
 		//if a curve is being drawn, stop it
 		if(loopID != -1)
@@ -114,15 +147,12 @@ var spiroCanvasCore = (function()
 			loopID			=	-1;
 		}
 		
-		drawBackground(canvasBGID, hsv);
-		
 		//declare and reset all the variables
 		angle				=	0;
-		currentPoint		=	0;
+		currentPointID		=	0;
 		var NumRevolutions	=	0;
 		var NumPoints		=	0;
 		var PointsPerCurve	=	res;
-		var oldPoint		=	{x:0, y:0};
 		var centerPoint		=	{x:0, y:0};
 		var curveType		=	"";
 		canvasBase			=	document.getElementById(canvasSpiroID);
@@ -154,32 +184,52 @@ var spiroCanvasCore = (function()
 		aPlusbOverb			=	aPlusb / r;
 		
 		//sets the context colors
-		ct.fillStyle		=	"#" + bgColor;
-		ct.strokeStyle		=	"#" + foreColor;
+		var bgRGB			=	$.jPicker.ColorMethods.hsvToRgb(bgColorHSV);
+		var bgHEX			=	RGBtoHex(bgRGB.r, bgRGB.g, bgRGB.b);
+		var foreRGB1		=	$.jPicker.ColorMethods.hsvToRgb(foreColorHSV);
+		var foreRGB2		=	$.jPicker.ColorMethods.hsvToRgb( { h:foreColorHSV.h - 20, s:foreColorHSV.s - 20, v:foreColorHSV.v + 20} );
+		var foreHEX1		=	"#" + RGBtoHex(foreRGB1.r, foreRGB1.g, foreRGB1.b);
+		var foreHEX2		=	"#" + RGBtoHex(foreRGB2.r, foreRGB2.g, foreRGB2.b);
+		penColorRGB			=	foreRGB1;
+		var lingrad 		=	ct.createLinearGradient(0,0,300,600);
+			lingrad.addColorStop(0,		foreHEX1);
+			lingrad.addColorStop(0.6,	foreHEX2);
+		ct.fillStyle		=	"#" + bgHEX;
+		ct.strokeStyle		=	lingrad;
 		
-		
-		
+		//based on the curveType, call corresponding functions repeatedly
 		if (curveType == "hypotrochoid")
 		{
 			oldPoint.x		=	centerPoint.x + R - r + p;
 			oldPoint.y		=	centerPoint.y;
-			ct.clearRect(0, 0, canvasBase.width, canvasBase.height);
-			ct.beginPath();
-			ct.moveTo(oldPoint.x, oldPoint.y);
 			loopID			=	self.setInterval( function() { my.drawH(ct, R, r, p, NumPoints, centerPoint); }, 1 + (25 - speed) * 5);
 		}
 		else if(curveType == "epitrochoid")
 		{
 			oldPoint.x		=	centerPoint.x + R + r - p;
 			oldPoint.y		=	centerPoint.y;
-			ct.clearRect(0, 0, canvasBase.width, canvasBase.height);
-			ct.beginPath();
-			ct.moveTo(oldPoint.x, oldPoint.y);
 			loopID			=	self.setInterval( function() { my.drawE(ct, R, r, p, NumPoints, centerPoint); }, 1 + (25 - speed) * 5);
 		}
 	};
 	
-	function drawCircles(centerPoint, newPoint, R, r, inOrOut)
+	//clear the spirograph
+	my.clearSpiro	=	function (canvasSpiroID)
+	{
+		//if a curve is being drawn, stop it
+		if(loopID != -1)
+		{
+			self.clearInterval(loopID);
+			loopID			=	-1;
+		}
+		
+		canvasBase			=	document.getElementById(canvasSpiroID);
+		ct					=	canvasBase.getContext('2d');
+		
+		ct.clearRect(0, 0, 800, 600);
+	};
+	
+	//draw the drawing circles
+	my.drawCircles 	=	function(centerPoint, newPoint, R, r, inOrOut)
 	{
 		var canvasBG		=	document.getElementById('canvasCircle');
 		var ct				=	canvasBG.getContext('2d');
@@ -188,11 +238,13 @@ var spiroCanvasCore = (function()
 		ct.strokeStyle		=	"#888888";
 		ct.clearRect(0, 0, 800, 600);
 		
+		//draws the fixed circle
 		ct.beginPath();
 		ct.arc(centerPoint.x, centerPoint.y, R, 0, 6.28, 0);
 		ct.stroke();
 		ct.closePath();
 		
+		//finds the co-ordinate to draw the moving circle
 		if (inOrOut)
 		{
 			c2Point.x			=	centerPoint.x + (R - r) * Math.cos(angle);
@@ -203,19 +255,22 @@ var spiroCanvasCore = (function()
 			c2Point.x			=	centerPoint.x + (R + r) * Math.cos(angle);
 			c2Point.y			=	centerPoint.y + (R + r) * Math.sin(angle);
 		}
+		//draws the moving circle
 		ct.beginPath();
 		ct.arc(c2Point.x, c2Point.y, r, 0, 6.28, 0);
 		ct.stroke();
 		ct.closePath();
 
+		//draw the drawing line
 		ct.beginPath();
 		ct.moveTo(c2Point.x, c2Point.y);
 		ct.lineTo(newPoint.x, newPoint.y);
 		ct.stroke();
 		ct.closePath();
-	}
+	};
 	
-	function drawBackground(canvasBGID, hsv)
+	//function to fill the background with shades of selected color
+	my.drawBG		=	function(canvasBGID, hsv)
 	{
 		var canvasBG		=	document.getElementById(canvasBGID);
 		var ct				=	canvasBG.getContext('2d');
