@@ -83,8 +83,10 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	</div>
 </div>
 
-<div id="canvasDiv">
-	<canvas id="canvasBase" width="800" height="600">
+<div id="canvasContainer" style="position:relative;">
+	<canvas id="canvasBG" 		width="800" height="600" style="position:absolute; left:0px; top:0px; z-index:0;"></canvas>
+	<canvas id="canvasCircle" 	width="800" height="600" style="position:absolute; left:0px; top:0px; z-index:1;"></canvas>
+	<canvas id="canvasSpiro"	width="800" height="600" style="position:absolute; left:0px; top:0px; z-index:2;">
 	Sorry! You are using an outdated browser and cant view this content.
 	Upgrade to latest browsers to view this page.
 	</canvas>
@@ -93,21 +95,31 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 <div id="toolBox">
 	<div id="toolBoxVerticalPanel">
 		<div id="toolBoxHorizontalPanel">
-			<div id="circle1RadiusSlider" style="height:100px;"></div>
-			<div id="circle1RadiusLabel" style="border:0; color:#f6931f; font-weight:bold;">60</div>
+			<div id="circle1RadiusSlider" style="width:100px; float:left;"></div>
+			<div id="circle1RadiusLabel" style="border:0; color:#f6931f; font-weight:bold; float:right">60</div>
+			<br> Fixed circle Radius
 		</div>
 		<div id="toolBoxHorizontalPanel">
-			<div id="circle2RadiusSlider" style="height:100px;"></div>
-			<div id="circle2RadiusLabel" style="border:0; color:#f6931f; font-weight:bold;">60</div>
+			<div id="circle2RadiusSlider" style="width:100px; float:left;"></div>
+			<div id="circle2RadiusLabel" style="border:0; color:#f6931f; font-weight:bold; float:right">50</div>
+			<br> Moving circle Radius
 		</div>
 		<div id="toolBoxHorizontalPanel">
-			<div id="pointDistanceSlider" style="height:100px;"></div>
-			<div id="pointDistanceLabel" style="border:0; color:#f6931f; font-weight:bold;">60</div>
+			<div id="pointDistanceSlider" style="width:100px; float:left;"></div>
+			<div id="pointDistanceLabel" style="border:0; color:#f6931f; font-weight:bold; float:right">60</div>
+			<br> Point Distance
 		</div>
 		<div id="toolBoxHorizontalPanel">
-			<div id="speedSlider" style="height:100px;"></div>
-			<div id="speedLabel" style="border:0; color:#f6931f; font-weight:bold;">5</div>
+			<div id="resolutionSlider" style="width:100px; float:left;"></div>
+			<div id="resolutionLabel" style="border:0; color:#f6931f; font-weight:bold; float:right">32</div>
+			<br> Resolution
 		</div>
+		<div id="toolBoxHorizontalPanel">
+			<div id="speedSlider" style="width:100px; float:left;"></div>
+			<div id="speedLabel" style="border:0; color:#f6931f; font-weight:bold; float:right">5</div>
+			<br> Animation Speed
+		</div>
+		
 	</div>
 </div>
 

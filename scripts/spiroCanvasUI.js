@@ -30,14 +30,14 @@ var spiroCanvasUI = (function()
 	{
 		jQuery(function()
 		{
-			//moves the canvasDiv (inside which our canvas tag resides) to the center of the screen
-			$("#canvasDiv").center();
+			//moves the canvasContainer (inside which our canvas tag resides) to the center of the screen
+			$("#canvasContainer").center();
 			
 			//moves the floating toolbox (which includes all the sliders) to the left center of the screen
 			$("#toolBox").leftCenter();
 			
 			//click handler for reDraw Button. Calls the the drawSpiro function in spiroCanvasCore
-			//to draw a new spirograph
+			//to draw a new spirograph with appropriate parameters
 			$( "#reDrawButton" ).click
 			(
 				function()
@@ -48,8 +48,10 @@ var spiroCanvasUI = (function()
 					var foreColor	=	$.jPicker.List[0].color.active.val('hex');
 					var bgColor		=	$.jPicker.List[1].color.active.val('hex');
 					var speed		=	$('#speedSlider').slider('value');
-					
-					spiroCanvasCore.drawSpiro('canvasBase', 1, speed, R, r, p, foreColor, bgColor);
+					var res			=	$('#resolutionSlider').slider('value');
+	
+					var hsv			=	$.jPicker.List[1].color.active.val('hsv');
+					spiroCanvasCore.drawSpiro('canvasSpiro', 'canvasBG', speed, R, r, p, foreColor, bgColor, res, hsv);
 				}
 			);
 			
@@ -81,32 +83,35 @@ var spiroCanvasUI = (function()
 				}
 			});
 
-			//transforms the canvasDiv to a resizable panel with a fixed aspect ratio
-			$( "#canvasDiv" ).resizable
+			//transforms the canvasContainer to a resizable panel with a fixed aspect ratio
+			$( "#canvasContainer" ).resizable
 			({
 				aspectRatio		:	4 / 3,
 				minWidth		:	400,
 				minHeight		:	300
 			});
 			
-			//moves the canvasDiv to the center of the screen, whenever it's resized
-			//and also adjusts the size of canvasBase (the real canvas) to match the
-			//size of canvasDiv
-			$( "#canvasDiv" ).bind
+			//moves the canvasContainer to the center of the screen, whenever it's resized
+			//and also adjusts the size of canvasSpiro (the real canvas) to match the
+			//size of canvasContainer
+			$( "#canvasContainer" ).bind
 			(
 				"resize",	function(event, ui)
 							{
-								$("#canvasDiv").center();
-								$("#canvasBase").width($("#canvasDiv").width());
-								$("#canvasBase").height($("#canvasDiv").height());
+								$("#canvasContainer").center();
+								$("#canvasSpiro").width($("#canvasContainer").width());
+								$("#canvasSpiro").height($("#canvasContaine").height());
+								$("#canvasBG").width($("#canvasContainer").width());
+								$("#canvasBG").height($("#canvasContaine").height());
 							}
 			);
 		
 			//transforms the circle1RadiusSlider into a slider with a specific min and
 			//max values. Also, the label is updated as and when the slider value is changed
+			//This slider is used to adjust the radius of the fixed circle
 			$( "#circle1RadiusSlider" ).slider
 			({
-				orientation		:	"vertical",
+				orientation		:	"horizontal",
 				range			:	"min",
 				min				:	1,
 				max				:	100,
@@ -119,13 +124,18 @@ var spiroCanvasUI = (function()
 			
 			//transforms the circle2RadiusSlider into a slider with a specific min and
 			//max values. Also, the label is updated as and when the slider value is changed
+			//This slider is used to adjust the radius of the moving circle.
+			//If the slider value is negative, moving circle moves inside the fixed circle
+			//and draws a Hypotrochoid
+			//If the slider value is positive, moving circle moves outside the fixed circle
+			//and draws a Epitrochoid
 			$( "#circle2RadiusSlider" ).slider
 			({
-				orientation		:	"vertical",
+				orientation		:	"horizontal",
 				range			:	"min",
-				min				:	1,
+				min				:	-100,
 				max				:	100,
-				value			:	60,
+				value			:	50,
 				slide			:	function( event, ui )
 									{
 										$( "#circle2RadiusLabel" ).html( ui.value );
@@ -134,9 +144,10 @@ var spiroCanvasUI = (function()
 			
 			//transforms the pointDistanceSlider into a slider with a specific min and
 			//max values. Also, the label is updated as and when the slider value is changed
+			//This slider defines the distance of drawing point from the center of moving circle
 			$( "#pointDistanceSlider" ).slider
 			({
-				orientation		:	"vertical",
+				orientation		:	"horizontal",
 				range			:	"min",
 				min				:	1,
 				max				:	100,
@@ -149,16 +160,34 @@ var spiroCanvasUI = (function()
 			
 			//transforms the speedSlider into a slider with a specific min and
 			//max values. Also, the label is updated as and when the slider value is changed
+			//This slider determines the rate at which the draw loop is called using setInterval
 			$( "#speedSlider" ).slider
 			({
-				orientation		:	"vertical",
+				orientation		:	"horizontal",
 				range			:	"min",
 				min				:	1,
-				max				:	10,
+				max				:	25,
 				value			:	5,
 				slide			:	function( event, ui )
 									{
 										$( "#speedLabel" ).html( ui.value );
+									}
+			});
+			
+			//transforms the resolutionSlider into a slider with a specific min and
+			//max values. Also, the label is updated as and when the slider value is changed
+			//This slider determines the number of points drawn in one revolution of the
+			//curve. The more the value is, the smoother the curve is.
+			$( "#resolutionSlider" ).slider
+			({
+				orientation		:	"horizontal",
+				range			:	"min",
+				min				:	2,
+				max				:	128,
+				value			:	32,
+				slide			:	function( event, ui )
+									{
+										$( "#resolutionLabel" ).html( ui.value );
 									}
 			});
 		});

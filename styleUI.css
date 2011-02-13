@@ -32,18 +32,13 @@ a
 
 
 
-#canvasDiv
+#canvasContainer
 {
 	width:					800px;
 	height:					600px;
 	margin:					auto;
 	background-color: 		#fff;
 	border:					2px solid #bbb;
-}
-#canvasBase
-{
-	width:					800px;
-	height:					600px;
 }
 
 
@@ -63,15 +58,10 @@ a
 }
 #toolBoxHorizontalPanel
 {
-	float:					left;
-	width:					30px;
-	margin:					4px;
-	padding:				4px;
+	height: 				40px;
+	margin:					2px;
+	padding:				2px;
 }
-
-
-
-
 
 #statusDiv
 {
