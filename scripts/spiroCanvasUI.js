@@ -29,7 +29,7 @@ var spiroCanvasUI = (function()
 	my.initUI 		=	function ()
 	{
 		jQuery(function()
-		{
+		{		
 			//moves the canvasContainer (inside which our canvas tag resides) to the center of the screen
 			$("#canvasContainer").center();
 			
@@ -141,7 +141,11 @@ var spiroCanvasUI = (function()
 				value			:	60,
 				slide			:	function( event, ui )
 									{
+										//updates the label with slider value
 										$( "#circle1RadiusLabel" ).html( ui.value );
+										
+										//updates the drawing circle
+										updateDrawingCircle();
 									}
 			});
 			
@@ -161,7 +165,16 @@ var spiroCanvasUI = (function()
 				value			:	50,
 				slide			:	function( event, ui )
 									{
+										//returns false, if the slide value goes less than the slide value
+										//of circle1radius slide. This is to ensure that if the moving
+										//circle is inside fixed circle, then its radius should never go
+										//beyond the radius of fixed circle.
+										if(ui.value <= -($('#circle1RadiusSlider').slider('value')))
+											return false;
 										$( "#circle2RadiusLabel" ).html( ui.value );
+										
+										//updates the drawing circle
+										updateDrawingCircle();
 									}
 			});
 			
@@ -178,6 +191,9 @@ var spiroCanvasUI = (function()
 				slide			:	function( event, ui )
 									{
 										$( "#pointDistanceLabel" ).html( ui.value );
+										
+										//updates the drawing circle
+										updateDrawingCircle();
 									}
 			});
 			
@@ -213,8 +229,47 @@ var spiroCanvasUI = (function()
 										$( "#resolutionLabel" ).html( ui.value );
 									}
 			});
+			
+			updateDrawingCircle();
 		});
 	};
+	
+	function updateDrawingCircle()
+	{
+		//if any cruve is being drawn, stop it
+		if ( spiroCanvasCore.loopID != -1 )
+		{
+			clearInterval(spiroCanvasCore.loopID);
+			spiroCanvasCore.loopID	=	-1;
+			spiroCanvasCore.angle	=	0.0;
+		}
+		
+		//retrieve the details required to draw the drawing circles
+		//and ask spiroCanvasCore to draw them
+		var canvasCircle=	document.getElementById('canvasCircle');
+		var centerPoint	=	{x:0, y:0};
+		var newPoint	=	{x:0, y:0};
+		var R			=	$("#circle1RadiusSlider").slider("value");
+		var r			=	$("#circle2RadiusSlider").slider("value");
+		var p			=	$("#pointDistanceSlider").slider("value");
+		centerPoint.x	=	canvasCircle.width  / 2;
+		centerPoint.y	=	canvasCircle.height / 2;
+		
+		if ( r < 0 )
+		{
+			newPoint.x	=	centerPoint.x + R - r + p;
+			newPoint.y	=	centerPoint.y;
+			
+			spiroCanvasCore.drawCircles(centerPoint, newPoint, R, -r, true);
+		}
+		else
+		{
+			newPoint.x	=	centerPoint.x + R + r - p;
+			newPoint.y	=	centerPoint.y;
+			
+			spiroCanvasCore.drawCircles(centerPoint, newPoint, R, r, false);
+		}
+	}
 	
 	return my;
 }());

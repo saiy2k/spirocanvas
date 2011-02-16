@@ -31,10 +31,10 @@ drawE() in a loop to draw the curve.
 var spiroCanvasCore = (function()
 {
 	var my 			=	{};
+	my.loopID		=	-1;			//keeps track of the ID of the Loop. It will be -1, if curve drawing is not happening
+	my.angle		=	0.0;		//current angle	
 	var angleStep;					//amount of angle to increment on each loop (derived from Points/Curve)
-	var angle;						//current angle	
 	var currentPointID;				//keeps track of the number of points drawn	
-	var loopID		=	-1;			//keeps track of the ID of the Loop. It will be -1, if curve drawing is not happening
 	var oldPoint	=	{x:0, y:0}; //previous point of the spirograph
 	var penColorRGB	=	{r:0, g:0, b:0};	//color of the spirograph
 	
@@ -51,11 +51,11 @@ var spiroCanvasCore = (function()
 	my.drawH 		=	function (ct, R, r, p, maxPoints, originPoint)
 	{
 		var newPoint=	{x:0, y:0};		
-		angle 		+=	angleStep;
+		my.angle 		+=	angleStep;
 		
 		//calculates the point using updated angle and Hypotrochoid formula
-		newPoint.x 	=	originPoint.x + aMinusb * Math.cos(angle) + p * Math.cos(angle * aMinusbOverb);
-		newPoint.y 	=	originPoint.y + aMinusb * Math.sin(angle) - p * Math.sin(angle * aMinusbOverb);
+		newPoint.x 	=	originPoint.x + aMinusb * Math.cos(my.angle) + p * Math.cos(my.angle * aMinusbOverb);
+		newPoint.y 	=	originPoint.y + aMinusb * Math.sin(my.angle) - p * Math.sin(my.angle * aMinusbOverb);
 		
 		//draw the "drawing circles"
 		my.drawCircles(originPoint, newPoint, R, r, true);
@@ -83,8 +83,8 @@ var spiroCanvasCore = (function()
 		if(currentPointID >= maxPoints)
 		{
 			ct.closePath();
-			self.clearInterval(loopID);
-			loopID 	=	-1;
+			self.clearInterval(my.loopID);
+			my.loopID 	=	-1;
 		}
 		
 		oldPoint	=	newPoint;
@@ -97,11 +97,11 @@ var spiroCanvasCore = (function()
 	my.drawE 		=	function (ct, R, r, p, maxPoints, originPoint)
 	{
 		var newPoint=	{x:0, y:0};
-		angle += angleStep;
+		my.angle += angleStep;
 		
 		//calculates the point using updated angle and Hypotrochoid formula
-		newPoint.x	=	originPoint.x + aPlusb * Math.cos(angle) - p * Math.cos(angle * aPlusbOverb);
-		newPoint.y	=	originPoint.y + aPlusb * Math.sin(angle) - p * Math.sin(angle * aPlusbOverb);
+		newPoint.x	=	originPoint.x + aPlusb * Math.cos(my.angle) - p * Math.cos(my.angle * aPlusbOverb);
+		newPoint.y	=	originPoint.y + aPlusb * Math.sin(my.angle) - p * Math.sin(my.angle * aPlusbOverb);
 		
 		//draw the "drawing circles"
 		my.drawCircles(originPoint, newPoint, R, r, false);
@@ -130,8 +130,8 @@ var spiroCanvasCore = (function()
 		if(currentPointID >= maxPoints)
 		{
 			ct.closePath();
-			self.clearInterval(loopID);
-			loopID 	=	-1;
+			self.clearInterval(my.loopID);
+			my.loopID 	=	-1;
 		}
 		
 		oldPoint	=	newPoint;
@@ -141,14 +141,14 @@ var spiroCanvasCore = (function()
 	my.drawSpiro 	=	function (canvasSpiroID, canvasBGID, speed, R, r, p, foreColorHSV, bgColorHSV, res)	
 	{
 		//if a curve is being drawn, stop it
-		if(loopID != -1)
+		if(my.loopID != -1)
 		{
-			self.clearInterval(loopID);
-			loopID			=	-1;
+			self.clearInterval(my.loopID);
+			my.loopID			=	-1;
 		}
 		
 		//declare and reset all the variables
-		angle				=	0;
+		my.angle			=	0;
 		currentPointID		=	0;
 		var NumRevolutions	=	0;
 		var NumPoints		=	0;
@@ -202,13 +202,13 @@ var spiroCanvasCore = (function()
 		{
 			oldPoint.x		=	centerPoint.x + R - r + p;
 			oldPoint.y		=	centerPoint.y;
-			loopID			=	self.setInterval( function() { my.drawH(ct, R, r, p, NumPoints, centerPoint); }, 1 + (25 - speed) * 5);
+			my.loopID		=	self.setInterval( function() { my.drawH(ct, R, r, p, NumPoints, centerPoint); }, 1 + (25 - speed) * 5);
 		}
 		else if(curveType == "epitrochoid")
 		{
 			oldPoint.x		=	centerPoint.x + R + r - p;
 			oldPoint.y		=	centerPoint.y;
-			loopID			=	self.setInterval( function() { my.drawE(ct, R, r, p, NumPoints, centerPoint); }, 1 + (25 - speed) * 5);
+			my.loopID		=	self.setInterval( function() { my.drawE(ct, R, r, p, NumPoints, centerPoint); }, 1 + (25 - speed) * 5);
 		}
 	};
 	
@@ -216,10 +216,10 @@ var spiroCanvasCore = (function()
 	my.clearSpiro	=	function (canvasSpiroID)
 	{
 		//if a curve is being drawn, stop it
-		if(loopID != -1)
+		if(my.loopID != -1)
 		{
-			self.clearInterval(loopID);
-			loopID			=	-1;
+			self.clearInterval(my.loopID);
+			my.loopID			=	-1;
 		}
 		
 		canvasBase			=	document.getElementById(canvasSpiroID);
@@ -247,14 +247,14 @@ var spiroCanvasCore = (function()
 		//finds the co-ordinate to draw the moving circle
 		if (inOrOut)
 		{
-			c2Point.x			=	centerPoint.x + (R - r) * Math.cos(angle);
-			c2Point.y			=	centerPoint.y + (R - r) * Math.sin(angle);
+			c2Point.x			=	centerPoint.x + (R - r) * Math.cos(my.angle);
+			c2Point.y			=	centerPoint.y + (R - r) * Math.sin(my.angle);
 		}
 		else
 		{
-			c2Point.x			=	centerPoint.x + (R + r) * Math.cos(angle);
-			c2Point.y			=	centerPoint.y + (R + r) * Math.sin(angle);
-		}
+			c2Point.x			=	centerPoint.x + (R + r) * Math.cos(my.angle);
+			c2Point.y			=	centerPoint.y + (R + r) * Math.sin(my.angle);
+		} console.log(my.angle);
 		//draws the moving circle
 		ct.beginPath();
 		ct.arc(c2Point.x, c2Point.y, r, 0, 6.28, 0);
