@@ -26,12 +26,34 @@ is initUI and it will be called, when the body is loaded
 var spiroCanvasUI = (function()
 {
 	var my 			=	{};
+	
+	var layerCount			=	0;
+	var currentLayerID		=	-1;
+	var layerWidgets		=	new Array();
+	
 	my.initUI 		=	function ()
 	{
 		jQuery(function()
 		{		
 			//moves the canvasContainer (inside which our canvas tag resides) to the center of the screen
 			$("#canvasContainer").center();
+			
+			//makes the <UL> in layersPanel selectable
+			$("#layersPanelSelectable").selectable
+			({
+				cancel: 'a',
+				selected: function(event, ui)
+				{ 
+					console.log(ui.selected.id);
+				}
+			});
+			
+			//position the layers bar to the right of the canvas Container
+			$("#layersPanel").offset
+			({
+				top: $("#canvasContainer").offset().top + 50,
+				left: $("#canvasContainer").offset().left + $("#canvasContainer").width() + 4
+			});
 			
 			//moves the floating toolbox (which includes all the sliders) to the left center of the screen
 			$("#toolBox").leftCenter();
@@ -49,9 +71,42 @@ var spiroCanvasUI = (function()
 					var bgColor		=	$.jPicker.List[1].color.active.val('hsv');
 					var speed		=	$('#speedSlider').slider('value');
 					var res			=	$('#resolutionSlider').slider('value');
-					spiroCanvasCore.drawSpiro('canvasSpiro', 'canvasBG', speed, R, r, p, foreColor, bgColor, res);
+					
+					layerCount		=	layerCount + 1;
+					currentLayerID	=	layerCount - 1;
+					
+					//creates a new Canvas
+					$("#canvasContainer").append('<canvas id="canvasSpiro' + layerCount + '" '
+						+ 'width="800" height="600" '
+						+ 'style="position:absolute; left:0px; top:0px; z-index:' + (layerCount + 1) + ';"></canvas>'
+					);
+					
+					//make an entry to the layers panel
+					$("#layersPanelSelectable").append(
+						'<li class="ui-widget-content" id="layerWidget' + layerCount + '">' + 
+						'Layer ' +  layerCount + ' ' +
+						'<a href="#" id="removeLayerWidget" border="2">X</a>' +
+						'</li>'
+					);
+					
+					spiroCanvasCore.drawSpiro('canvasSpiro' + layerCount, 'canvasBG', speed, R, r, p, foreColor, bgColor, res, 1);
+					//spiroCanvasCore.drawInstantSpiro('canvasSpiro', 'canvasBG', speed, R, r, p, foreColor, bgColor, res, 1);
+
+					layerWidgets[currentLayerID]	=	'Layer ' +  layerCount;
 				}
 			);
+			
+			$('#removeLayerWidget').live('click', function()
+			{
+				var obj = $(this).parent()[0];
+				var text = obj.id;
+				var id	=	text.substring(11, 13);
+				var canvasid = "#canvasSpiro" + id;
+				$(canvasid).remove();
+				console.log(canvasid);
+				$(this).parent().remove();
+				return false;
+			});
 			
 			//click handler for clear Button. clears the spirocanvas
 			$( "#clearButton" ).click
@@ -108,8 +163,8 @@ var spiroCanvasUI = (function()
 			$( "#canvasContainer" ).resizable
 			({
 				aspectRatio		:	4 / 3,
-				minWidth		:	400,
-				minHeight		:	300
+				minWidth		:	800,
+				minHeight		:	600
 			});
 			
 			//moves the canvasContainer to the center of the screen, whenever it's resized

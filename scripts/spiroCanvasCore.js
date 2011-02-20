@@ -57,37 +57,7 @@ var spiroCanvasCore = (function()
 		newPoint.x 	=	originPoint.x + aMinusb * Math.cos(my.angle) + p * Math.cos(my.angle * aMinusbOverb);
 		newPoint.y 	=	originPoint.y + aMinusb * Math.sin(my.angle) - p * Math.sin(my.angle * aMinusbOverb);
 		
-		//draw the "drawing circles"
-		my.drawCircles(originPoint, newPoint, R, r, true);
-
-		//draw a shadow behind the spirograph line
-		ct.save();
-		ct.strokeStyle	=	'rgba(125, 125, 125, 0.2)';
-		ct.lineWidth	=	5;
-		ct.beginPath();
-		ct.moveTo(oldPoint.x, oldPoint.y);
-		ct.lineTo(newPoint.x, newPoint.y);
-		ct.stroke();
-		ct.closePath();
-		ct.restore();
-		
-		//plot a line to the new point
-		ct.beginPath();
-		ct.moveTo(oldPoint.x, oldPoint.y);
-		ct.lineTo(Math.floor(newPoint.x), Math.floor(newPoint.y));
-		ct.stroke();
-		ct.closePath();
-		
-		//check if all the points are drawn. if yes, it clears the loop.
-		currentPointID++;
-		if(currentPointID >= maxPoints)
-		{
-			ct.closePath();
-			self.clearInterval(my.loopID);
-			my.loopID 	=	-1;
-		}
-		
-		oldPoint	=	newPoint;
+		drawLineTo(ct, R, r, p, maxPoints, originPoint, newPoint);
 	};
 	
 	//This Epitrochoid function will be invoked repeatedly at a rate set by the user.
@@ -99,42 +69,11 @@ var spiroCanvasCore = (function()
 		var newPoint=	{x:0, y:0};
 		my.angle += angleStep;
 		
-		//calculates the point using updated angle and Hypotrochoid formula
+		//calculates the point using updated angle and Epitrochoid formula
 		newPoint.x	=	originPoint.x + aPlusb * Math.cos(my.angle) - p * Math.cos(my.angle * aPlusbOverb);
 		newPoint.y	=	originPoint.y + aPlusb * Math.sin(my.angle) - p * Math.sin(my.angle * aPlusbOverb);
 		
-		//draw the "drawing circles"
-		my.drawCircles(originPoint, newPoint, R, r, false);
-		
-		//draw a shadow behind the spirograph line
-		ct.save();
-		ct.strokeStyle		=	'rgba(125, 125, 125, 0.2)';
-		ct.lineWidth	=	5;
-		ct.beginPath();
-		ct.moveTo(oldPoint.x, oldPoint.y);
-		ct.lineTo(newPoint.x, newPoint.y);
-		ct.stroke();
-		ct.closePath();
-		ct.restore();
-		
-		
-		//plot a line to the new point
-		ct.beginPath();
-		ct.moveTo(oldPoint.x, oldPoint.y);
-		ct.lineTo(Math.floor(newPoint.x), Math.floor(newPoint.y));
-		ct.stroke();
-		ct.closePath();
-		
-		//check if all the points are drawn. if yes, it clears the loop.
-		currentPointID++;
-		if(currentPointID >= maxPoints)
-		{
-			ct.closePath();
-			self.clearInterval(my.loopID);
-			my.loopID 	=	-1;
-		}
-		
-		oldPoint	=	newPoint;
+		drawLineTo(ct, R, r, p, maxPoints, originPoint, newPoint);
 	};
 
 	//This function is invoked when the Redraw button is pressed
@@ -212,6 +151,103 @@ var spiroCanvasCore = (function()
 		}
 	};
 	
+	//This function is to draw the spirograph instantly, without the animation (for preview purposes)
+	my.drawInstantSpiro 	=	function (canvasSpiroID, canvasBGID, speed, R, r, p, foreColorHSV, bgColorHSV, res, curvePercent)	
+	{
+		//if a curve is being drawn, stop it
+		if(my.loopID != -1)
+		{
+			self.clearInterval(my.loopID);
+			my.loopID		=	-1;
+		}
+		
+		//declare and reset all the variables
+		my.angle			=	0;
+		currentPointID		=	0;
+		var NumRevolutions	=	0;
+		var NumPoints		=	0;
+		var PointsPerCurve	=	res;
+		var centerPoint		=	{x:0, y:0};
+		var curveType		=	"";
+		canvasBase			=	document.getElementById(canvasSpiroID);
+		ct					=	canvasBase.getContext('2d');
+		
+		//if r is negative, set curveType as hypotrochoid
+		//otherwise, make it as epitrochoid.
+		if ( r < 0 )
+		{
+			r				*=	-1;
+			curveType		=	"hypotrochoid";
+		}
+		else
+		{
+			curveType		=	"epitrochoid";
+		}
+		
+		//calculates the necessary variable to draw the curve
+		angleStep			=	(Math.PI * 2) / PointsPerCurve;
+		NumRevolutions		=	r / MMath.HCF (R, r);
+		NumPoints			=	PointsPerCurve * NumRevolutions / curvePercent;
+		centerPoint.x		=	canvasBase.width / 2;
+		centerPoint.y		=	canvasBase.height / 2;
+		
+		//pre-calculation of frequently required terms
+		aMinusb				=	R - r;
+		aMinusbOverb		=	aMinusb / r;
+		aPlusb				=	R + r;
+		aPlusbOverb			=	aPlusb / r;
+		
+		//sets the context colors
+		var bgRGB			=	$.jPicker.ColorMethods.hsvToRgb(bgColorHSV);
+		var bgHEX			=	RGBtoHex(bgRGB.r, bgRGB.g, bgRGB.b);
+		var foreRGB1		=	$.jPicker.ColorMethods.hsvToRgb(foreColorHSV);
+		var foreRGB2		=	$.jPicker.ColorMethods.hsvToRgb( { h:foreColorHSV.h - 20, s:foreColorHSV.s - 20, v:foreColorHSV.v + 20} );
+		var foreHEX1		=	"#" + RGBtoHex(foreRGB1.r, foreRGB1.g, foreRGB1.b);
+		var foreHEX2		=	"#" + RGBtoHex(foreRGB2.r, foreRGB2.g, foreRGB2.b);
+		penColorRGB			=	foreRGB1;
+		var lingrad 		=	ct.createLinearGradient(0,0,300,600);
+			lingrad.addColorStop(0,		foreHEX1);
+			lingrad.addColorStop(0.6,	foreHEX2);
+		ct.fillStyle		=	"#" + bgHEX;
+		ct.strokeStyle		=	lingrad;
+		
+		//based on the curveType, call corresponding functions repeatedly
+		if (curveType == "hypotrochoid")
+		{
+			oldPoint.x		=	centerPoint.x + R - r + p;
+			oldPoint.y		=	centerPoint.y;
+			
+			for (i = 0; i < NumPoints; i++)
+			{
+				var newPoint=	{x:0, y:0};		
+				my.angle 		+=	angleStep;
+		
+				//calculates the point using updated angle and Hypotrochoid formula
+				newPoint.x 	=	centerPoint.x + aMinusb * Math.cos(my.angle) + p * Math.cos(my.angle * aMinusbOverb);
+				newPoint.y 	=	centerPoint.y + aMinusb * Math.sin(my.angle) - p * Math.sin(my.angle * aMinusbOverb);
+				
+				drawLineTo(ct, R, r, p, 99999, centerPoint, newPoint);
+			}
+		}
+		else if(curveType == "epitrochoid")
+		{
+			oldPoint.x		=	centerPoint.x + R + r - p;
+			oldPoint.y		=	centerPoint.y;
+			
+			for (i = 0; i < NumPoints; i++)
+			{
+				var newPoint=	{x:0, y:0};		
+				my.angle 		+=	angleStep;
+		
+				//calculates the point using updated angle and Epitrochoid formula
+				newPoint.x	=	centerPoint.x + aPlusb * Math.cos(my.angle) - p * Math.cos(my.angle * aPlusbOverb);
+				newPoint.y	=	centerPoint.y + aPlusb * Math.sin(my.angle) - p * Math.sin(my.angle * aPlusbOverb);
+				
+				drawLineTo(ct, R, r, p, 99999, centerPoint, newPoint);
+			}
+		}
+	};
+	
 	//clear the spirograph
 	my.clearSpiro	=	function (canvasSpiroID)
 	{
@@ -275,17 +311,61 @@ var spiroCanvasCore = (function()
 		var canvasBG		=	document.getElementById(canvasBGID);
 		var ct				=	canvasBG.getContext('2d');
 		
+		//get the RGB value of the given HSV color
 		var bgRGB1			=	$.jPicker.ColorMethods.hsvToRgb(hsv);
+		//get the RGB value of the given HSV color, after altering its Saturation and value a little
 		var bgRGB2			=	$.jPicker.ColorMethods.hsvToRgb( { h:hsv.h, s:hsv.s - 10, v:hsv.v + 10} );
+		
+		//convert the RGB to Hex('#ff0000') format for both the colors
 		var bgHex1			=	"#" + RGBtoHex(bgRGB1.r, bgRGB1.g, bgRGB1.b);
 		var bgHex2			=	"#" + RGBtoHex(bgRGB2.r, bgRGB2.g, bgRGB2.b);
+		
+		//construct a gradient effect and apply it to the canvas's fill style
 		var lingrad 		=	ct.createLinearGradient(0,0,300,600);
 			lingrad.addColorStop(0,		bgHex1);
 			lingrad.addColorStop(0.7,	bgHex2);
 			lingrad.addColorStop(1,		bgHex1);
 		ct.fillStyle		=	lingrad;
+		
+		//clear and fill the canvas
 		ct.clearRect(0, 0, canvasBG.width, canvasBG.height);
 		ct.fillRect(0, 0, canvasBG.width, canvasBG.height);
+	}
+	
+	function drawLineTo(ct, R, r, p, maxPoints, originPoint, newPoint)
+	{
+		//draw the "drawing circles"
+		my.drawCircles(originPoint, newPoint, R, r, false);
+		
+		//draw a shadow behind the spirograph line
+		ct.save();
+		ct.strokeStyle		=	'rgba(125, 125, 125, 0.2)';
+		ct.lineWidth	=	5;
+		ct.beginPath();
+		ct.moveTo(oldPoint.x, oldPoint.y);
+		ct.lineTo(newPoint.x, newPoint.y);
+		ct.stroke();
+		ct.closePath();
+		ct.restore();
+		
+		
+		//plot a line to the new point
+		ct.beginPath();
+		ct.moveTo(oldPoint.x, oldPoint.y);
+		ct.lineTo(Math.floor(newPoint.x), Math.floor(newPoint.y));
+		ct.stroke();
+		ct.closePath();
+		
+		//check if all the points are drawn. if yes, it clears the loop.
+		currentPointID++;
+		if(currentPointID >= maxPoints)
+		{
+			ct.closePath();
+			self.clearInterval(my.loopID);
+			my.loopID 	=	-1;
+		}
+		
+		oldPoint	=	newPoint;
 	}
 	
 	function RGBtoHex(R,G,B)
