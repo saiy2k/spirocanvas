@@ -29,12 +29,13 @@ var spiroCanvasUI = (function()
 	
 	var layerCount			=	0;
 	var currentLayerID		=	-1;
-	var layerWidgets		=	new Array();
 	
 	my.initUI 		=	function ()
 	{
 		jQuery(function()
-		{		
+		{
+			$('#previewCanvas').hide();
+			
 			//moves the canvasContainer (inside which our canvas tag resides) to the center of the screen
 			$("#canvasContainer").center();
 			
@@ -57,6 +58,38 @@ var spiroCanvasUI = (function()
 			
 			//moves the floating toolbox (which includes all the sliders) to the left center of the screen
 			$("#toolBox").leftCenter();
+			
+			$( "#drawButton" ).mouseover
+			(
+				function()
+				{
+					if(spiroCanvasCore.isDrawingInstant)
+					{
+						console.log('returning');
+						return;
+					}
+						
+					var R 			=	$('#circle1RadiusSlider').slider('value') / 4;
+					var r 			=	$('#circle2RadiusSlider').slider('value') / 4;
+					var p 			=	$('#pointDistanceSlider').slider('value') / 4;
+					var foreColor	=	$.jPicker.List[0].color.active.val('hsv');
+					var bgColor		=	$.jPicker.List[1].color.active.val('hsv');
+					var speed		=	$('#speedSlider').slider('value');
+					var res			=	$('#resolutionSlider').slider('value') / 4;
+					
+					$('#previewCanvas').show();
+					spiroCanvasCore.clearSpiro('previewCanvas');
+					spiroCanvasCore.drawInstantSpiro('previewCanvas', 'previewCanvas', speed, R, r, p, foreColor, bgColor, res, 1);
+				}
+			);
+			
+			$( "#drawButton" ).mouseout
+			(
+				function()
+				{
+					$('#previewCanvas').hide();
+				}
+			);
 			
 			//click handler for reDraw Button. Calls the the drawSpiro function in spiroCanvasCore
 			//to draw a new spirograph with appropriate parameters
@@ -91,8 +124,6 @@ var spiroCanvasUI = (function()
 					
 					spiroCanvasCore.drawSpiro('canvasSpiro' + layerCount, 'canvasBG', speed, R, r, p, foreColor, bgColor, res, 1);
 					//spiroCanvasCore.drawInstantSpiro('canvasSpiro', 'canvasBG', speed, R, r, p, foreColor, bgColor, res, 1);
-
-					layerWidgets[currentLayerID]	=	'Layer ' +  layerCount;
 				}
 			);
 			

@@ -33,6 +33,7 @@ var spiroCanvasCore = (function()
 	var my 			=	{};
 	my.loopID		=	-1;			//keeps track of the ID of the Loop. It will be -1, if curve drawing is not happening
 	my.angle		=	0.0;		//current angle	
+	my.isDrawingInstant	= 	false;	//flag that indicates if the Instant is currently being drawn
 	var angleStep;					//amount of angle to increment on each loop (derived from Points/Curve)
 	var currentPointID;				//keeps track of the number of points drawn	
 	var oldPoint	=	{x:0, y:0}; //previous point of the spirograph
@@ -57,7 +58,7 @@ var spiroCanvasCore = (function()
 		newPoint.x 	=	originPoint.x + aMinusb * Math.cos(my.angle) + p * Math.cos(my.angle * aMinusbOverb);
 		newPoint.y 	=	originPoint.y + aMinusb * Math.sin(my.angle) - p * Math.sin(my.angle * aMinusbOverb);
 		
-		drawLineTo(ct, R, r, p, maxPoints, originPoint, newPoint);
+		drawLineTo(ct, R, r, p, maxPoints, originPoint, newPoint, true);
 	};
 	
 	//This Epitrochoid function will be invoked repeatedly at a rate set by the user.
@@ -73,7 +74,7 @@ var spiroCanvasCore = (function()
 		newPoint.x	=	originPoint.x + aPlusb * Math.cos(my.angle) - p * Math.cos(my.angle * aPlusbOverb);
 		newPoint.y	=	originPoint.y + aPlusb * Math.sin(my.angle) - p * Math.sin(my.angle * aPlusbOverb);
 		
-		drawLineTo(ct, R, r, p, maxPoints, originPoint, newPoint);
+		drawLineTo(ct, R, r, p, maxPoints, originPoint, newPoint, true);
 	};
 
 	//This function is invoked when the Redraw button is pressed
@@ -154,6 +155,8 @@ var spiroCanvasCore = (function()
 	//This function is to draw the spirograph instantly, without the animation (for preview purposes)
 	my.drawInstantSpiro 	=	function (canvasSpiroID, canvasBGID, speed, R, r, p, foreColorHSV, bgColorHSV, res, curvePercent)	
 	{
+		isDrawingInstant	=	true;
+		
 		//if a curve is being drawn, stop it
 		if(my.loopID != -1)
 		{
@@ -226,7 +229,7 @@ var spiroCanvasCore = (function()
 				newPoint.x 	=	centerPoint.x + aMinusb * Math.cos(my.angle) + p * Math.cos(my.angle * aMinusbOverb);
 				newPoint.y 	=	centerPoint.y + aMinusb * Math.sin(my.angle) - p * Math.sin(my.angle * aMinusbOverb);
 				
-				drawLineTo(ct, R, r, p, 99999, centerPoint, newPoint);
+				drawLineTo(ct, R, r, p, 99999, centerPoint, newPoint, false);
 			}
 		}
 		else if(curveType == "epitrochoid")
@@ -243,9 +246,11 @@ var spiroCanvasCore = (function()
 				newPoint.x	=	centerPoint.x + aPlusb * Math.cos(my.angle) - p * Math.cos(my.angle * aPlusbOverb);
 				newPoint.y	=	centerPoint.y + aPlusb * Math.sin(my.angle) - p * Math.sin(my.angle * aPlusbOverb);
 				
-				drawLineTo(ct, R, r, p, 99999, centerPoint, newPoint);
+				drawLineTo(ct, R, r, p, 99999, centerPoint, newPoint, false);
 			}
 		}
+		
+		isDrawingInstant	=	false;
 	};
 	
 	//clear the spirograph
@@ -332,10 +337,11 @@ var spiroCanvasCore = (function()
 		ct.fillRect(0, 0, canvasBG.width, canvasBG.height);
 	}
 	
-	function drawLineTo(ct, R, r, p, maxPoints, originPoint, newPoint)
+	function drawLineTo(ct, R, r, p, maxPoints, originPoint, newPoint, toDrawCircle)
 	{
 		//draw the "drawing circles"
-		my.drawCircles(originPoint, newPoint, R, r, false);
+		if (toDrawCircle)
+			my.drawCircles(originPoint, newPoint, R, r, false);
 		
 		//draw a shadow behind the spirograph line
 		ct.save();
