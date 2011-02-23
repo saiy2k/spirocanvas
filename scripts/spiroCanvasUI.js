@@ -26,7 +26,7 @@ is initUI and it will be called, when the body is loaded
 var spiroCanvasUI = (function()
 {
 	var my 			=	{};
-	
+	var tmpCore;
 	var layerCount			=	0;
 	var currentLayerID		=	-1;
 	
@@ -34,52 +34,29 @@ var spiroCanvasUI = (function()
 	{
 		jQuery(function()
 		{
-			$('#previewCanvas').hide();
-			
-			//moves the canvasContainer (inside which our canvas tag resides) to the center of the screen
-			$("#canvasContainer").center();
-			
-			//makes the <UL> in layersPanel selectable
-			$("#layersPanelSelectable").selectable
-			({
-				cancel: 'a',
-				selected: function(event, ui)
-				{ 
-					console.log(ui.selected.id);
-				}
-			});
-			
-			//position the layers bar to the right of the canvas Container
-			$("#layersPanel").offset
-			({
-				top: $("#canvasContainer").offset().top + 50,
-				left: $("#canvasContainer").offset().left + $("#canvasContainer").width() + 4
-			});
-			
-			//moves the floating toolbox (which includes all the sliders) to the left center of the screen
-			$("#toolBox").leftCenter();
-			
 			$( "#drawButton" ).mouseover
 			(
-				function()
+				function(e)
 				{
-					if(spiroCanvasCore.isDrawingInstant)
-					{
-						console.log('returning');
-						return;
-					}
-						
-					var R 			=	$('#circle1RadiusSlider').slider('value') / 4;
-					var r 			=	$('#circle2RadiusSlider').slider('value') / 4;
-					var p 			=	$('#pointDistanceSlider').slider('value') / 4;
-					var foreColor	=	$.jPicker.List[0].color.active.val('hsv');
-					var bgColor		=	$.jPicker.List[1].color.active.val('hsv');
-					var speed		=	$('#speedSlider').slider('value');
-					var res			=	$('#resolutionSlider').slider('value') / 4;
+					//creating a new Spirograph object
+					var tmpSpiro	=	new SpiroCanvas.spiroGraph();
 					
-					$('#previewCanvas').show();
+					//initiating the new object with vales from the controls
+					tmpSpiro.R		=	$('#circle1RadiusSlider').slider('value') / 4;
+					tmpSpiro.r 		=	$('#circle2RadiusSlider').slider('value') / 4;
+					tmpSpiro.p 		=	$('#pointDistanceSlider').slider('value') / 4;
+					tmpSpiro.color	=	$.jPicker.List[0].color.active.val('hsv');
+					var bgColor		=	$.jPicker.List[1].color.active.val('hsv');
+					tmpSpiro.speed	=	$('#speedSlider').slider('value');
+					tmpSpiro.res	=	$('#resolutionSlider').slider('value') / 4;
+					
+					$('#previewCanvas').css( 'top',  (e.pageY - 240) + "px");
+					$('#previewCanvas').css( 'left', (e.pageX + 5) + "px");
+					
+					$('#previewCanvas').fadeIn();
 					spiroCanvasCore.clearSpiro('previewCanvas');
-					spiroCanvasCore.drawInstantSpiro('previewCanvas', 'previewCanvas', speed, R, r, p, foreColor, bgColor, res, 1);
+					//in future the spirograph object will be passed directly to the drawing functions, instead of passing the members one by one
+					spiroCanvasCore.drawInstantSpiro('previewCanvas', 'previewCanvas', tmpSpiro.speed, tmpSpiro.R, tmpSpiro.r, tmpSpiro.p, tmpSpiro.color, bgColor, tmpSpiro.res, 1);
 				}
 			);
 			
@@ -87,7 +64,7 @@ var spiroCanvasUI = (function()
 			(
 				function()
 				{
-					$('#previewCanvas').hide();
+					$('#previewCanvas').fadeOut();
 				}
 			);
 			
@@ -127,26 +104,39 @@ var spiroCanvasUI = (function()
 				}
 			);
 			
+			//will get invoked, if the close button on any of the layers is pressed
 			$('#removeLayerWidget').live('click', function()
 			{
-				var obj = $(this).parent()[0];
-				var text = obj.id;
-				var id	=	text.substring(11, 13);
-				var canvasid = "#canvasSpiro" + id;
-				$(canvasid).remove();
-				console.log(canvasid);
-				$(this).parent().remove();
+				var itemID		=	$(this).parent()[0].id;			//gets the id of <li> element
+				var no			=	itemID.substring(11, 13);		//retrieves the number at the end
+				var canvasid	=	"#canvasSpiro" + no;			//append the id to 'canvasSpriro' to refer to the canvas
+				$(canvasid).remove();								//remove the canvas
+				$(this).parent().remove();							//remove the <li> element
 				return false;
 			});
 			
-			//click handler for clear Button. clears the spirocanvas
-			$( "#clearButton" ).click
-			(
-				function()
-				{
-					spiroCanvasCore.clearSpiro('canvasSpiro');
+			//moves the canvasContainer (inside which our canvas tag resides) to the center of the screen
+			$("#canvasContainer").center();
+			
+			//makes the <UL> in layersPanel selectable
+			$("#layersPanelSelectable").selectable
+			({
+				cancel: 'a',
+				selected: function(event, ui)
+				{ 
+					//console.log(ui.selected.id);
 				}
-			);
+			});
+			
+			//position the layers bar to the right of the canvas Container
+			$("#layersPanel").offset
+			({
+				top: $("#canvasContainer").offset().top + 50,
+				left: $("#canvasContainer").offset().left + $("#canvasContainer").width() + 4
+			});
+			
+			//moves the floating toolbox (which includes all the sliders) to the left center of the screen
+			$("#toolBox").leftCenter();
 			
 			//transforms the foregroundColorDiv to a colorpicker
 			$('#foregroundColorDiv').jPicker
@@ -159,7 +149,7 @@ var spiroCanvasUI = (function()
 					color:
 					{
 						alphaSupport: true,
-						active: new $.jPicker.Color({ ahex: '000000ff' })
+						active: new $.jPicker.Color({ ahex: 'ffffffff' })
 					}
 				}
 			);
@@ -175,46 +165,17 @@ var spiroCanvasUI = (function()
 					color:
 					{
 						alphaSupport: true,
-						active: new $.jPicker.Color({ ahex: 'ffffffff' })
+						active: new $.jPicker.Color({ ahex: '00000000' })
 					}
 				},
-				function(color, context)
-				{
-				},
-				function(color, context)
-				{
-					spiroCanvasCore.drawBG('canvasBG', color.val('hsv'));
-				},
-				function(color, context)
-				{
-				}
+				function(color, context) {},
+				function(color, context) { spiroCanvasCore.drawBG('canvasBG', color.val('hsv')); },
+				function(color, context) {}
 			);
-
-			//transforms the canvasContainer to a resizable panel with a fixed aspect ratio
-			$( "#canvasContainer" ).resizable
-			({
-				aspectRatio		:	4 / 3,
-				minWidth		:	800,
-				minHeight		:	600
-			});
 			
-			//moves the canvasContainer to the center of the screen, whenever it's resized
-			//and also adjusts the size of canvasSpiro (the real canvas) to match the
-			//size of canvasContainer
-			$( "#canvasContainer" ).bind
-			(
-				"resize",	function(event, ui)
-							{
-								$("#canvasContainer").center();
-								$("#canvasSpiro").width($("#canvasContainer").width());
-								$("#canvasSpiro").height($("#canvasContaine").height());
-								$("#canvasBG").width($("#canvasContainer").width());
-								$("#canvasBG").height($("#canvasContaine").height());
-								$("#canvasCircle").width($("#canvasContainer").width());
-								$("#canvasCircle").height($("#canvasContaine").height());
-							}
-			);
-		
+			//hides the preview layer. This will be shown during mouse over on Draw button
+			$('#previewCanvas').hide();
+					
 			//transforms the circle1RadiusSlider into a slider with a specific min and
 			//max values. Also, the label is updated as and when the slider value is changed
 			//This slider is used to adjust the radius of the fixed circle

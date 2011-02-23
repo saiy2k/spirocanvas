@@ -161,12 +161,12 @@ var spiroCanvasCore = (function()
 		if(my.loopID != -1)
 		{
 			self.clearInterval(my.loopID);
-			my.loopID		=	-1;
+			my.loopID			=	-1;
 		}
 		
 		//declare and reset all the variables
-		my.angle			=	0;
-		currentPointID		=	0;
+		var tAngle			=	0;
+		var tCurrentPointID	=	0;
 		var NumRevolutions	=	0;
 		var NumPoints		=	0;
 		var PointsPerCurve	=	res;
@@ -223,11 +223,11 @@ var spiroCanvasCore = (function()
 			for (i = 0; i < NumPoints; i++)
 			{
 				var newPoint=	{x:0, y:0};		
-				my.angle 		+=	angleStep;
+				tAngle 		+=	angleStep;
 		
 				//calculates the point using updated angle and Hypotrochoid formula
-				newPoint.x 	=	centerPoint.x + aMinusb * Math.cos(my.angle) + p * Math.cos(my.angle * aMinusbOverb);
-				newPoint.y 	=	centerPoint.y + aMinusb * Math.sin(my.angle) - p * Math.sin(my.angle * aMinusbOverb);
+				newPoint.x 	=	centerPoint.x + aMinusb * Math.cos(tAngle) + p * Math.cos(tAngle * aMinusbOverb);
+				newPoint.y 	=	centerPoint.y + aMinusb * Math.sin(tAngle) - p * Math.sin(tAngle * aMinusbOverb);
 				
 				drawLineTo(ct, R, r, p, 99999, centerPoint, newPoint, false);
 			}
@@ -240,11 +240,11 @@ var spiroCanvasCore = (function()
 			for (i = 0; i < NumPoints; i++)
 			{
 				var newPoint=	{x:0, y:0};		
-				my.angle 		+=	angleStep;
+				tAngle 		+=	angleStep;
 		
 				//calculates the point using updated angle and Epitrochoid formula
-				newPoint.x	=	centerPoint.x + aPlusb * Math.cos(my.angle) - p * Math.cos(my.angle * aPlusbOverb);
-				newPoint.y	=	centerPoint.y + aPlusb * Math.sin(my.angle) - p * Math.sin(my.angle * aPlusbOverb);
+				newPoint.x	=	centerPoint.x + aPlusb * Math.cos(tAngle) - p * Math.cos(tAngle * aPlusbOverb);
+				newPoint.y	=	centerPoint.y + aPlusb * Math.sin(tAngle) - p * Math.sin(tAngle * aPlusbOverb);
 				
 				drawLineTo(ct, R, r, p, 99999, centerPoint, newPoint, false);
 			}

@@ -27,6 +27,8 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	<script type="text/javascript" src="scripts/jqueryui/js/jquery-ui-1.8.9.custom.min.js"></script>
 	<script type="text/javascript" src="scripts/jpicker-1.1.6.min.js"></script>
 	<script type="text/javascript" src="scripts/MMath.js"></script>
+	<script type="text/javascript" src="scripts/spiroCanvas.js"></script>
+	<script type="text/javascript" src="scripts/spiroGraph.js"></script>
 	<script type="text/javascript" src="scripts/spiroCanvasUI.js"></script>
 	<script type="text/javascript" src="scripts/spiroCanvasCore.js"></script>
 	
@@ -76,22 +78,17 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 		<span id="backgroundColorDiv"></span>
 	</div>
 	<div id="statusLeftPanel">
-		<a href="#" id="clearButton">Clear</a>
-	</div>
-	<div id="statusLeftPanel">
 		<a href="#" id="drawButton">Draw</a>
 	</div>
 </div>
 
 <div id="canvasContainer" style="position:relative;">
-	<canvas id="canvasBG" 		width="800" height="600" style="position:absolute; left:0px; top:0px; z-index:0;"></canvas>
+	<canvas id="canvasBG" 		width="800" height="600" style="position:absolute; left:0px; top:0px; z-index:0; background-color:#000"></canvas>
 	<canvas id="canvasCircle" 	width="800" height="600" style="position:absolute; left:0px; top:0px; z-index:1;"></canvas>
 </div>
 <div id="layersPanel">
 	<ul id="layersPanelSelectable"></ul>
 </div>
-
-<canvas id="previewCanvas" width="320" height="240" style="position:absolute; top:400; left: 200; background-color: #ffffff; border:1px solid"> </canvas>
 
 <div id="toolBox">
 	<div id="toolBoxVerticalPanel">
@@ -123,6 +120,8 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 		
 	</div>
 </div>
+
+<canvas id="previewCanvas" width="320" height="240" style="position:absolute; background-color: #ffffff; border:1px solid"> </canvas>
 
 </body>
 </html>

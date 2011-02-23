@@ -19,9 +19,10 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 
 body
 {
-	background-color: 		#eee;
+	background-color: 		#000;
 	font-family:			georgia;
 	font-size:				12px;
+	color:					#aaa;
 }
 a
 {
@@ -42,8 +43,8 @@ a
 	width:					100px;
 	height:					500px;
 	position:				absolute;
-	background-color:		#ddd;
-	border:					2px solid #aaaaaa;
+	background-color:		#111;
+	border:					2px solid #555;
 	border-left:			none;
 }
 
@@ -58,8 +59,8 @@ a
 	position:				absolute;
 	width:					150px;
 	height:					400px;
-	background-color:		#ddd;
-	border:					1px solid #bbb;
+	background-color:		#111;
+	border:					1px solid #555;
 }
 #toolBoxVerticalPanel
 {
@@ -79,20 +80,20 @@ a
 	left:					0px;
 	right:					0px;
 	height:					30px;
-	background-color: 		#ddd;
-	border-top:				1px solid #bbb;
+	background-color: 		#111;
+	border-top:				1px solid #555;
 }
 #statusRightPanel
 {
 	float:					right;
 	margin:					4px;
 	padding:				2px 8px 2px 8px;
-	background-color:		#eee;
+	background-color:		#333;
 }
 #statusLeftPanel
 {
 	float:					left;
 	margin:					4px;
 	padding:				2px 8px 2px 8px;
-	background-color:		#eee;
+	background-color:		#333;
 }
