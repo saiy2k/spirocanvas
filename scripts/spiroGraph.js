@@ -28,10 +28,15 @@ and saved in an array
 
 SpiroCanvas.spiroGraph = function()
 {
-	this.R		=	0;
-	this.r		=	0;
-	this.p		=	0;
-	this.res	=	0;
-	this.speed	=	0;
-	this.color	=	{};
+	this.R			=	0;				//Radius of the fixed Circle
+	this.r			=	0;				//Radius of the mobile Circle
+	this.p			=	0;				//Distance of drawing point from the center of mobile Circle
+	this.res		=	0;				//Number of points per curve
+	this.speed		=	0;				//Speed of drawing the curve
+	this.color		=	{	
+							h:0,
+							s:0,
+							v:0
+						};				//line color of the spirograph in hsv format
+	this.isEpi		=	true;			//is epitrochoid and not hypotrochoid
 };

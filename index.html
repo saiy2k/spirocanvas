@@ -29,8 +29,8 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	<script type="text/javascript" src="scripts/MMath.js"></script>
 	<script type="text/javascript" src="scripts/spiroCanvas.js"></script>
 	<script type="text/javascript" src="scripts/spiroGraph.js"></script>
-	<script type="text/javascript" src="scripts/spiroCanvasUI.js"></script>
 	<script type="text/javascript" src="scripts/spiroCanvasCore.js"></script>
+	<script type="text/javascript" src="scripts/spiroCanvasUI.js"></script>
 	
 	<script language="javascript">
 		(function( $ )
@@ -53,10 +53,15 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 				return this;
 			};
 		})( jQuery );
+		
+		function init()
+		{
+			SpiroCanvas.spiroCanvasUI.initUI();
+		}
 	</script>	
 </head>
 
-<body onload="spiroCanvasUI.initUI();"> 
+<body onload="init()"> 
 
 <div id="statusDiv">
 	<div id="statusRightPanel">
@@ -78,7 +83,7 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 		<span id="backgroundColorDiv"></span>
 	</div>
 	<div id="statusLeftPanel">
-		<a href="#" id="drawButton">Draw</a>
+		<a href="#" style="text-decoration:none;"><div id="drawButton" style="width:60px; height:30px; text-align:center; text-decoration:none;">Draw</div></a>
 	</div>
 </div>
 
@@ -121,7 +126,7 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	</div>
 </div>
 
-<canvas id="previewCanvas" width="320" height="240" style="position:absolute; background-color: #ffffff; border:1px solid"> </canvas>
+<canvas id="previewCanvas" width="320" height="240" style="position:absolute; background-color: #000; border:1px solid"> </canvas>
 
 </body>
 </html>
