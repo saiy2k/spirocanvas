@@ -36,7 +36,7 @@ SpiroCanvas.spiroCanvasUI = (function()
 	my.initUI 		=	function ()
 	{
 		jQuery(function()
-		{
+		{		
 			$( "#drawButton" ).mouseover
 			(
 				function(e)
@@ -51,7 +51,16 @@ SpiroCanvas.spiroCanvasUI = (function()
 					tmpSpiro.R		=	$('#circle1RadiusSlider').slider('value') / 4;
 					tmpSpiro.r 		=	$('#circle2RadiusSlider').slider('value') / 4;
 					tmpSpiro.p 		=	$('#pointDistanceSlider').slider('value') / 4;
-					tmpSpiro.color	=	$.jPicker.List[0].color.active.val('hsv');
+					var hexCol		= 	$('#foregroundColorDiv').css('background-color');
+					hexCol			=	colorToHex(hexCol);
+					var rgbCol		=	HexToRGB(hexCol);
+					tmpSpiro.color	=	rgbToHsv(rgbCol.r, rgbCol.g, rgbCol.b);
+					
+					hexCol			= 	$('#backgroundColorDiv').css('background-color');
+					hexCol			=	colorToHex(hexCol);
+					rgbCol			=	HexToRGB(hexCol);
+					var bgColor		=	rgbToHsv(rgbCol.r, rgbCol.g, rgbCol.b);
+					
 					tmpSpiro.speed	=	$('#speedSlider').slider('value');
 					tmpSpiro.res	=	$('#resolutionSlider').slider('value') / 4;
 					
@@ -66,14 +75,14 @@ SpiroCanvas.spiroCanvasUI = (function()
 					}
 					
 					//set the position of the preview canvas
-					$('#previewCanvas').css( 'top',  (e.pageY - 240) + "px");
-					$('#previewCanvas').css( 'left', (e.pageX + 5) + "px");
+					$('#previewCanvas').css( 'top',  (e.pageY - 250) + "px");
+					$('#previewCanvas').css( 'left', (e.pageX + 10) + "px");
 					
 					//show the canvas
 					$('#previewCanvas').fadeIn();
 					
 					//clear the canvas first
-					spiroInstant.clearSpiro('previewCanvas');
+					spiroInstant.clearSpiro('previewCanvas', bgColor);
 					
 					//invoke the instant draw function to draw the graph
 					spiroInstant.drawInstantSpiro('previewCanvas', tmpSpiro);
@@ -101,11 +110,19 @@ SpiroCanvas.spiroCanvasUI = (function()
 					tmpSpiro.R		=	$('#circle1RadiusSlider').slider('value');
 					tmpSpiro.r 		=	$('#circle2RadiusSlider').slider('value');
 					tmpSpiro.p 		=	$('#pointDistanceSlider').slider('value');
-					tmpSpiro.color	=	$.jPicker.List[0].color.active.val('hsv');
+					var hexCol		= 	$('#foregroundColorDiv').css('background-color');
+					hexCol			=	colorToHex(hexCol);
+					var rgbCol		=	HexToRGB(hexCol);
+					tmpSpiro.color	=	rgbToHsv(rgbCol.r, rgbCol.g, rgbCol.b);
 					tmpSpiro.speed	=	$('#speedSlider').slider('value');
 					tmpSpiro.res	=	$('#resolutionSlider').slider('value');
 					
-					var bgColor		=	$.jPicker.List[1].color.active.val('hsv');
+					/*
+					var hexCol		= 	$('#foregroundColorDiv').css('background-color');
+					hexCol			=	colorToHex(hexCol);
+					var rgbCol		=	HexToRGB(hexCol);
+					var bgColor		=	rgbToHsv(rgbCol.r, rgbCol.g, rgbCol.b);
+					*/
 					
 					layerCount		=	layerCount + 1;
 					currentLayerID	=	layerCount - 1;
@@ -157,48 +174,12 @@ SpiroCanvas.spiroCanvasUI = (function()
 			({
 				top: $("#canvasContainer").offset().top + 50,
 				left: $("#canvasContainer").offset().left + $("#canvasContainer").width() + 4
-			});
-			
-			//moves the floating toolbox (which includes all the sliders) to the left center of the screen
-			$("#toolBox").leftCenter();
-			
-			//transforms the foregroundColorDiv to a colorpicker
-			$('#foregroundColorDiv').jPicker
-			(
-				{
-					window:
-					{
-						expandable: true
-					},
-					color:
-					{
-						alphaSupport: true,
-						active: new $.jPicker.Color({ ahex: 'ffffffff' })
-					}
-				}
-			);
-			
-			//transforms the backgroundColorDiv to a colorpicker
-			$('#backgroundColorDiv').jPicker
-			(
-				{
-					window:
-					{
-						expandable: true
-					},
-					color:
-					{
-						alphaSupport: true,
-						active: new $.jPicker.Color({ ahex: '00000000' })
-					}
-				},
-				function(color, context) {},
-				function(color, context) { drawBG('canvasBG', color.val('hsv')); },
-				function(color, context) {}
-			);
+			});		
 			
 			//hides the preview layer. This will be shown during mouse over on Draw button
 			$('#previewCanvas').hide();
+			
+			$("#sliderBox").draggable( { handle: "#sliderlBox.toolBoxHeader" } );
 					
 			//transforms the circle1RadiusSlider into a slider with a specific min and
 			//max values. Also, the label is updated as and when the slider value is changed
@@ -301,6 +282,42 @@ SpiroCanvas.spiroCanvasUI = (function()
 									}
 			});
 			
+			$("#colorBox").draggable( { handle: "#colorBox.toolBoxHeader" } );
+			$("#colorBox").css("top", ($("#sliderBox").offset().top + $("#sliderBox").height() + 20) );
+			
+			$( "#foregroundColorDiv" ).ColorPicker
+			({
+				color: '#ffffff',
+				onShow: function (colpkr) {
+					$(colpkr).fadeIn(500);
+					return false;
+				},
+				onHide: function (colpkr) {
+					$(colpkr).fadeOut(500);
+					return false;
+				},
+				onChange: function (hsb, hex, rgb) {
+					$( "#foregroundColorDiv" ).css('backgroundColor', '#' + hex);
+				}
+			});
+			
+			$( "#backgroundColorDiv" ).ColorPicker
+			({
+				color: '#000000',
+				onShow: function (colpkr) {
+					$(colpkr).fadeIn(500);
+					return false;
+				},
+				onHide: function (colpkr) {
+					$(colpkr).fadeOut(500);
+					return false;
+				},
+				onChange: function (hsb, hex, rgb) {
+					$( "#backgroundColorDiv" ).css('backgroundColor', '#' + hex);
+					drawBG('canvasBG', rgb);
+				}
+			});
+			
 			//updateDrawingCircle();
 		});
 	};
@@ -343,15 +360,23 @@ SpiroCanvas.spiroCanvasUI = (function()
 	}
 	
 	//function to fill the background with shades of selected color
-	function drawBG(canvasBGID, hsv)
+	function drawBG(canvasBGID, rgb)
 	{
 		var canvasBG		=	document.getElementById(canvasBGID);
 		var ct				=	canvasBG.getContext('2d');
-		
+		var hsv				=	rgbToHsv(rgb.r, rgb.g, rgb.b);
 		//get the RGB value of the given HSV color
-		var bgRGB1			=	$.jPicker.ColorMethods.hsvToRgb(hsv);
+		var bgRGB1			=	hsvToRgb(hsv.h, hsv.s, hsv. v);
+		var bgRGB2;
 		//get the RGB value of the given HSV color, after altering its Saturation and value a little
-		var bgRGB2			=	$.jPicker.ColorMethods.hsvToRgb( { h:hsv.h, s:hsv.s - 10, v:hsv.v + 10} );
+		if (hsv.v - 0.1 < 0)
+		{
+			 bgRGB2			=	hsvToRgb(hsv.h, hsv.s, hsv.v + 0.1);
+		}
+		else
+		{
+			 bgRGB2			=	hsvToRgb(hsv.h, hsv.s, hsv.v - 0.1);
+		}
 		
 		//convert the RGB to Hex('#ff0000') format for both the colors
 		var bgHex1			=	"#" + RGBtoHex(bgRGB1.r, bgRGB1.g, bgRGB1.b);
@@ -364,9 +389,31 @@ SpiroCanvas.spiroCanvasUI = (function()
 			lingrad.addColorStop(1,		bgHex1);
 		ct.fillStyle		=	lingrad;
 		
+		ct.fillStyle		=	hsv;
 		//clear and fill the canvas
-		ct.clearRect(0, 0, canvasBG.width, canvasBG.height);
 		ct.fillRect(0, 0, canvasBG.width, canvasBG.height);
+	}
+	
+	function hsvToRgb(h, s, v)
+	{
+		var r, g, b;
+
+		var i = Math.floor(h * 6);
+		var f = h * 6 - i;
+		var p = v * (1 - s);
+		var q = v * (1 - f * s);
+		var t = v * (1 - (1 - f) * s);
+
+		switch(i % 6){
+			case 0: r = v, g = t, b = p; break;
+			case 1: r = q, g = v, b = p; break;
+			case 2: r = p, g = v, b = t; break;
+			case 3: r = p, g = q, b = v; break;
+			case 4: r = t, g = p, b = v; break;
+			case 5: r = v, g = p, b = q; break;
+		}
+
+		return { r:r * 255, g:g * 255, b:b * 255 };
 	}
 	
 	function RGBtoHex(R,G,B)
@@ -386,6 +433,56 @@ SpiroCanvas.spiroCanvasUI = (function()
 		N=Math.round(N);
 		return "0123456789ABCDEF".charAt((N-N%16)/16) + "0123456789ABCDEF".charAt(N%16);
 	}
+	
+	function rgbToHsv(r, g, b)
+	{
+		r = r/255, g = g/255, b = b/255;
+		var max = Math.max(r, g, b), min = Math.min(r, g, b);
+		var h, s, v = max;
+
+		var d = max - min;
+		s = max == 0 ? 0 : d / max;
+
+		if(max == min){
+			h = 0; // achromatic
+		}else{
+			switch(max){
+				case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+				case g: h = (b - r) / d + 2; break;
+				case b: h = (r - g) / d + 4; break;
+			}
+			h /= 6;
+		}
+		return { h:h, s:s, v:v };
+	}
+	
+	function HexToRGB(hex)
+	{
+		return	{	r: HexToR(hex),
+					g: HexToG(hex),
+					b: HexToB(hex)
+				};
+	}
+	
+	function HexToR(h) {return parseInt((cutHex(h)).substring(0,2),16)}
+	function HexToG(h) {return parseInt((cutHex(h)).substring(2,4),16)}
+	function HexToB(h) {return parseInt((cutHex(h)).substring(4,6),16)}
+	function cutHex(h) {return (h.charAt(0)=="#") ? h.substring(1,7):h}
+	
+	function colorToHex(color)
+	{
+		if (color.substring(0, 1) === '#') {
+			return color;
+		}
+		var digits = /(.*?)rgb\((\d+), (\d+), (\d+)\)/.exec(color);
+		
+		var red = parseInt(digits[2]);
+		var green = parseInt(digits[3]);
+		var blue = parseInt(digits[4]);
+		
+		var rgb = blue | (green << 8) | (red << 16);
+		return digits[1] + '#' + rgb.toString(16);
+	};
 	
 	return my;
 }());

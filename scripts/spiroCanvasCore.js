@@ -161,8 +161,8 @@ SpiroCanvas.spiroCanvasCore = function()
 		aPlusbOverb			=	aPlusb / r;
 		
 		//sets the context colors
-		ct.strokeStyle		=	prepareLinearGradient(ct, curveData.color);// lingrad;
-		var rgbColor		=	$.jPicker.ColorMethods.hsvToRgb(curveData.color);
+		ct.strokeStyle		=	prepareLinearGradient(ct, curveData.color);
+		var rgbColor		=	hsvToRgb(curveData.color.h, curveData.color.s, curveData.color.v);
 		shadowColor			=	'rgba(' + (255 - rgbColor.r) + ', ' + (255 - rgbColor.g) + ', ' + (255 - rgbColor.b) + ', ' + 0.2 + ')';
 		
 		//based on the curveType, call corresponding functions repeatedly
@@ -260,7 +260,7 @@ SpiroCanvas.spiroCanvasCore = function()
 	};
 	
 	//clear the spirograph
-	this.clearSpiro	=	function (canvasID)
+	this.clearSpiro	=	function (canvasID, color)
 	{
 		//if a curve is being drawn, stop it
 		if(this.loopID != -1)
@@ -271,7 +271,9 @@ SpiroCanvas.spiroCanvasCore = function()
 		
 		var	ctx				=	document.getElementById(canvasID).getContext('2d');
 		
-		ctx.clearRect(0, 0, 800, 600);
+		var rgb				=	hsvToRgb(color.h, color.s, color.v);
+		ctx.fillStyle		=	'#' + RGBtoHex(rgb.r, rgb.g, rgb.b);
+		ctx.fillRect(0, 0, 800, 600);
 	};
 	
 	//draw the drawing circles
@@ -316,7 +318,7 @@ SpiroCanvas.spiroCanvasCore = function()
 	};
 	
 	function drawShadowLine(ct, point1, point2)
-	{			
+	{	
 		ct.save();
 		ct.strokeStyle		=	shadowColor;
 		ct.lineWidth		=	3;
@@ -339,23 +341,54 @@ SpiroCanvas.spiroCanvasCore = function()
 		
 	function prepareLinearGradient(ct, color)
 	{
-		var foreRGB1		=	$.jPicker.ColorMethods.hsvToRgb(color);
-		var foreRGB2		=	$.jPicker.ColorMethods.hsvToRgb( { h:color.h - 20, s:color.s - 20, v:color.v + 20} );
+		var foreRGB1		=	hsvToRgb(color.h, color.s, color.v);
+		var foreRGB2;
+		if (color.v - 0.2 < 0)
+		{
+			foreRGB2		=	hsvToRgb(color.h, color.s, color.v + 0.2);
+		}
+		else
+		{
+			foreRGB2		=	hsvToRgb(color.h, color.s, color.v - 0.2);
+		}
+		
 		var foreHEX1		=	"#" + RGBtoHex(foreRGB1.r, foreRGB1.g, foreRGB1.b);
 		var foreHEX2		=	"#" + RGBtoHex(foreRGB2.r, foreRGB2.g, foreRGB2.b);
 		var lingrad 		=	ct.createLinearGradient(0,0,300,600);
 			lingrad.addColorStop(0,		foreHEX1);
-			lingrad.addColorStop(0.6,	foreHEX2);
+			lingrad.addColorStop(0.7,	foreHEX2);
 		
 		return lingrad;
 	}
 	
 	function HSVToHex(hsv)
 	{
-		var rgb		=	$.jPicker.ColorMethods.hsvToRgb(hsv);
+		var rgb		=	hsvToRgb(hsv.h, hsv.s, hsv.v);
 		var hex		=	RGBtoHex(rgb.r, rgb.g, rgb.b);
 		
 		return			hex;
+	}
+	
+	function hsvToRgb(h, s, v)
+	{
+		var r, g, b;
+
+		var i = Math.floor(h * 6);
+		var f = h * 6 - i;
+		var p = v * (1 - s);
+		var q = v * (1 - f * s);
+		var t = v * (1 - (1 - f) * s);
+
+		switch(i % 6){
+			case 0: r = v, g = t, b = p; break;
+			case 1: r = q, g = v, b = p; break;
+			case 2: r = p, g = v, b = t; break;
+			case 3: r = p, g = q, b = v; break;
+			case 4: r = t, g = p, b = v; break;
+			case 5: r = v, g = p, b = q; break;
+		}
+
+		return { r:r * 255, g:g * 255, b:b * 255 };
 	}
 	
 	function RGBtoHex(R,G,B)

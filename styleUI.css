@@ -54,19 +54,24 @@ a
 #layersPanelSelectable .ui-selecting { background: #FECA40; }
 #layersPanelSelectable .ui-selected { background: #F39814; color: white; }
 
-#toolBox
+.toolBox
 {
 	position:				absolute;
 	width:					150px;
-	height:					400px;
 	background-color:		#111;
 	border:					1px solid #555;
+	padding:				4px;
+	border-radius: 			5px;
 }
-#toolBoxVerticalPanel
+.toolBoxHeader
 {
-	margin:					4px;
+	background-color:		#000000;
+	cursor:					move;
+	margin-bottom:			10px;
+	text-align:				center;
+	font-size:				14px;
 }
-#toolBoxHorizontalPanel
+.toolBoxHorizontalPanel
 {
 	height: 				40px;
 	margin:					2px;
@@ -79,7 +84,7 @@ a
 	bottom:					0px;
 	left:					0px;
 	right:					0px;
-	height:					30px;
+	height:					40px;
 	background-color: 		#111;
 	border-top:				1px solid #555;
 }
