@@ -145,6 +145,59 @@ SpiroCanvas.spiroCanvasUI = (function()
 				}
 			);
 			
+			//handler for Random Button
+			$( "#randomButton" ).click
+			(
+				function()
+				{
+					$('#circle1RadiusSlider').slider('value', Math.random() * 195 + 1);
+					$('#circle2RadiusSlider').slider('value', Math.random() * 98 + 1);
+					$('#pointDistanceSlider').slider('value', Math.random() * 98 + 1);
+					$('#speedSlider').slider('value', 25);
+					$('#resolutionSlider').slider('value', Math.random() * 126 + 2);
+					
+					//creating a new Spirograph object
+					var tmpSpiro	=	new SpiroCanvas.spiroGraph();
+					
+					//initiating the new object with vales from the controls
+					tmpSpiro.R		=	$('#circle1RadiusSlider').slider('value');
+					tmpSpiro.r 		=	$('#circle2RadiusSlider').slider('value');
+					tmpSpiro.p 		=	$('#pointDistanceSlider').slider('value');
+					var hexCol		= 	$('#foregroundColorDiv').css('background-color');
+					hexCol			=	colorToHex(hexCol);
+					var rgbCol		=	HexToRGB(hexCol);
+					tmpSpiro.color	=	rgbToHsv(rgbCol.r, rgbCol.g, rgbCol.b);
+					tmpSpiro.speed	=	$('#speedSlider').slider('value');
+					tmpSpiro.res	=	$('#resolutionSlider').slider('value');
+					
+					/*
+					var hexCol		= 	$('#foregroundColorDiv').css('background-color');
+					hexCol			=	colorToHex(hexCol);
+					var rgbCol		=	HexToRGB(hexCol);
+					var bgColor		=	rgbToHsv(rgbCol.r, rgbCol.g, rgbCol.b);
+					*/
+					
+					layerCount		=	layerCount + 1;
+					currentLayerID	=	layerCount - 1;
+					
+					//creates a new Canvas
+					$("#canvasContainer").append('<canvas id="canvasSpiro' + layerCount + '" '
+						+ 'width="800" height="600" '
+						+ 'style="position:absolute; left:0px; top:0px; z-index:' + (layerCount + 1) + ';"></canvas>'
+					);
+					
+					//make an entry to the layers panel
+					$("#layersPanelSelectable").append(
+						'<li class="ui-widget-content" id="layerWidget' + layerCount + '">' + 
+						'Layer ' +  layerCount + ' ' +
+						'<a href="#" id="removeLayerWidget" border="2">X</a>' +
+						'</li>'
+					);
+					
+					spiroMain.drawSpiro('canvasSpiro' + layerCount, 'canvasBG', tmpSpiro);
+				}
+			);
+			
 			//will get invoked, if the close button on any of the layers is pressed
 			$('#removeLayerWidget').live('click', function()
 			{
@@ -170,16 +223,19 @@ SpiroCanvas.spiroCanvasUI = (function()
 			});
 			
 			//position the layers bar to the right of the canvas Container
-			$("#layersPanel").offset
+			$("#layersBox").offset
 			({
-				top: $("#canvasContainer").offset().top + 50,
-				left: $("#canvasContainer").offset().left + $("#canvasContainer").width() + 4
-			});		
+				top: $("#canvasContainer").offset().top,
+				left: $("#canvasContainer").offset().left + $("#canvasContainer").width() + 15
+			});	
+			$("#layersBox").draggable( { handle: "#layersBox.toolBoxHeader" } );
+			
 			
 			//hides the preview layer. This will be shown during mouse over on Draw button
 			$('#previewCanvas').hide();
 			
 			$("#sliderBox").draggable( { handle: "#sliderlBox.toolBoxHeader" } );
+			$("#sliderBox").css("top", $("#canvasContainer").offset().top );
 					
 			//transforms the circle1RadiusSlider into a slider with a specific min and
 			//max values. Also, the label is updated as and when the slider value is changed

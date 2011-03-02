@@ -38,14 +38,13 @@ a
 	border:					2px solid #bbb;
 }
 
-#layersPanel
+#layersBox
 {
 	width:					100px;
 	height:					500px;
 	position:				absolute;
 	background-color:		#111;
 	border:					2px solid #555;
-	border-left:			none;
 }
 
 #layersPanelSelectable { list-style-type: none; margin: 0; padding: 0; width: 100%; }

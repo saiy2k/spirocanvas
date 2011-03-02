@@ -67,7 +67,10 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	<canvas id="canvasBG" 		width="800" height="600" style="position:absolute; left:0px; top:0px; z-index:0; background-color:#000"></canvas>
 	<canvas id="canvasCircle" 	width="800" height="600" style="position:absolute; left:0px; top:0px; z-index:1;"></canvas>
 </div>
-<div id="layersPanel">
+<div id="layersBox" class="toolBox">
+	<div class="toolBoxHeader">
+		Layers
+	</div>
 	<ul id="layersPanelSelectable"></ul>
 </div>
 
@@ -86,6 +89,9 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	</div>
 	<div id="statusLeftPanel">
 		<a href="#" style="text-decoration:none;"><div id="drawButton" style="width:60px; height:30px; text-align:center; text-decoration:none;">Draw</div></a>
+	</div>
+	<div id="statusLeftPanel">
+		<a href="#" style="text-decoration:none;"><div id="randomButton" style="width:60px; height:30px; text-align:center; text-decoration:none;">Random</div></a>
 	</div>
 </div>
 
@@ -123,7 +129,7 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 
 <div id="colorBox" class="toolBox">
 	<div class="toolBoxHeader">
-		Color Box
+		Color
 	</div>
 	<div id="foregroundColorDiv" style="width:140px; height:24px; background-color:#ffffff; margin:2px; border:1px solid #ffffff"></div>
 	<div id="backgroundColorDiv" style="width:140px; height:24px; background-color:#000000; margin:2px; border:1px solid #ffffff"></div>
