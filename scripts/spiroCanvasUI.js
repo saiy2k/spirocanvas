@@ -29,6 +29,7 @@ SpiroCanvas.spiroCanvasUI = (function()
 	var tmpCore;
 	var layerCount			=	0;
 	var currentLayerID		=	-1;
+	var layersArray			=	new Array();
 	
 	var spiroMain			=	new SpiroCanvas.spiroCanvasCore();
 	var spiroInstant		=	new SpiroCanvas.spiroCanvasCore();
@@ -141,6 +142,10 @@ SpiroCanvas.spiroCanvasUI = (function()
 						'</li>'
 					);
 					
+					layersArray[currentLayerID]	=	"canvasSpiro" + layerCount;
+					
+					console.log(layersArray);
+					
 					spiroMain.drawSpiro('canvasSpiro' + layerCount, 'canvasBG', tmpSpiro);
 				}
 			);
@@ -154,7 +159,13 @@ SpiroCanvas.spiroCanvasUI = (function()
 					$('#circle2RadiusSlider').slider('value', Math.random() * 98 + 1);
 					$('#pointDistanceSlider').slider('value', Math.random() * 98 + 1);
 					$('#speedSlider').slider('value', 25);
-					$('#resolutionSlider').slider('value', Math.random() * 126 + 2);
+					$('#resolutionSlider').slider('value', Math.random() *  $('#circle1RadiusSlider').slider('value') / 2);
+					
+					var rh		=	toHex(Math.random() * 255);
+					var gh		=	toHex(Math.random() * 255);
+					var bh		=	toHex(Math.random() * 255);
+					var hex		=	'#' + rh + gh + bh;
+					$('#foregroundColorDiv').css('background-color', hex);
 					
 					//creating a new Spirograph object
 					var tmpSpiro	=	new SpiroCanvas.spiroGraph();
@@ -190,9 +201,14 @@ SpiroCanvas.spiroCanvasUI = (function()
 					$("#layersPanelSelectable").append(
 						'<li class="ui-widget-content" id="layerWidget' + layerCount + '">' + 
 						'Layer ' +  layerCount + ' ' +
-						'<a href="#" id="removeLayerWidget" border="2">X</a>' +
+						'<a href="#" id="removeLayerWidget" border="2">X</a> &nbsp;' +
+						'<a href="#" id="hideLayerWidget" border="2">H</a>' +
 						'</li>'
 					);
+					
+					layersArray[currentLayerID]	=	"canvasSpiro" + layerCount;
+					
+					console.log(layersArray);
 					
 					spiroMain.drawSpiro('canvasSpiro' + layerCount, 'canvasBG', tmpSpiro);
 				}
@@ -206,6 +222,21 @@ SpiroCanvas.spiroCanvasUI = (function()
 				var canvasid	=	"#canvasSpiro" + no;			//append the id to 'canvasSpriro' to refer to the canvas
 				$(canvasid).remove();								//remove the canvas
 				$(this).parent().remove();							//remove the <li> element
+				removeByElement(layersArray, "canvasSpiro" + no);
+				console.log(layersArray);
+				return false;
+			});
+			
+			//will get invoked, if the hide button on any of the layers is pressed
+			$('#hideLayerWidget').live('click', function()
+			{
+				var itemID		=	$(this).parent()[0].id;			//gets the id of <li> element
+				var no			=	itemID.substring(11, 13);		//retrieves the number at the end
+				var canvasid	=	"#canvasSpiro" + no;			//append the id to 'canvasSpriro' to refer to the canvas
+				if($(canvasid).css('display') == 'none')
+					$(canvasid).css('display', 'block');					//hide the canvas
+				else
+					$(canvasid).css('display', 'none');
 				return false;
 			});
 			
@@ -213,12 +244,21 @@ SpiroCanvas.spiroCanvasUI = (function()
 			$("#canvasContainer").center();
 			
 			//makes the <UL> in layersPanel selectable
-			$("#layersPanelSelectable").selectable
+			$("#layersPanelSelectable").sortable
 			({
-				cancel: 'a',
-				selected: function(event, ui)
-				{ 
-					//console.log(ui.selected.id);
+				update: function(event, ui)
+				{
+					var arr	=	$(this).sortable('toArray');
+					
+					console.log(arr.length);
+					for ( var i = 0; i < arr.length; i++)
+					{
+						var itemID	=	arr[i];
+						var no			=	itemID.substring(11, 13);		//retrieves the number at the end
+						var canvasid	=	"#canvasSpiro" + no;			//append the id to 'canvasSpriro' to refer to the canvas
+						
+						$(canvasid).css('z-index' , i + 2);
+					}					
 				}
 			});
 			
@@ -538,6 +578,15 @@ SpiroCanvas.spiroCanvasUI = (function()
 		
 		var rgb = blue | (green << 8) | (red << 16);
 		return digits[1] + '#' + rgb.toString(16);
+	};
+	
+	function removeByElement(arrayName,arrayElement)
+	{
+		for(var i=0; i<arrayName.length;i++ )
+		{ 
+			if(arrayName[i]==arrayElement)
+				arrayName.splice(i,1); 
+		} 
 	};
 	
 	return my;

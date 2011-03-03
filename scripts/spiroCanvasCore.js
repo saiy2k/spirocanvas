@@ -126,7 +126,7 @@ SpiroCanvas.spiroCanvasCore = function()
 		var p				=	curveData.p;
 		
 		//declare and reset all the variables
-		angle			=	0;
+		this.angle			=	0;
 		currentPointID		=	0;
 		var NumRevolutions	=	0;
 		var NumPoints		=	0;

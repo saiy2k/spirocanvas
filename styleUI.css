@@ -48,7 +48,7 @@ a
 }
 
 #layersPanelSelectable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
-#layersPanelSelectable li { margin: 0 1px 1px 1px; padding: 0.4em; padding-left: 1.5em; height: 18px; }
+#layersPanelSelectable li { margin: 0 1px 1px 1px; padding: 0.4em; padding-left: 0.5em; height: 18px; }
 #layersPanelSelectable li span { position: absolute; margin-left: -1.3em; }
 #layersPanelSelectable .ui-selecting { background: #FECA40; }
 #layersPanelSelectable .ui-selected { background: #F39814; color: white; }
