@@ -38,6 +38,29 @@ SpiroCanvas.spiroCanvasUI = (function()
 	{
 		jQuery(function()
 		{		
+			$( "#saveButton" ).click
+			(
+				function()
+				{
+					var resultCanvas	=	document.getElementById("canvasResult");
+					var bgCanvas		=	document.getElementById("canvasBG");
+					var ctx				=	resultCanvas.getContext('2d');
+					var cty				=	bgCanvas.getContext('2d');
+					
+					var bgImg 			= 	Canvas2Image.saveAsPNG(bgCanvas, true);
+					ctx.drawImage(cty.canvas, 0, 0);
+					
+					for ( var i = 1; i <= layerCount; i++)
+					{
+						var canvasid	=	"canvasSpiro" + i;			//append the id to 'canvasSpriro' to refer to the canvas
+						var ctz			=	document.getElementById(canvasid).getContext('2d');
+						ctx.drawImage(ctz.canvas, 0, 0);
+					}
+					
+					console.log(Canvas2Image.saveAsPNG(resultCanvas));
+				}
+			);
+		
 			$( "#drawButton" ).mouseover
 			(
 				function(e)
@@ -138,7 +161,8 @@ SpiroCanvas.spiroCanvasUI = (function()
 					$("#layersPanelSelectable").append(
 						'<li class="ui-widget-content" id="layerWidget' + layerCount + '">' + 
 						'Layer ' +  layerCount + ' ' +
-						'<a href="#" id="removeLayerWidget" border="2">X</a>' +
+						'<a href="#" id="removeLayerWidget" border="2">X</a> &nbsp;' +
+						'<a href="#" id="hideLayerWidget" border="2">H</a>' +
 						'</li>'
 					);
 					

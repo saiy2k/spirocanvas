@@ -22,6 +22,9 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	<link type="text/css" href="styleUI.css" rel="Stylesheet" />
 	<link type="text/css" href="scripts/jqueryui/css/ui-lightness/jquery-ui-1.8.9.custom.css" rel="Stylesheet" />
 	<link type="text/css" href="scripts/eyeConColorPicker/css/colorpicker.css" rel="Stylesheet" />
+	
+	<script type="text/javascript" src="scripts/base64.js"></script>
+	<script type="text/javascript" src="scripts/canvas2image.js"></script>
 	<script type="text/javascript" src="scripts/jquery.js"></script>
 	<script type="text/javascript" src="scripts/jqueryui/js/jquery-1.4.4.min.js"></script>
 	<script type="text/javascript" src="scripts/jqueryui/js/jquery-ui-1.8.9.custom.min.js"></script>
@@ -66,6 +69,7 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 <div id="canvasContainer" style="position:relative; z-index: -1">
 	<canvas id="canvasBG" 		width="800" height="600" style="position:absolute; left:0px; top:0px; z-index:0; background-color:#000"></canvas>
 	<canvas id="canvasCircle" 	width="800" height="600" style="position:absolute; left:0px; top:0px; z-index:1;"></canvas>
+	<canvas id="canvasResult" 	width="800" height="600" style="display:none;"></canvas>
 </div>
 <div id="layersBox" class="toolBox">
 	<div class="toolBoxHeader">
@@ -85,7 +89,7 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 		TWEET
 	</div>
 	<div id="statusRightPanel">
-		SAVE
+		<a href="#" style="text-decoration:none;"><div id="saveButton" style="width:60px; height:30px; text-align:center; text-decoration:none;">Save</div></a>
 	</div>
 	<div id="statusLeftPanel">
 		<a href="#" style="text-decoration:none;"><div id="drawButton" style="width:60px; height:30px; text-align:center; text-decoration:none;">Draw</div></a>
