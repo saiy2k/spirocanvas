@@ -73,7 +73,10 @@ SpiroCanvas.spiroCanvasCore = function()
 			ct.closePath();
 			self.clearInterval(this.loopID);
 			this.loopID 	=	-1;
+			$( "#progressBar" ).hide();
 		}
+		
+		$( "#progressBar" ).progressbar("value", currentPointID/maxPoints * 100.0);
 		
 		oldPoint	=	newPoint;
 	};
@@ -106,7 +109,10 @@ SpiroCanvas.spiroCanvasCore = function()
 			ct.closePath();
 			self.clearInterval(this.loopID);
 			this.loopID 	=	-1;
+			$( "#progressBar" ).hide();
 		}
+		
+		$( "#progressBar" ).progressbar("value", currentPointID/maxPoints * 100.0);
 		
 		oldPoint	=	newPoint;
 	};
@@ -265,6 +271,7 @@ SpiroCanvas.spiroCanvasCore = function()
 		//if a curve is being drawn, stop it
 		if(this.loopID != -1)
 		{
+			$( "#progressBar" ).hide();
 			self.clearInterval(this.loopID);
 			this.loopID			=	-1;
 		}

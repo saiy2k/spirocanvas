@@ -46,13 +46,16 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		for ( var i = 1; i <= layerCount; i++)
 		{
 			var canvasid	=	"canvasSpiro" + i;
-			var ctz			=	document.getElementById(canvasid).getContext('2d');
-			ctx.drawImage(ctz.canvas, 0, 0);
-			console.log("canvas ID: " + canvasid);
+			if(document.getElementById(canvasid))
+			{
+				var ctz			=	document.getElementById(canvasid).getContext('2d');
+				ctx.drawImage(ctz.canvas, 0, 0);
+				//console.log("canvas ID: " + canvasid);
+			}
 		}
 		
-		window.location     = resultCanvas.toDataURL("image/png");
-
+		//window.location.href     = resultCanvas.toDataURL("image/png");
+		window.open(resultCanvas.toDataURL("image/png"));
 		//Canvas2Image.saveAsPNG(resultCanvas);
 	};
 	
@@ -81,6 +84,11 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		
 		tmpSpiro.speed	=	$('#speedSlider').slider('value');
 		tmpSpiro.res	=	$('#resolutionSlider').slider('value') / 4;
+		
+		if(tmpSpiro.res < 8)
+		{
+			tmpSpiro.res*=	2;
+		}
 		
 		if(tmpSpiro.r < 0)
 		{
@@ -112,6 +120,8 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		var tmpSpiro	=	new SpiroCanvas.spiroGraph();
 		var cc			=	new SpiroCanvas.colorConversion();
 		
+		$( "#progressBar" ).show();
+		
 		//initiating the new object with vales from the controls
 		tmpSpiro.R		=	$('#circle1RadiusSlider').slider('value');
 		tmpSpiro.r 		=	$('#circle2RadiusSlider').slider('value');
@@ -122,6 +132,11 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		tmpSpiro.color	=	cc.rgbToHsv(rgbCol.r, rgbCol.g, rgbCol.b);
 		tmpSpiro.speed	=	$('#speedSlider').slider('value');
 		tmpSpiro.res	=	$('#resolutionSlider').slider('value');
+		
+		hexCol			= 	$('#backgroundColorDiv').css('background-color');
+		hexCol			=	cc.colorToHex(hexCol);
+		rgbCol		=	cc.HexToRGB(hexCol);
+		this.drawBG('canvasBG', rgbCol);
 		
 		/*
 		var hexCol		= 	$('#foregroundColorDiv').css('background-color');
@@ -150,10 +165,23 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		
 		layersArray[currentLayerID]	=	"canvasSpiro" + layerCount;
 		
-		console.log(layersArray);
+		//console.log(layersArray);
 		
 		spiroMain.drawSpiro('canvasSpiro' + layerCount, 'canvasBG', tmpSpiro);
 	};
+	
+	this.stopSpiroDrawing		=	function()
+	{
+		//if any cruve is being drawn, stop it
+		if ( spiroMain.loopID != -1 )
+		{
+			clearInterval(spiroMain.loopID);
+			spiroMain.loopID	=	-1;
+			spiroMain.angle	=	0.0;
+			
+			$( "#progressBar" ).hide();
+		}
+	}
 	
 	this.updateDrawingCircle	=	function()
 	{
@@ -208,12 +236,36 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		var hex		=	'#' + rh + gh + bh;
 		$('#foregroundColorDiv').css('background-color', hex);
 		
+		rh		=	cc.toHex(Math.random() * 255);
+		gh		=	cc.toHex(Math.random() * 255);
+		bh		=	cc.toHex(Math.random() * 255);
+		hex		=	'#' + rh + gh + bh;
+		$('#backgroundColorDiv').css('background-color', hex);
+		
 		$( "#circle1RadiusLabel" ).html( $('#circle1RadiusSlider').slider('value') );
 		$( "#circle2RadiusLabel" ).html( $('#circle2RadiusSlider').slider('value') );
 		$( "#pointDistanceLabel" ).html( $('#pointDistanceSlider').slider('value') );
 		$( "#speedLabel" ).html( $('#speedSlider').slider('value') );
 		$( "#resolutionLabel" ).html( $('#resolutionSlider').slider('value') );
 	};
+	
+	this.removeLayer		=	function(ele)
+	{
+		var itemID		=	$(ele).parent()[0].id;			//gets the id of <li> element
+		var no			=	itemID.substring(11, 13);		//retrieves the number at the end
+		var canvasid	=	"#canvasSpiro" + no;			//append the id to 'canvasSpriro' to refer to the canvas
+		$(canvasid).remove();								//remove the canvas
+		$(ele).parent().remove();							//remove the <li> element
+		removeByElement(layersArray, "canvasSpiro" + no);
+
+		//stop the drawing if the current drawing layer is being removed
+		if((currentLayerID+1) == no)
+		{
+			this.stopSpiroDrawing();
+		}
+		
+		return false;
+	}
 	
 	//function to fill the background with shades of selected color
 	this.drawBG				=	function(canvasBGID, rgb)
@@ -251,4 +303,13 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		//clear and fill the canvas
 		ct.fillRect(0, 0, canvasBG.width, canvasBG.height);
 	}
+	
+	function removeByElement(arrayName,arrayElement)
+	{
+		for(var i=0; i<arrayName.length;i++ )
+		{ 
+			if(arrayName[i]==arrayElement)
+				arrayName.splice(i,1); 
+		} 
+	};
 };

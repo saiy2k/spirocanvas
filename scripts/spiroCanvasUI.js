@@ -57,6 +57,22 @@ SpiroCanvas.spiroCanvasUI = (function()
 				}
 			);
 			
+			$( "#randomButton" ).mouseover
+			(
+				function(e)
+				{
+					spiroHelper.showPreview(e);
+				}
+			);
+			
+			$( "#randomButton" ).mouseout
+			(
+				function()
+				{
+					$('#previewCanvas').fadeOut();
+				}
+			);
+			
 			spiroHelper.drawBG('canvasBG', { r:0, g:0, b:0 });
 			
 			//click handler for reDraw Button. Calls the the drawSpiro function in spiroCanvasCore
@@ -66,6 +82,14 @@ SpiroCanvas.spiroCanvasUI = (function()
 				function()
 				{
 					spiroHelper.drawSpirograph();
+				}
+			);
+			
+			$( "#stopButton" ).click
+			(
+				function()
+				{
+					spiroHelper.stopSpiroDrawing();
 				}
 			);
 			
@@ -82,14 +106,7 @@ SpiroCanvas.spiroCanvasUI = (function()
 			//will get invoked, if the close button on any of the layers is pressed
 			$('#removeLayerWidget').live('click', function()
 			{
-				var itemID		=	$(this).parent()[0].id;			//gets the id of <li> element
-				var no			=	itemID.substring(11, 13);		//retrieves the number at the end
-				var canvasid	=	"#canvasSpiro" + no;			//append the id to 'canvasSpriro' to refer to the canvas
-				$(canvasid).remove();								//remove the canvas
-				$(this).parent().remove();							//remove the <li> element
-				removeByElement(layersArray, "canvasSpiro" + no);
-				console.log(layersArray);
-				return false;
+				return spiroHelper.removeLayer(this);
 			});
 			
 			//will get invoked, if the hide button on any of the layers is pressed
@@ -279,18 +296,32 @@ SpiroCanvas.spiroCanvasUI = (function()
 				}
 			});
 			
-			//updateDrawingCircle();
+			$("#playBox").draggable( { handle: "#playBox.toolBoxHeader" } );
+			$("#playBox").css("top", ($("#colorBox").offset().top + $("#colorBox").height() + 20) );
+			
+			$( "#progressBar" ).progressbar
+			({
+				value: 0
+			});
+			$( "#progressBar" ).center();
+			$( "#progressBar" ).css("top", ($("#canvasContainer").offset().top + $("#canvasContainer").height() - 40) );
+			$( "#progressBar" ).hide();
+			
+			
+			$('#colorBox').hover
+			(
+				function()
+				{  
+					 $("#colorBox", this).stop().animate({top:'200px'},{queue:false,duration:160});  
+				},
+				function()
+				{  
+					 $("#colorBox", this).stop().animate({top:'295px'},{queue:false,duration:160});  
+				}
+			);
+
 		});
 	};
-	
-	function removeByElement(arrayName,arrayElement)
-	{
-		for(var i=0; i<arrayName.length;i++ )
-		{ 
-			if(arrayName[i]==arrayElement)
-				arrayName.splice(i,1); 
-		} 
-	};
-	
+
 	return my;
 }());

@@ -81,23 +81,11 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 </div>
 
 <div id="statusDiv">
-	<div id="statusRightPanel">
-		developed by <a href="http://saiy2k.blogspot.com" target="_blank">Saiyasodharan</a>
-	</div>
-	<div id="statusRightPanel">
-		FB SHARE
-	</div>
-	<div id="statusRightPanel">
-		TWEET
-	</div>
-	<div id="statusRightPanel">
+	<div id="statusLeftPanel">
 		<a href="#" style="text-decoration:none;"><div id="saveButton" style="width:60px; height:30px; text-align:center; text-decoration:none;">Save</div></a>
 	</div>
 	<div id="statusLeftPanel">
-		<a href="#" style="text-decoration:none;"><div id="drawButton" style="width:60px; height:30px; text-align:center; text-decoration:none;">Draw</div></a>
-	</div>
-	<div id="statusLeftPanel">
-		<a href="#" style="text-decoration:none;"><div id="randomButton" style="width:60px; height:30px; text-align:center; text-decoration:none;">Random</div></a>
+		<a href="#" style="text-decoration:none;"><div id="randomButton" style="width:60px; height:30px; text-align:center; text-decoration:none;">Draw Random</div></a>
 	</div>
 </div>
 
@@ -141,7 +129,18 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	<div id="backgroundColorDiv" style="width:140px; height:24px; background-color:#000000; margin:2px; border:1px solid #ffffff"></div>
 </div>
 
+<div id="playBox" class="toolBox">
+	<div class="toolBoxHeader">
+		PlayBack
+	</div>
+	<a href="#" style="text-decoration:none;"><div id="drawButton" style="width:60px; height:30px; text-align:center; text-decoration:none;">Draw</div></a>
+	<a href="#" style="text-decoration:none;"><div id="stopButton" style="width:60px; height:30px; text-align:center; text-decoration:none;">Stop</div></a>	
+	<a href="#" style="text-decoration:none;"><div id="resetButton" style="width:60px; height:30px; text-align:center; text-decoration:none;">Reset</div></a>	
+</div>
+
 <canvas id="previewCanvas" width="320" height="240" style="position:absolute; background-color: #000; border:1px solid"> </canvas>
+
+<div id="progressBar" style="width: 250px; height: 10px"></div>
 
 </body>
 </html>

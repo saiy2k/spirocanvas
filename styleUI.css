@@ -19,10 +19,10 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 
 body
 {
-	background-color: 		#000;
+	background-color: 		#000000;
 	font-family:			georgia;
 	font-size:				12px;
-	color:					#aaa;
+	color:					#566669;
 }
 a
 {
@@ -34,17 +34,7 @@ a
 	width:					800px;
 	height:					600px;
 	margin:					auto;
-	background-color: 		#fff;
-	border:					2px solid #bbb;
-}
-
-#layersBox
-{
-	width:					100px;
-	height:					500px;
-	position:				absolute;
-	background-color:		#111;
-	border:					2px solid #555;
+	border:					2px solid #566669;
 }
 
 #layersPanelSelectable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
@@ -57,8 +47,8 @@ a
 {
 	position:				absolute;
 	width:					150px;
-	background-color:		#111;
-	border:					1px solid #555;
+	background-color:		#0A131A;
+	border:					1px solid #566669;
 	padding:				4px;
 	border-radius: 			5px;
 }
@@ -69,6 +59,7 @@ a
 	margin-bottom:			10px;
 	text-align:				center;
 	font-size:				14px;
+	color:					#BFE2FF;
 }
 .toolBoxHorizontalPanel
 {
@@ -86,6 +77,7 @@ a
 	height:					40px;
 	background-color: 		#111;
 	border-top:				1px solid #555;
+	text-align:				center;
 }
 #statusRightPanel
 {
