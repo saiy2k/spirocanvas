@@ -46,9 +46,10 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		for ( var i = 1; i <= layerCount; i++)
 		{
 			var canvasid	=	"canvasSpiro" + i;
-			if(document.getElementById(canvasid))
+			var canvasele	=	document.getElementById(canvasid)
+			if(canvasele && canvasele.style.display != "none")
 			{
-				var ctz			=	document.getElementById(canvasid).getContext('2d');
+				var ctz			=	canvasele.getContext('2d');
 				ctx.drawImage(ctz.canvas, 0, 0);
 				//console.log("canvas ID: " + canvasid);
 			}
@@ -156,7 +157,7 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		
 		//make an entry to the layers panel
 		$("#layersPanelSelectable").append(
-			'<li class="ui-widget-content" id="layerWidget' + layerCount + '">' + 
+			'<li class="ui-widget-content" style="background: #000000; border: none; color: #aaaaaa" id="layerWidget' + layerCount + '">' + 
 			'Layer ' +  layerCount + ' ' +
 			'<a href="#" id="removeLayerWidget" border="2">X</a> &nbsp;' +
 			'<a href="#" id="hideLayerWidget" border="2">H</a>' +

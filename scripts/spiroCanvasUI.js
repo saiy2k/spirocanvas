@@ -155,9 +155,28 @@ SpiroCanvas.spiroCanvasUI = (function()
 			
 			//hides the preview layer. This will be shown during mouse over on Draw button
 			$('#previewCanvas').hide();
+	
+			$("#sliderPanel").css("top", 20);
 			
-			$("#sliderBox").draggable( { handle: "#sliderlBox.toolBoxHeader" } );
-			$("#sliderBox").css("top", $("#canvasContainer").offset().top );
+			$(".toolPanel").css("left", "-" + ($(".toolPanel").width() - 15) + "px" );
+			//$("#sliderPanel").css("top", ($("#sliderPanel").height() -  $("#sliderBoxHeader").height()) / 2.0);
+			
+			
+			$(".toolBoxHeader").click
+			(
+				function()
+				{
+					var ele		=	$(this).parent();
+					if (ele.css("left") == "-5px")
+					{
+						ele.animate( {left: "-" + (ele.width() - 15) + "px"}, 250);
+					}
+					else
+					{
+						ele.animate( {left: "-5px"}, 250);
+					}
+				}
+			);
 					
 			//transforms the circle1RadiusSlider into a slider with a specific min and
 			//max values. Also, the label is updated as and when the slider value is changed
@@ -260,8 +279,7 @@ SpiroCanvas.spiroCanvasUI = (function()
 									}
 			});
 			
-			$("#colorBox").draggable( { handle: "#colorBox.toolBoxHeader" } );
-			$("#colorBox").css("top", ($("#sliderBox").offset().top + $("#sliderBox").height() + 20) );
+			$("#colorPanel").css("top", ($("#sliderPanel").offset().top + $("#sliderPanel").height() + 10) );
 			
 			$( "#foregroundColorDiv" ).ColorPicker
 			({
@@ -296,8 +314,7 @@ SpiroCanvas.spiroCanvasUI = (function()
 				}
 			});
 			
-			$("#playBox").draggable( { handle: "#playBox.toolBoxHeader" } );
-			$("#playBox").css("top", ($("#colorBox").offset().top + $("#colorBox").height() + 20) );
+			$("#playPanel").css("top", ($("#colorPanel").offset().top + $("#colorPanel").height() + 10) );
 			
 			$( "#progressBar" ).progressbar
 			({

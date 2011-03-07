@@ -37,6 +37,11 @@ a
 	border:					2px solid #566669;
 }
 
+.ui-widget-content
+{
+	background-color:		#ff0000;
+}
+
 #layersPanelSelectable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
 #layersPanelSelectable li { margin: 0 1px 1px 1px; padding: 0.4em; padding-left: 0.5em; height: 18px; }
 #layersPanelSelectable li span { position: absolute; margin-left: -1.3em; }
@@ -45,27 +50,23 @@ a
 
 .toolBox
 {
-	position:				absolute;
+	float:					left;
 	width:					150px;
 	background-color:		#0A131A;
 	border:					1px solid #566669;
 	padding:				4px;
-	border-radius: 			5px;
 }
-.toolBoxHeader
-{
-	background-color:		#000000;
-	cursor:					move;
-	margin-bottom:			10px;
-	text-align:				center;
-	font-size:				14px;
-	color:					#BFE2FF;
-}
+
 .toolBoxHorizontalPanel
 {
 	height: 				40px;
 	margin:					2px;
 	padding:				2px;
+}
+
+.toolPanel
+{
+	position:				absolute;
 }
 
 #statusDiv
