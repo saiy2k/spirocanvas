@@ -73,19 +73,27 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	<canvas id="canvasCircle" 	width="800" height="600" style="position:absolute; left:0px; top:0px; z-index:1;"></canvas>
 	<canvas id="canvasResult" 	width="800" height="600" style="display:none;"></canvas>
 </div>
-<div id="layersBox" class="toolBox">
-	<div class="toolBoxHeader">
-		Layers
+
+<div id="layersPanel" class="toolPanelRight" style="width: 176px">
+	<div style="float: left; border: 2px solid #566669; width: 1em; border-right: none; background-color: #000000; padding: 1px" class="toolBoxHeaderRight">
+		<b>L A Y E R S</b>
 	</div>
-	<ul id="layersPanelSelectable"></ul>
+	<div id="layersBox" class="toolBoxRight">
+		<ul id="layersPanelSelectable"></ul>
+	</div>
 </div>
 
-<div id="statusDiv">
-	<div id="statusLeftPanel">
-		<a href="#" style="text-decoration:none;"><div id="saveButton" style="width:60px; height:30px; text-align:center; text-decoration:none;">Save</div></a>
-	</div>
-	<div id="statusLeftPanel">
-		<a href="#" style="text-decoration:none;"><div id="randomButton" style="width:60px; height:30px; text-align:center; text-decoration:none;">Draw Random</div></a>
+<div id="statusDiv" style="text-align:center">
+	<div style="border:0px solid #ff0000; margin:auto; width:260px; height: 22px">
+		<div id="statusLeftPanel">
+			<a href="#" style="text-decoration:none;"><div id="saveButton" style="width:60px; height:20px; text-align:center; text-decoration:none;">Save</div></a>
+		</div>
+		<div id="statusLeftPanel">
+			<a href="#" style="text-decoration:none;"><div id="randomButton" style="width:60px; height:20px; text-align:center; text-decoration:none;">Random</div></a>
+		</div>
+		<div id="statusLeftPanel">
+			<a href="#" style="text-decoration:none;"><div id="shareButton" style="width:60px; height:20px; text-align:center; text-decoration:none;">Share</div></a>
+		</div>
 	</div>
 </div>
 
@@ -143,9 +151,9 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	</div>
 </div>
 
-<canvas id="previewCanvas" width="320" height="240" style="position:absolute; background-color: #000; border:1px solid"> </canvas>
-
 <div id="progressBar" style="width: 250px; height: 10px"></div>
+
+<canvas id="previewCanvas" width="320" height="240" style="position:absolute; background-color: #000; border:1px solid"> </canvas>
 
 </body>
 </html>

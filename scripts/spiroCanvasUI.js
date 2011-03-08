@@ -142,16 +142,7 @@ SpiroCanvas.spiroCanvasUI = (function()
 						$(canvasid).css('z-index' , i + 2);
 					}					
 				}
-			});
-			
-			//position the layers bar to the right of the canvas Container
-			$("#layersBox").offset
-			({
-				top: $("#canvasContainer").offset().top,
-				left: $("#canvasContainer").offset().left + $("#canvasContainer").width() + 15
 			});	
-			$("#layersBox").draggable( { handle: "#layersBox.toolBoxHeader" } );
-			
 			
 			//hides the preview layer. This will be shown during mouse over on Draw button
 			$('#previewCanvas').hide();
@@ -159,9 +150,8 @@ SpiroCanvas.spiroCanvasUI = (function()
 			$("#sliderPanel").css("top", 20);
 			
 			$(".toolPanel").css("left", "-" + ($(".toolPanel").width() - 15) + "px" );
-			//$("#sliderPanel").css("top", ($("#sliderPanel").height() -  $("#sliderBoxHeader").height()) / 2.0);
-			
-			
+			$(".toolPanelRight").offset({ top: 10, left: ($(document).width() - $(".toolPanelRight").width() + 10) });
+
 			$(".toolBoxHeader").click
 			(
 				function()
@@ -174,6 +164,23 @@ SpiroCanvas.spiroCanvasUI = (function()
 					else
 					{
 						ele.animate( {left: "-5px"}, 250);
+					}
+				}
+			);
+			$(".toolBoxHeaderRight").click
+			(
+				function()
+				{
+					var ele		=	$(this).parent();
+					var pos		=	$(window).width() - ele.width() + 10;
+					
+					if (ele.offset().left == pos)
+					{
+						ele.animate( {left: ($(window).width() - 16) + "px"}, 250);
+					}
+					else
+					{
+						ele.animate( {left: (pos) + "px"}, 250);
 					}
 				}
 			);
