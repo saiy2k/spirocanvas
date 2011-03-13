@@ -73,6 +73,28 @@ SpiroCanvas.spiroCanvasUI = (function()
 				}
 			);
 			
+			$( "#shareDialog" ).dialog
+			({
+				autoOpen: false,
+				modal:	true
+			});
+			$( "#shareButton" ).click
+			(
+				function()
+				{
+					$( "#shareDialog" ).dialog("open");
+				}
+			);
+			
+			$( "#shareFacebook" ).click
+			(
+				function()
+				{
+					
+				}
+			);
+			
+			
 			spiroHelper.drawBG('canvasBG', { r:0, g:0, b:0 });
 			
 			//click handler for reDraw Button. Calls the the drawSpiro function in spiroCanvasCore
@@ -82,6 +104,16 @@ SpiroCanvas.spiroCanvasUI = (function()
 				function()
 				{
 					spiroHelper.drawSpirograph();
+					
+					var arr = $("#layersPanelSelectable").sortable("toArray");
+					
+					var orderArray = new Array();
+					for (i = 0 ; i < arr.length; i++)
+					{
+						orderArray[i] = arr[i].substring(11,13);
+					}
+					
+					spiroHelper.setObjectOrder(orderArray);
 				}
 			);
 			
@@ -100,6 +132,16 @@ SpiroCanvas.spiroCanvasUI = (function()
 				{
 					spiroHelper.randomize();
 					spiroHelper.drawSpirograph();
+					
+					var arr = $("#layersPanelSelectable").sortable("toArray");
+					
+					var orderArray = new Array();
+					for (i = 0 ; i < arr.length; i++)
+					{
+						orderArray[i] = arr[i].substring(11,13);
+					}
+					
+					spiroHelper.setObjectOrder(orderArray);
 				}
 			);
 			
@@ -128,11 +170,11 @@ SpiroCanvas.spiroCanvasUI = (function()
 			//makes the <UL> in layersPanel selectable
 			$("#layersPanelSelectable").sortable
 			({
+				containment: 'document', 
 				update: function(event, ui)
 				{
 					var arr	=	$(this).sortable('toArray');
 					
-					console.log(arr.length);
 					for ( var i = 0; i < arr.length; i++)
 					{
 						var itemID	=	arr[i];
@@ -140,7 +182,21 @@ SpiroCanvas.spiroCanvasUI = (function()
 						var canvasid	=	"#canvasSpiro" + no;			//append the id to 'canvasSpriro' to refer to the canvas
 						
 						$(canvasid).css('z-index' , i + 2);
-					}					
+					}
+					/*
+					var srcID	=	event.srcElement.id;
+					var no		=	srcID.substring(11, 13);
+					var canvasid=	"#canvasSpiro" + no;
+					
+					console.log(arr);*/
+					
+					var orderArray = new Array();
+					for (i = 0 ; i < arr.length; i++)
+					{
+						orderArray[i] = arr[i].substring(11,13);
+					}
+					
+					spiroHelper.setObjectOrder(orderArray);
 				}
 			});	
 			

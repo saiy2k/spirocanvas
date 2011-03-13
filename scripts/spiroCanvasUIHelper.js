@@ -27,7 +27,8 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 	var tmpCore;
 	var layerCount			=	0;
 	var currentLayerID		=	-1;
-	var layersArray			=	new Array();
+	var layersArray			=	{};
+	var orderArray;
 	
 	var spiroMain			=	new SpiroCanvas.spiroCanvasCore();
 	var spiroInstant		=	new SpiroCanvas.spiroCanvasCore();
@@ -43,10 +44,12 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		var bgImg 			= 	Canvas2Image.saveAsPNG(bgCanvas, true);
 		ctx.drawImage(cty.canvas, 0, 0);
 		
-		for ( var i = 1; i <= layerCount; i++)
+		//for ( var key in layersArray )
+		for ( var i = 0; i < layerCount; i++)
 		{
-			var canvasid	=	"canvasSpiro" + i;
-			var canvasele	=	document.getElementById(canvasid)
+			var no			=	orderArray[i];
+			var canvasid	=	"canvasSpiro" + no;
+			var canvasele	=	document.getElementById(canvasid);
 			if(canvasele && canvasele.style.display != "none")
 			{
 				var ctz			=	canvasele.getContext('2d');
@@ -164,9 +167,10 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 			'</li>'
 		);
 		
-		layersArray[currentLayerID]	=	"canvasSpiro" + layerCount;
+		tmpSpiro.id							=	"canvasSpiro" + layerCount;
+		layersArray["canvasSpiro" + layerCount]	=	tmpSpiro;
 		
-		//console.log(layersArray);
+		console.log(layersArray);
 		
 		spiroMain.drawSpiro('canvasSpiro' + layerCount, 'canvasBG', tmpSpiro);
 	};
@@ -257,7 +261,10 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		var canvasid	=	"#canvasSpiro" + no;			//append the id to 'canvasSpriro' to refer to the canvas
 		$(canvasid).remove();								//remove the canvas
 		$(ele).parent().remove();							//remove the <li> element
+		
 		removeByElement(layersArray, "canvasSpiro" + no);
+		
+		console.log(layersArray);
 
 		//stop the drawing if the current drawing layer is being removed
 		if((currentLayerID+1) == no)
@@ -305,12 +312,20 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		ct.fillRect(0, 0, canvasBG.width, canvasBG.height);
 	}
 	
+	this.moveObject			=	function(canvasid, newPos)
+	{
+		var ele		=	layersArray[canvasid];
+		delete	layersArray[canvasid];
+		layersArray.splice(newPos, 0, ele);
+	}
+	
+	this.setObjectOrder		=	function(oArray)
+	{
+		orderArray			=	oArray;
+	}
+	
 	function removeByElement(arrayName,arrayElement)
 	{
-		for(var i=0; i<arrayName.length;i++ )
-		{ 
-			if(arrayName[i]==arrayElement)
-				arrayName.splice(i,1); 
-		} 
+		delete arrayName[arrayElement];
 	};
 };

@@ -28,6 +28,7 @@ and saved in an array
 
 SpiroCanvas.spiroGraph = function()
 {
+	this.id			=	"";				//unique id of this curve
 	this.R			=	0;				//Radius of the fixed Circle
 	this.r			=	0;				//Radius of the mobile Circle
 	this.p			=	0;				//Distance of drawing point from the center of mobile Circle
@@ -39,4 +40,5 @@ SpiroCanvas.spiroGraph = function()
 							v:0
 						};				//line color of the spirograph in hsv format
 	this.isEpi		=	true;			//is epitrochoid and not hypotrochoid
+	this.zIndex		=	0;				//placement of the curve in z-axis
 };
