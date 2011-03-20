@@ -28,6 +28,7 @@ SpiroCanvas.spiroCanvasUI = (function()
 	var my 			=	{};
 	var tmpCore;
 	var spiroHelper			=	new SpiroCanvas.spiroCanvasUIHelper();
+	var fbWrapper			=	new SpiroCanvas.FBWrapper();
 	
 	my.initUI 		=	function ()
 	{
@@ -56,23 +57,7 @@ SpiroCanvas.spiroCanvasUI = (function()
 					$('#previewCanvas').fadeOut();
 				}
 			);
-			
-			$( "#randomButton" ).mouseover
-			(
-				function(e)
-				{
-					spiroHelper.showPreview(e);
-				}
-			);
-			
-			$( "#randomButton" ).mouseout
-			(
-				function()
-				{
-					$('#previewCanvas').fadeOut();
-				}
-			);
-			
+
 			$( "#shareDialog" ).dialog
 			({
 				autoOpen: false,
@@ -90,10 +75,9 @@ SpiroCanvas.spiroCanvasUI = (function()
 			(
 				function()
 				{
-					
+					fbWrapper.sharePhoto();
 				}
 			);
-			
 			
 			spiroHelper.drawBG('canvasBG', { r:0, g:0, b:0 });
 			

@@ -31,11 +31,16 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	<script type="text/javascript" src="scripts/eyeConColorPicker/js/colorpicker.js"></script>
 	<script type="text/javascript" src="scripts/MMath.js"></script>
 	<script type="text/javascript" src="scripts/spiroCanvas.js"></script>
+	<script type="text/javascript" src="scripts/FBWrapper.js"></script>
 	<script type="text/javascript" src="scripts/colorConversion.js"></script>
 	<script type="text/javascript" src="scripts/spiroGraph.js"></script>
 	<script type="text/javascript" src="scripts/spiroCanvasCore.js"></script>
 	<script type="text/javascript" src="scripts/spiroCanvasUIHelper.js"></script>
 	<script type="text/javascript" src="scripts/spiroCanvasUI.js"></script>
+	
+	<!--Importing Facebook's Javascript SDK - Begin-->
+	
+	<!--Importing Facebook's Javascript SDK - End-->
 	
 	<script language="javascript">
 		(function( $ )
@@ -63,7 +68,7 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 		{
 			SpiroCanvas.spiroCanvasUI.initUI();
 		}
-	</script>	
+	</script>
 </head>
 
 <body onload="init()"> 
@@ -156,10 +161,28 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 <canvas id="previewCanvas" width="320" height="240" style="position:absolute; background-color: #000; border:1px solid"> </canvas>
 
 <div id="shareDialog" title="Basic modal dialog">
-	<p id="shareFacebook">Facebook</p>
+	<fb:login-button autologoutlink="true" perms="publish_stream, offline_access, photo_upload, share_item, user_photos"></fb:login-button> <p id="shareFacebook">upload</p>
 	<p id="shareTwitter">Twitter</p>
 	<p id="shareFlickr">Flickr</p>
 </div>
+
+
+
+<!--div for Facebook Javascript SDK-->
+<div id="fb-root"></div>
+<script type="text/javascript">
+    window.fbAsyncInit = function() {
+        FB.init({appId: '145439352170764', status: true, cookie: true, xfbml: true});
+    };
+    (function() {
+        var e = document.createElement('script');
+        e.type = 'text/javascript';
+        e.src = 'http://connect.facebook.net/en_US/all.js';
+        e.async = true;
+        document.getElementById('fb-root').appendChild(e);
+    }());
+</script>
+
 
 </body>
 </html>
