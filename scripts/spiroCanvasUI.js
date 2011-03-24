@@ -28,7 +28,7 @@ SpiroCanvas.spiroCanvasUI = (function()
 	var my 			=	{};
 	var tmpCore;
 	var spiroHelper			=	new SpiroCanvas.spiroCanvasUIHelper();
-	var fbWrapper			=	new SpiroCanvas.FBWrapper();
+	var fbWrapper			=	new SpiroCanvas.FBWrapper(spiroHelper);
 	
 	my.initUI 		=	function ()
 	{

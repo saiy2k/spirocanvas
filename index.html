@@ -173,6 +173,13 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/javascript">
     window.fbAsyncInit = function() {
         FB.init({appId: '145439352170764', status: true, cookie: true, xfbml: true});
+		FB.login(function (response) {
+			if (response.session) {
+				access_token = response.session.access_token;
+			} else {
+				alert('User is logged out');
+			}
+		});
     };
     (function() {
         var e = document.createElement('script');

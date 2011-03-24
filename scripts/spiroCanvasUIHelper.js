@@ -59,8 +59,9 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		}
 		
 		//window.location.href     = resultCanvas.toDataURL("image/png");
-		window.open(resultCanvas.toDataURL("image/png"));
+		//window.open(resultCanvas.toDataURL("image/png"));
 		//Canvas2Image.saveAsPNG(resultCanvas);
+		return resultCanvas.toDataURL("image/png");
 	};
 	
 	this.showPreview		=	function(e)
