@@ -29,72 +29,16 @@ SpiroCanvas.FBWrapper				=	function(sH)
 
 	this.sharePhoto					=	function()
 	{
-		//create an album, if it doesnt exists
-		createAlbumIfNotExists();
-	}
-	
-	function createAlbumIfNotExists()
-	{
-		FB.api('/me', function(resp)
-		{
-			var qString		=	'select aid,name from album where owner=' + resp.id + ' AND name="' + albumName + '"';
-			var query		=	FB.Data.query(qString);
-			
-			query.wait(function(rows)
-			{
-				if($.isEmptyObject(rows))
-				{
-					createAlbum();
-				}
-				else
-				{
-					console.log(rows);
-					uploadPhoto(rows[0].aid);
-				}
-			});
-		});
-		
-		return true;
-	}
-
-	function createAlbum()
-	{
-		console.log("creating album");
-		var albumDetails	=	{message:albumDesc, name:albumName};
-		FB.api('/me/albums', 'post', albumDetails, function(resp)
-		{
-			uploadPhoto(resp.id);
-		});
-	}
-	
-	function uploadPhoto(albumID)
-	{
-		console.log("uploading photo");
-		
 		$.ajax({
 			url: "http://localhost.com/spirocanvas/services/FBUpload.php",
 			type: "POST",
-			data: "message=hi&data=" + spiroHelper.saveAsPNG(),
+			data: "data=" + spiroHelper.saveAsPNG() + "&uid=" + FB._session.uid,
 			success: function(data, textStatus, jqXHR)
 			{
-				console.log(data);
+				
 			}
 		});
-		
-		//console.log();
-		
-		/*
-		var params = {};
-		params['message'] = 'PicRolled';
-		params['source'] = 'http://upload.wikimedia.org/wikipedia/commons/6/63/Three_rail_tracks_350.jpg';
-		params['upload file'] = true;
-		FB.api('/' + albumID + '/photos', 'post', params, function(resp)
-		{
-			console.log("photo uploaded");
-			console.log(resp);
-		});
-		*/
 	}
-	
+		
 	return this;
 }
