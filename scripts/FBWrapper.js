@@ -29,13 +29,14 @@ SpiroCanvas.FBWrapper				=	function(sH)
 
 	this.sharePhoto					=	function()
 	{
+		console.log('calling web service to share');
 		$.ajax({
 			url: "http://localhost.com/spirocanvas/services/FBUpload.php",
 			type: "POST",
 			data: "data=" + spiroHelper.saveAsPNG() + "&uid=" + FB._session.uid,
 			success: function(data, textStatus, jqXHR)
 			{
-				
+				$( "#shareFacebook" ).html("Uploaded");
 			}
 		});
 	}

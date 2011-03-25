@@ -29,6 +29,7 @@ SpiroCanvas.spiroCanvasUI = (function()
 	var tmpCore;
 	var spiroHelper			=	new SpiroCanvas.spiroCanvasUIHelper();
 	var fbWrapper			=	new SpiroCanvas.FBWrapper(spiroHelper);
+	var flickrWrapper		=	new SpiroCanvas.FlickrWrapper(spiroHelper);
 	
 	my.initUI 		=	function ()
 	{
@@ -68,6 +69,7 @@ SpiroCanvas.spiroCanvasUI = (function()
 				function()
 				{
 					$( "#shareDialog" ).dialog("open");
+					$( "#shareFacebook" ).html("Upload");
 				}
 			);
 			
@@ -75,7 +77,19 @@ SpiroCanvas.spiroCanvasUI = (function()
 			(
 				function()
 				{
-					fbWrapper.sharePhoto();
+					if ( $( "#shareFacebook" ).html() == "Upload" )
+					{
+						$( "#shareFacebook" ).html("Uploading...");
+						fbWrapper.sharePhoto();
+					}
+				}
+			);
+			
+			$( "#shareFlickr" ).click
+			(
+				function()
+				{
+					flickrWrapper.authenticate();
 				}
 			);
 			
