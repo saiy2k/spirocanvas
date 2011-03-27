@@ -1,3 +1,4 @@
+<?php
 /*
 Copyright 2011 Saiyasodharan (http://saiy2k.blogspot.com/)
 
@@ -17,17 +18,11 @@ You should have received a copy of the GNU General Public License
 along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-<?php
+$cl = curl_init('http://api.flickr.com/services/upload/');
 
-require 'fbsdk/facebook.php';
 
-//initialize facebook object
-$facebook = new Facebook(array(
-                           'appId'  => '145439352170764',
-                           'secret' => '27cfc1e11bdb9e63f9479edd91cf5599',
-                          'fileUpload' => true, 
-                           'cookie' => true,));
-$facebook->setFileUploadSupport(true);  
+$data	=	array(	"api_key" => "c6c3f471e99860ba35dae1dea6389faa",
+					"auth_token" => $_POST['token']);
 
 //get the base64 data from POST arguments
 $b64	=	$_POST['data'];
@@ -39,14 +34,24 @@ $clean	=	substr($b64, 22);
 $clean = str_replace(' ','+',$clean);
 
 //decode the raw data and save it in a file
-$FILE_PATH = $_POST['uid'] . '.png';
+$FILE_PATH = 'tmp.png';
 file_put_contents($FILE_PATH, base64_decode($clean));
+					
+$data['photo'] = '@' . realpath($FILE_PATH);
 
-//post the saved file to FB
-$args	=	array('message' => '');
-$args['image']	=	'@' . realpath($FILE_PATH);
-$data = $facebook->api('/me/photos', 'post', $args);
+$sig = '47ccedfd3e857f83api_keyc6c3f471e99860ba35dae1dea6389faa';
+$sig = $sig . 'auth_token' . $_POST['token'];
 
-unlink($FILE_PATH);
+$sig = md5($sig);
+$data['api_sig'] = $sig;
+
+curl_setopt($cl, CURLOPT_POST, true);
+curl_setopt($cl, CURLOPT_POSTFIELDS, $data);
+curl_setopt($cl, CURLOPT_RETURNTRANSFER, true);
+$resp = curl_exec($cl);
+curl_close($cl);
+
+echo('success');
+print_r($resp);
 
 ?>

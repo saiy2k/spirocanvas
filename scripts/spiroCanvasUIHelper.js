@@ -64,6 +64,36 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		return resultCanvas.toDataURL("image/png");
 	};
 	
+	this.saveAsJPG			=	function()
+	{
+		var resultCanvas	=	document.getElementById("canvasResult");
+		var bgCanvas		=	document.getElementById("canvasBG");
+		var ctx				=	resultCanvas.getContext('2d');
+		var cty				=	bgCanvas.getContext('2d');
+		
+		var bgImg 			= 	Canvas2Image.saveAsPNG(bgCanvas, true);
+		ctx.drawImage(cty.canvas, 0, 0);
+		
+		//for ( var key in layersArray )
+		for ( var i = 0; i < layerCount; i++)
+		{
+			var no			=	orderArray[i];
+			var canvasid	=	"canvasSpiro" + no;
+			var canvasele	=	document.getElementById(canvasid);
+			if(canvasele && canvasele.style.display != "none")
+			{
+				var ctz			=	canvasele.getContext('2d');
+				ctx.drawImage(ctz.canvas, 0, 0);
+				//console.log("canvas ID: " + canvasid);
+			}
+		}
+		
+		//window.location.href     = resultCanvas.toDataURL("image/png");
+		//window.open(resultCanvas.toDataURL("image/png"));
+		//Canvas2Image.saveAsPNG(resultCanvas);
+		return resultCanvas.toDataURL("image/jpeg");
+	};
+	
 	this.showPreview		=	function(e)
 	{
 		//creating a new Spirograph object
