@@ -30,16 +30,19 @@ SpiroCanvas.spiroCanvasUI = (function()
 	var spiroHelper			=	new SpiroCanvas.spiroCanvasUIHelper();
 	var fbWrapper			=	new SpiroCanvas.FBWrapper(spiroHelper);
 	var flickrWrapper		=	new SpiroCanvas.FlickrWrapper(spiroHelper);
+	var twitterWrapper		=	new SpiroCanvas.TwitterWrapper(spiroHelper);
 	
 	my.initUI 		=	function ()
 	{
 		jQuery(function()
 		{		
+		
+			$( "body" ).css("overflow", "hidden");
 			$( "#saveButton" ).click
 			(
 				function()
 				{
-					spiroHelper.saveAsPNG();
+					window.open(spiroHelper.saveAsPNG());
 				}
 			);
 		
@@ -90,6 +93,14 @@ SpiroCanvas.spiroCanvasUI = (function()
 				function()
 				{
 					flickrWrapper.authenticate();
+				}
+			);
+			
+			$( "#shareTwitter" ).click
+			(
+				function()
+				{
+					twitterWrapper.authenticate();
 				}
 			);
 			
@@ -162,6 +173,8 @@ SpiroCanvas.spiroCanvasUI = (function()
 				return false;
 			});
 			
+			$("#backgroundFrame").center();
+			
 			//moves the canvasContainer (inside which our canvas tag resides) to the center of the screen
 			$("#canvasContainer").center();
 			
@@ -181,12 +194,6 @@ SpiroCanvas.spiroCanvasUI = (function()
 						
 						$(canvasid).css('z-index' , i + 2);
 					}
-					/*
-					var srcID	=	event.srcElement.id;
-					var no		=	srcID.substring(11, 13);
-					var canvasid=	"#canvasSpiro" + no;
-					
-					console.log(arr);*/
 					
 					var orderArray = new Array();
 					for (i = 0 ; i < arr.length; i++)

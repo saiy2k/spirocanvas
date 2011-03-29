@@ -193,8 +193,8 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		$("#layersPanelSelectable").append(
 			'<li class="ui-widget-content" style="background: #000000; border: none; color: #aaaaaa" id="layerWidget' + layerCount + '">' + 
 			'Layer ' +  layerCount + ' ' +
-			'<a href="#" id="removeLayerWidget" border="2">X</a> &nbsp;' +
-			'<a href="#" id="hideLayerWidget" border="2">H</a>' +
+			'<a href="#" id="removeLayerWidget" border="2"><img src="images/closeIcon.png"></a> &nbsp;' +
+			'<a href="#" id="hideLayerWidget" border="2"><img src="images/eyeIcon.gif"></a>' +
 			'</li>'
 		);
 		
@@ -276,7 +276,7 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		gh		=	cc.toHex(Math.random() * 255);
 		bh		=	cc.toHex(Math.random() * 255);
 		hex		=	'#' + rh + gh + bh;
-		$('#backgroundColorDiv').css('background-color', hex);
+		//$('#backgroundColorDiv').css('background-color', hex);
 		
 		$( "#circle1RadiusLabel" ).html( $('#circle1RadiusSlider').slider('value') );
 		$( "#circle2RadiusLabel" ).html( $('#circle2RadiusSlider').slider('value') );

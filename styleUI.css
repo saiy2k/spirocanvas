@@ -23,6 +23,7 @@ body
 	font-family:			georgia;
 	font-size:				12px;
 	color:					#566669;
+	background-image:		url('images/spiroBG.jpg');
 }
 a
 {
@@ -34,7 +35,7 @@ a
 	width:					800px;
 	height:					600px;
 	margin:					auto;
-	border:					2px solid #566669;
+	border:					2px solid #111;
 }
 
 #layersPanelSelectable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
@@ -47,16 +48,16 @@ a
 {
 	float:					left;
 	width:					150px;
-	background-color:		#0A131A;
-	border:					1px solid #566669;
+	background-color:		#090909;
+	border:					1px solid #333;
 	padding:				4px;
 }
 .toolBoxRight
 {
 	float:					right;
 	width:					150px;
-	background-color:		#0A131A;
-	border:					1px solid #566669;
+	background-color:		#090909;
+	border:					1px solid #333;
 	padding:				4px;
 }
 
@@ -76,28 +77,78 @@ a
 	position:				absolute;
 }
 
+.toolBoxHeader
+{
+	margin-left:			-1px;
+	float:					left;
+	border:					2px solid #333;
+	//border-left: 			none;
+	width: 					1em;				
+	background-color:		#090909;
+	padding: 				1px;
+	font:					12px arial;
+}
+
+.toolBoxHeaderRight
+{
+	margin-right:			-1px;
+	float:					left;
+	border:					2px solid #333;
+	//border-left: 			none;
+	width: 					1em;				
+	background-color:		#090909;
+	padding: 				1px;
+	font:					12px arial;
+}
+
 #statusDiv
 {
 	position:				absolute;
 	bottom:					0px;
 	left:					0px;
 	right:					0px;
-	height:					30px;
-	background-color: 		#111;
-	border-top:				1px solid #555;
+	height:					32px;
 	text-align:				center;
-	display:	inline;
+	display:				inline;
 }
 #statusRightPanel
 {
 	margin:					auto;
 	padding:				2px 8px 2px 8px;
-	background-color:		#333;
 }
 #statusLeftPanel
 {
 	float:					left;
 	margin:					4px;
-	padding:				2px 8px 2px 8px;
-	background-color:		#333;
+	padding:				2px;
+}
+
+.statusButton
+{
+	width:					60px;
+	height:					24px;
+	text-align:				center;
+	text-decoration:		none;
+	background:				#111;
+	border:					1px solid #440000;
+	font:					12px arial;
+	color:					#888888;
+	padding-top:			4px;
+}
+
+.statusButton:hover
+{
+	background:				#000;
+	border:					1px solid #880000;
+	color:					#cccccc;
+}
+
+.controlButton
+{
+	width:					60px;
+	height:					30px;
+	text-decoration:		none;
+	font:					12px arial;
+	padding-left:			6px;
+	color:					#888888;
 }

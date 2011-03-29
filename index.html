@@ -34,6 +34,7 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	<script type="text/javascript" src="scripts/spiroCanvas.js"></script>
 	<script type="text/javascript" src="scripts/FBWrapper.js"></script>
 	<script type="text/javascript" src="scripts/FlickrWrapper.js"></script>
+	<script type="text/javascript" src="scripts/TwitterWrapper.js"></script>
 	<script type="text/javascript" src="scripts/colorConversion.js"></script>
 	<script type="text/javascript" src="scripts/spiroGraph.js"></script>
 	<script type="text/javascript" src="scripts/spiroCanvasCore.js"></script>
@@ -81,8 +82,8 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	<canvas id="canvasResult" 	width="800" height="600" style="display:none;"></canvas>
 </div>
 
-<div id="layersPanel" class="toolPanelRight" style="width: 176px">
-	<div style="float: left; border: 2px solid #566669; width: 1em; border-right: none; background-color: #000000; padding: 1px" class="toolBoxHeaderRight">
+<div id="layersPanel" class="toolPanelRight" style="width: 177px">
+	<div class="toolBoxHeaderRight">
 		<b>L A Y E R S</b>
 	</div>
 	<div id="layersBox" class="toolBoxRight">
@@ -91,15 +92,15 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 </div>
 
 <div id="statusDiv" style="text-align:center">
-	<div style="border:0px solid #ff0000; margin:auto; width:260px; height: 22px">
+	<div style="margin:auto; width:260px">
 		<div id="statusLeftPanel">
-			<a href="#" style="text-decoration:none;"><div id="saveButton" style="width:60px; height:20px; text-align:center; text-decoration:none;">Save</div></a>
+			<a href="#" style="text-decoration:none;"><div id="saveButton" class="statusButton">Save</div></a>
 		</div>
 		<div id="statusLeftPanel">
-			<a href="#" style="text-decoration:none;"><div id="randomButton" style="width:60px; height:20px; text-align:center; text-decoration:none;">Random</div></a>
+			<a href="#" style="text-decoration:none;"><div id="randomButton" class="statusButton">Random</div></a>
 		</div>
 		<div id="statusLeftPanel">
-			<a href="#" style="text-decoration:none;"><div id="shareButton" style="width:60px; height:20px; text-align:center; text-decoration:none;">Share</div></a>
+			<a href="#" style="text-decoration:none;"><div id="shareButton" class="statusButton">Share</div></a>
 		</div>
 	</div>
 </div>
@@ -132,7 +133,7 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 			<br> Animation Speed
 		</div>
 	</div>
-	<div style="float: left; border: 2px solid #566669; width: 1em; border-left: none; background-color: #000000; padding: 1px" class="toolBoxHeader">
+	<div class="toolBoxHeader">
 		<b>T O O L B O X</b>
 	</div>
 </div>
@@ -142,19 +143,19 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 		<div id="foregroundColorDiv" style="width:140px; height:24px; background-color:#ffffff; margin:2px; border:1px solid #ffffff"></div>
 		<div id="backgroundColorDiv" style="width:140px; height:24px; background-color:#000000; margin:2px; border:1px solid #ffffff"></div>
 	</div>
-	<div style="float: left; border: 2px solid #566669; width: 1em; border-left: none; background-color: #000000; padding: 1px" class="toolBoxHeader">
+	<div class="toolBoxHeader">
 		<b>C O L O R B O X</b>
 	</div>
 </div>
 
 <div id="playPanel" class="toolPanel">
 	<div id="playBox" class="toolBox">
-		<a href="#" style="text-decoration:none;"><div id="drawButton" style="width:60px; height:30px; text-align:center; text-decoration:none;">Draw</div></a>
-		<a href="#" style="text-decoration:none;"><div id="stopButton" style="width:60px; height:30px; text-align:center; text-decoration:none;">Stop</div></a>	
-		<a href="#" style="text-decoration:none;"><div id="resetButton" style="width:60px; height:30px; text-align:center; text-decoration:none;">Reset</div></a>	
+		<a href="#" style="text-decoration:none;"><div id="drawButton" class="controlButton">Draw</div></a>
+		<a href="#" style="text-decoration:none;"><div id="stopButton" class="controlButton">Stop</div></a>	
+		<a href="#" style="text-decoration:none;"><div id="resetButton" class="controlButton">Reset</div></a>	
 	</div>
-	<div style="float: left; border: 2px solid #566669; width: 1em; border-left: none; background-color: #000000; padding: 1px" class="toolBoxHeader">
-		<b>P L  A Y B O X</b>
+	<div class="toolBoxHeader">
+		<b>C O N T R O L S</b>
 	</div>
 </div>
 
@@ -163,9 +164,8 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 <canvas id="previewCanvas" width="320" height="240" style="position:absolute; background-color: #000; border:1px solid"> </canvas>
 
 <div id="shareDialog" title="Basic modal dialog">
-	<fb:login-button autologoutlink="true" perms="publish_stream, offline_access, photo_upload, share_item, user_photos"></fb:login-button> <a href="#" id="shareFacebook" style="display:inline">Upload</a>
-	<p id="shareTwitter">Twitter</p>
-	<a href="#" id="shareFlickr" style="display:inline">Flickr</a>
+	<fb:login-button autologoutlink="true" perms="publish_stream, offline_access, photo_upload, share_item, user_photos"></fb:login-button> <a href="#" id="shareFacebook" style="display:inline">Upload</a> <br>
+	<a href="#" id="shareFlickr" style="display:inline">Flickr</a> <br>
 </div>
 
 
