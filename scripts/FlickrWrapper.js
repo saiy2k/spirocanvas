@@ -25,28 +25,27 @@ SpiroCanvas.FlickrWrapper			=	function(sH)
 {
 	var		spiroHelper				=	sH;
 
-	var auth_url 	=	'http://flickr.com/services/auth/?';
-	var key			=	'c6c3f471e99860ba35dae1dea6389faa';
+	var auth_url 		=	'http://flickr.com/services/auth/?';
+	var key				=	'c6c3f471e99860ba35dae1dea6389faa';
 	var shared_secret	=	'47ccedfd3e857f83';
-	var perms		=	'write';
-	var token;
+	var perms			=	'write';
+	var token			=	null;
 	
 	this.authenticate				=	function()
 	{
-		var _url	=	auth_url;
+		var _url		=	auth_url;
 		var sig;
 		
-		_url		+=	"api_key=" + key + "&perms=" + perms + "&api_sig=" + getSig(perms);		
+		_url			+=	"api_key=" + key + "&perms=" + perms + "&api_sig=" + getSig(perms);		
 				
-		var win = window.open(_url, "thePop", "");
-		var pollTimer = window.setInterval(function()
+		var win 		=	window.open(_url, "thePop", "");
+		
+		var pollTimer	=	window.setInterval(function()
 		{
-			if (win.closed) {
+			if (win.closed)
+			{
 				window.clearInterval(pollTimer);
-				var frb	=	gup(win.document.URL, 'frob');
-				console.log(win.document.URL);
-				console.log(frb);
-				
+				var frb	=	gup(win.document.URL, 'frob');			
 				var	api_sig	= hex_md5(shared_secret + 'api_key' + key + 'formatjson' + 'frob' + frb + 'jsoncallbackgotToken' + 'methodflickr.auth.getToken');
 				_url	=	'http://flickr.com/services/rest/?' + '&api_key=' + key + '&format=json' + '&frob=' + frb + '&method=flickr.auth.getToken' + '&api_sig=' + api_sig;
 				
@@ -55,14 +54,36 @@ SpiroCanvas.FlickrWrapper			=	function(sH)
 		}, 100);
 	}
 	
-	function getToken(_url)
+	this.logout						=	function()
 	{
-		console.log('url:');
-		console.log(_url);
-		
-		//$.getJSON(_url, gotToken);
-		
-		
+		token						=	null;
+		$("#flickrLogin").html("Flickr Login");
+	}
+	
+	this.sharePhoto					=	function()
+	{
+		$.ajax({
+			url: "http://localhost.com/spirocanvas/services/flickrUpload.php",
+			type: "POST",
+			data: "data=" + spiroHelper.saveAsPNG() + "&token=" + token,
+			success: function(data, textStatus, jqXHR)
+			{
+				console.log(data);
+				$( "#shareFlickr" ).html("Uploaded");
+			}
+		});
+	}
+	
+	this.isValid					=	function()
+	{
+		if(token ==	null)
+			return false;
+		else
+			return true;
+	}
+	
+	function getToken(_url)
+	{		
 		jQuery.ajax({
 			dataType: 'jsonp',
 			url: _url,
@@ -71,23 +92,9 @@ SpiroCanvas.FlickrWrapper			=	function(sH)
 			jsonpCallback: 'gotToken',
 			success: function(data)
 			{
-				gotToken(data);
-			}
-		});
-	}
-	
-	function gotToken(data)
-	{
-		console.log(data);
-		token = data.auth.token._content;
-		
-		$.ajax({
-			url: "http://localhost.com/spirocanvas/services/flickrUpload.php",
-			type: "POST",
-			data: "data=" + spiroHelper.saveAsPNG() + "&token=" + token,
-			success: function(data, textStatus, jqXHR)
-			{
-				console.log(data);
+				token = data.auth.token._content;
+				$("#flickrLogin").html("Flickr Logout");
+				$( "#shareFlickr" ).html("Upload");
 			}
 		});
 	}
@@ -99,7 +106,7 @@ SpiroCanvas.FlickrWrapper			=	function(sH)
 		return hex;
 	}
 	
-	//taken from http://www.netlobo.com/url_query_string_javascript.html
+	//credits: http://www.netlobo.com/url_query_string_javascript.html
 	function gup(url, name)
 	{
 		name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
@@ -111,7 +118,5 @@ SpiroCanvas.FlickrWrapper			=	function(sH)
 		else
 			return results[1];
 	}
-
-	
 	return this;
 }

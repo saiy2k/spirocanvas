@@ -350,9 +350,40 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		layersArray.splice(newPos, 0, ele);
 	}
 	
-	this.setObjectOrder		=	function(oArray)
+	this.calcObjectOrder		=	function()
 	{
-		orderArray			=	oArray;
+		var arr = $("#layersPanelSelectable").sortable("toArray");
+		
+		orderArray = new Array();
+		for (i = 0 ; i < arr.length; i++)
+		{
+			orderArray[i] = arr[i].substring(11,13);
+		}
+	}
+	
+	this.arrangeLayers			=	function(arr)
+	{
+		for ( var i = 0; i < arr.length; i++)
+		{
+			var itemID		=	arr[i];
+			var no			=	itemID.substring(11, 13);		//retrieves the number at the end
+			var canvasid	=	"#canvasSpiro" + no;			//append the id to 'canvasSpriro' to refer to the canvas
+			
+			$(canvasid).css('z-index' , i + 2);
+		}
+
+	}
+	
+	this.layerToggleVisibility	=	function(e)
+	{
+		var itemID		=	$(e).parent()[0].id;			//gets the id of <li> element
+		var no			=	itemID.substring(11, 13);		//retrieves the number at the end
+		var canvasid	=	"#canvasSpiro" + no;			//append the id to 'canvasSpriro' to refer to the canvas
+		if($(canvasid).css('display') == 'none')
+			$(canvasid).css('display', 'block');			//hide the canvas
+		else
+			$(canvasid).css('display', 'none');
+		return false;
 	}
 	
 	function removeByElement(arrayName,arrayElement)

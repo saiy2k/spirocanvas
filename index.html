@@ -164,8 +164,8 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 <canvas id="previewCanvas" width="320" height="240" style="position:absolute; background-color: #000; border:1px solid"> </canvas>
 
 <div id="shareDialog" title="Basic modal dialog">
-	<fb:login-button autologoutlink="true" perms="publish_stream, offline_access, photo_upload, share_item, user_photos"></fb:login-button> <a href="#" id="shareFacebook" style="display:inline">Upload</a> <br>
-	<a href="#" id="shareFlickr" style="display:inline">Flickr</a> <br>
+	<fb:login-button autologoutlink="true" perms="publish_stream, offline_access, photo_upload, share_item, user_photos"></fb:login-button> <a href="#" id="shareFacebook" style="display:inline">Upload</a> <br> <br>
+	<a href="#" style="text-decoration:none"><div id="flickrLogin" style="width:80px; height:20px; padding-left:4px; padding-right:4px; font-weight:bold; background-color:#ccccee; display:inline; border:1px solid">Flickr Login</div></a> <a href="#" id="shareFlickr" style="display:inline">Upload</a> <br>
 </div>
 
 
@@ -175,13 +175,7 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/javascript">
     window.fbAsyncInit = function() {
         FB.init({appId: '145439352170764', status: true, cookie: true, xfbml: true});
-		FB.login(function (response) {
-			if (response.session) {
-				access_token = response.session.access_token;
-			} else {
-				alert('User is logged out');
-			}
-		});
+		FB.Event.subscribe('auth.statusChange', function() { $( "#shareFacebook" ).html("Upload"); } );
     };
     (function() {
         var e = document.createElement('script');

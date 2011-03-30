@@ -1,3 +1,5 @@
+<?php
+
 /*
 Copyright 2011 Saiyasodharan (http://saiy2k.blogspot.com/)
 
@@ -17,9 +19,7 @@ You should have received a copy of the GNU General Public License
 along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-<?php
-
-require 'fbsdk/facebook.php';
+require 'fbsdk/facebook.php';				//including facebook SDK
 
 //initialize facebook object
 $facebook = new Facebook(array(

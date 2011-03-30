@@ -35,9 +35,11 @@ SpiroCanvas.spiroCanvasUI = (function()
 	my.initUI 		=	function ()
 	{
 		jQuery(function()
-		{		
-		
+		{
+			//disable the scroll bars
 			$( "body" ).css("overflow", "hidden");
+			
+			//on save, get the PNG base64 encoded data and show it in new tab
 			$( "#saveButton" ).click
 			(
 				function()
@@ -45,87 +47,103 @@ SpiroCanvas.spiroCanvasUI = (function()
 					window.open(spiroHelper.saveAsPNG());
 				}
 			);
-		
-			$( "#drawButton" ).mouseover
-			(
-				function(e)
-				{
-					spiroHelper.showPreview(e);
-				}
-			);
-			
-			$( "#drawButton" ).mouseout
-			(
-				function()
-				{
-					$('#previewCanvas').fadeOut();
-				}
-			);
 
+			//make the shareDialog div, a jquery modal dialog
 			$( "#shareDialog" ).dialog
 			({
 				autoOpen: false,
 				modal:	true
 			});
+			
+			//open the share dialog and reset controls in it
 			$( "#shareButton" ).click
 			(
 				function()
 				{
 					$( "#shareDialog" ).dialog("open");
 					$( "#shareFacebook" ).html("Upload");
+					$( "#shareFlickr" ).html("Upload");
 				}
 			);
 			
+			//share to facebook
 			$( "#shareFacebook" ).click
 			(
 				function()
 				{
+					//if the user is not logged into FB, return back
+					if(FB.getSession() == null)
+					{
+						$( "#shareFacebook" ).html("Login First");
+						return;
+					}
+				
+					//check if the previous fb share is done. here the text can
+					//have values "Upload|Uploading|Uploaded" that denotes the status
+					//of current sharing.
 					if ( $( "#shareFacebook" ).html() == "Upload" )
 					{
+					
+						//update status and start sharing
 						$( "#shareFacebook" ).html("Uploading...");
 						fbWrapper.sharePhoto();
 					}
 				}
 			);
 			
+			//share to flickr
 			$( "#shareFlickr" ).click
 			(
 				function()
 				{
-					flickrWrapper.authenticate();
+					if(flickrWrapper.isValid()	==	false)
+					{
+						$( "#shareFlickr" ).html("Login First");
+						return;
+					}
+					
+					if ( $( "#shareFacebook" ).html() == "Upload" )
+					{
+					
+						//update status and start sharing
+						$( "#shareFlickr" ).html("Uploading...");
+						flickrWrapper.sharePhoto();
+					}
 				}
 			);
 			
-			$( "#shareTwitter" ).click
+			//login to flickr
+			$( "#flickrLogin" ).click
 			(
 				function()
 				{
-					twitterWrapper.authenticate();
+					if( $( "#flickrLogin" ).html() == "Flickr Login" )
+					{
+						flickrWrapper.authenticate();
+					}
+					else
+					{
+						flickrWrapper.logout();
+					}
 				}
 			);
+
 			
+			//draw the background of canvas background
 			spiroHelper.drawBG('canvasBG', { r:0, g:0, b:0 });
 			
-			//click handler for reDraw Button. Calls the the drawSpiro function in spiroCanvasCore
+			//click handler for Draw Button. Calls the the drawSpiro function
 			//to draw a new spirograph with appropriate parameters
 			$( "#drawButton" ).click
 			(
 				function()
 				{
-					spiroHelper.drawSpirograph();
-					
-					var arr = $("#layersPanelSelectable").sortable("toArray");
-					
-					var orderArray = new Array();
-					for (i = 0 ; i < arr.length; i++)
-					{
-						orderArray[i] = arr[i].substring(11,13);
-					}
-					
-					spiroHelper.setObjectOrder(orderArray);
+					spiroHelper.drawSpirograph();		//draw a spirograph based on currect slider values
+					spiroHelper.calcObjectOrder();		//update the order array
 				}
 			);
 			
+			//stop the current spiro drawing
 			$( "#stopButton" ).click
 			(
 				function()
@@ -139,18 +157,9 @@ SpiroCanvas.spiroCanvasUI = (function()
 			(
 				function()
 				{
-					spiroHelper.randomize();
-					spiroHelper.drawSpirograph();
-					
-					var arr = $("#layersPanelSelectable").sortable("toArray");
-					
-					var orderArray = new Array();
-					for (i = 0 ; i < arr.length; i++)
-					{
-						orderArray[i] = arr[i].substring(11,13);
-					}
-					
-					spiroHelper.setObjectOrder(orderArray);
+					spiroHelper.randomize();			//randomize the slider values
+					spiroHelper.drawSpirograph();		//draw a spirograph based on currect slider values
+					spiroHelper.calcObjectOrder();		//update the order array
 				}
 			);
 			
@@ -163,17 +172,8 @@ SpiroCanvas.spiroCanvasUI = (function()
 			//will get invoked, if the hide button on any of the layers is pressed
 			$('#hideLayerWidget').live('click', function()
 			{
-				var itemID		=	$(this).parent()[0].id;			//gets the id of <li> element
-				var no			=	itemID.substring(11, 13);		//retrieves the number at the end
-				var canvasid	=	"#canvasSpiro" + no;			//append the id to 'canvasSpriro' to refer to the canvas
-				if($(canvasid).css('display') == 'none')
-					$(canvasid).css('display', 'block');					//hide the canvas
-				else
-					$(canvasid).css('display', 'none');
-				return false;
+				spiroHelper.layerToggleVisibility(this);
 			});
-			
-			$("#backgroundFrame").center();
 			
 			//moves the canvasContainer (inside which our canvas tag resides) to the center of the screen
 			$("#canvasContainer").center();
@@ -185,23 +185,8 @@ SpiroCanvas.spiroCanvasUI = (function()
 				update: function(event, ui)
 				{
 					var arr	=	$(this).sortable('toArray');
-					
-					for ( var i = 0; i < arr.length; i++)
-					{
-						var itemID	=	arr[i];
-						var no			=	itemID.substring(11, 13);		//retrieves the number at the end
-						var canvasid	=	"#canvasSpiro" + no;			//append the id to 'canvasSpriro' to refer to the canvas
-						
-						$(canvasid).css('z-index' , i + 2);
-					}
-					
-					var orderArray = new Array();
-					for (i = 0 ; i < arr.length; i++)
-					{
-						orderArray[i] = arr[i].substring(11,13);
-					}
-					
-					spiroHelper.setObjectOrder(orderArray);
+					spiroHelper.arrangeLayers(arr);				//arrange the layers in order
+					spiroHelper.calcObjectOrder();				//update the order array
 				}
 			});	
 			

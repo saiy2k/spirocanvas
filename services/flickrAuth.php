@@ -1,4 +1,5 @@
 <?php
 
-echo('welcome');
+echo('close this window to continue');
+
 ?>
