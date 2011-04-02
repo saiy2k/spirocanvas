@@ -57,6 +57,7 @@ SpiroCanvas.FlickrWrapper			=	function(sH)
 	this.logout						=	function()
 	{
 		token						=	null;
+		//need to do real logout here
 		$("#flickrLogin").html("Flickr Login");
 	}
 	

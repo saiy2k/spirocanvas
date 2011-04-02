@@ -23,7 +23,8 @@ body
 	font-family:			georgia;
 	font-size:				12px;
 	color:					#566669;
-	background-image:		url('images/spiroBG.jpg');
+	background-image:		url('images/spiroBGBlue.jpg');
+	background-repeat:		no-repeat;
 	font:					12px arial;
 }
 a
@@ -36,7 +37,7 @@ a
 	width:					800px;
 	height:					600px;
 	margin:					auto;
-	border:					2px solid #111;
+	border:					2px solid #094965;
 }
 
 #layersPanelSelectable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
@@ -108,48 +109,75 @@ a
 	bottom:					0px;
 	left:					0px;
 	right:					0px;
-	height:					32px;
+	height:					43px;
 	text-align:				center;
 	display:				inline;
 }
 #statusRightPanel
 {
 	margin:					auto;
-	padding:				2px 8px 2px 8px;
 }
 #statusLeftPanel
 {
 	float:					left;
-	margin:					4px;
-	padding:				2px;
 }
 
 .statusButton
 {
-	width:					60px;
-	height:					24px;
+	width:					119px;
+	height:					43px;
 	text-align:				center;
 	text-decoration:		none;
-	background:				#111;
-	border:					1px solid #440000;
-	font:					12px arial;
+	font:					18px arial;
 	color:					#888888;
-	padding-top:			4px;
-}
-
-.statusButton:hover
-{
-	background:				#000;
-	border:					1px solid #880000;
-	color:					#cccccc;
+	font-variant:			small-caps;
+	padding-top:			12px;
 }
 
 .controlButton
 {
-	width:					60px;
-	height:					30px;
-	text-decoration:		none;
+	margin-top:				-3px;
+	width:					50px;
 	font:					12px arial;
-	padding-left:			6px;
-	color:					#888888;
+	color:					#7fdcff;
+	background-color:		#023A4F;
+	display:				inline-block;
+	text-align:				center;
+	padding:				4px;
+	padding-left:			10px;
+	padding-right:			10px;
+	border:					1px solid #09698d;
+	border-bottom:			none;
+}
+
+.controlButton:hover
+{
+	background-color:		#000000;
+}
+
+#saveButton
+{
+	background-image:		url('images/button1.png');
+}
+#saveButton:hover
+{
+	background-image:		url('images/button1S.png');
+}
+
+#randomButton
+{
+	background-image:		url('images/button2.png');
+}
+#randomButton:hover
+{
+	background-image:		url('images/button2S.png');
+}
+
+#shareButton
+{
+	background-image:		url('images/button3.png');
+}
+#shareButton:hover
+{
+	background-image:		url('images/button3S.png');
 }

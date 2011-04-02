@@ -74,6 +74,7 @@ SpiroCanvas.spiroCanvasCore = function()
 			self.clearInterval(this.loopID);
 			this.loopID 	=	-1;
 			$( "#progressBar" ).hide();
+			$("#drawButton").html("Draw");
 		}
 		
 		$( "#progressBar" ).progressbar("value", currentPointID/maxPoints * 100.0);
@@ -110,6 +111,7 @@ SpiroCanvas.spiroCanvasCore = function()
 			self.clearInterval(this.loopID);
 			this.loopID 	=	-1;
 			$( "#progressBar" ).hide();
+			$("#drawButton").html("Draw");
 		}
 		
 		$( "#progressBar" ).progressbar("value", currentPointID/maxPoints * 100.0);
@@ -272,6 +274,7 @@ SpiroCanvas.spiroCanvasCore = function()
 		if(this.loopID != -1)
 		{
 			$( "#progressBar" ).hide();
+			$("#drawButton").html("Draw");
 			self.clearInterval(this.loopID);
 			this.loopID			=	-1;
 		}

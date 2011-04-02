@@ -76,10 +76,15 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 
 <body onload="init()"> 
 
-<div id="canvasContainer" style="position:relative; z-index: -1">
+<div id="canvasContainer" style="position:absolute; z-index: 1; width:800; height:600;">
 	<canvas id="canvasBG" 		width="800" height="600" style="position:absolute; left:0px; top:0px; z-index:0; background-color:#000"></canvas>
 	<canvas id="canvasCircle" 	width="800" height="600" style="position:absolute; left:0px; top:0px; z-index:1;"></canvas>
 	<canvas id="canvasResult" 	width="800" height="600" style="display:none;"></canvas>
+	
+	<div id="playBox" style="height: 20px; text-align: center; z-index: 50;">
+		<a href="#" style="text-decoration:none;"><div id="drawButton" class="controlButton">Draw</div></a>	
+		<a href="#" style="text-decoration:none;"><div id="resetButton" class="controlButton">Clear</div></a>	
+	</div>
 </div>
 
 <div id="layersPanel" class="toolPanelRight" style="width: 177px">
@@ -92,15 +97,15 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 </div>
 
 <div id="statusDiv" style="text-align:center">
-	<div style="margin:auto; width:260px">
+	<div style="margin:auto; width:360px">
 		<div id="statusLeftPanel">
-			<a href="#" style="text-decoration:none;"><div id="saveButton" class="statusButton">Save</div></a>
+			<a href="#" style="text-decoration:none;"><div id="saveButton" class="statusButton"></div></a>
 		</div>
 		<div id="statusLeftPanel">
-			<a href="#" style="text-decoration:none;"><div id="randomButton" class="statusButton">Random</div></a>
+			<a href="#" style="text-decoration:none;"><div id="randomButton" class="statusButton" style="color: #dd6666"></div></a>
 		</div>
 		<div id="statusLeftPanel">
-			<a href="#" style="text-decoration:none;"><div id="shareButton" class="statusButton">Share</div></a>
+			<a href="#" style="text-decoration:none;"><div id="shareButton" class="statusButton"></div></a>
 		</div>
 	</div>
 </div>
@@ -148,18 +153,7 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	</div>
 </div>
 
-<div id="playPanel" class="toolPanel">
-	<div id="playBox" class="toolBox">
-		<a href="#" style="text-decoration:none;"><div id="drawButton" class="controlButton">Draw</div></a>
-		<a href="#" style="text-decoration:none;"><div id="stopButton" class="controlButton">Stop</div></a>	
-		<a href="#" style="text-decoration:none;"><div id="resetButton" class="controlButton">Reset</div></a>	
-	</div>
-	<div class="toolBoxHeader">
-		<b>C O N T R O L S</b>
-	</div>
-</div>
-
-<div id="progressBar" style="width: 250px; height: 10px"></div>
+<div id="progressBar" style="width: 250px; height: 10px; z-index:1000"></div>
 
 <canvas id="previewCanvas" width="320" height="240" style="position:absolute; background-color: #000; border:1px solid"> </canvas>
 

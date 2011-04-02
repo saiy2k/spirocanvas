@@ -20,7 +20,9 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 /*
 This class does the magic of converting plain divs to jqueryui controls
 and thus setting up the application UI. One and only function in this class
-is initUI and it will be called, when the body is loaded
+is initUI and it will be called, when the body is loaded.
+
+This class also holds the event handlers for the controls
 */
 
 SpiroCanvas.spiroCanvasUI = (function()
@@ -36,8 +38,8 @@ SpiroCanvas.spiroCanvasUI = (function()
 	{
 		jQuery(function()
 		{
-			//disable the scroll bars
-			$( "body" ).css("overflow", "hidden");
+			//initialize spiro helper
+			spiroHelper.init();
 			
 			//on save, get the PNG base64 encoded data and show it in new tab
 			$( "#saveButton" ).click
@@ -45,6 +47,19 @@ SpiroCanvas.spiroCanvasUI = (function()
 				function()
 				{
 					window.open(spiroHelper.saveAsPNG());
+				}
+			);
+			
+			//on save, clear the canvas and delete all the layers
+			$( "#resetButton" ).click
+			(
+				function()
+				{
+					if  ($("#drawButton").html() == "Stop")
+					{
+						spiroHelper.stopSpiroDrawing();
+					}
+					spiroHelper.reset();
 				}
 			);
 
@@ -96,15 +111,18 @@ SpiroCanvas.spiroCanvasUI = (function()
 			(
 				function()
 				{
+					//if the session is invalid, return back
 					if(flickrWrapper.isValid()	==	false)
 					{
 						$( "#shareFlickr" ).html("Login First");
 						return;
 					}
 					
+					//check if the previous share is done. here the text can
+					//have values "Upload|Uploading|Uploaded" that denotes the status
+					//of current sharing.
 					if ( $( "#shareFacebook" ).html() == "Upload" )
 					{
-					
 						//update status and start sharing
 						$( "#shareFlickr" ).html("Uploading...");
 						flickrWrapper.sharePhoto();
@@ -117,6 +135,8 @@ SpiroCanvas.spiroCanvasUI = (function()
 			(
 				function()
 				{
+					//if the user is not logged in, then log him in
+					//or else logout
 					if( $( "#flickrLogin" ).html() == "Flickr Login" )
 					{
 						flickrWrapper.authenticate();
@@ -128,18 +148,22 @@ SpiroCanvas.spiroCanvasUI = (function()
 				}
 			);
 
-			
-			//draw the background of canvas background
-			spiroHelper.drawBG('canvasBG', { r:0, g:0, b:0 });
-			
 			//click handler for Draw Button. Calls the the drawSpiro function
 			//to draw a new spirograph with appropriate parameters
 			$( "#drawButton" ).click
 			(
 				function()
 				{
-					spiroHelper.drawSpirograph();		//draw a spirograph based on currect slider values
-					spiroHelper.calcObjectOrder();		//update the order array
+					if  ($("#drawButton").html() == "Draw")
+					{
+						spiroHelper.drawSpirograph();		//draw a spirograph based on currect slider values
+						spiroHelper.calcObjectOrder();		//update the order array
+						$("#drawButton").html("Stop");
+					}
+					else
+					{
+						spiroHelper.stopSpiroDrawing();
+					}
 				}
 			);
 			
@@ -160,6 +184,7 @@ SpiroCanvas.spiroCanvasUI = (function()
 					spiroHelper.randomize();			//randomize the slider values
 					spiroHelper.drawSpirograph();		//draw a spirograph based on currect slider values
 					spiroHelper.calcObjectOrder();		//update the order array
+					$("#drawButton").html("Stop");
 				}
 			);
 			
@@ -175,13 +200,10 @@ SpiroCanvas.spiroCanvasUI = (function()
 				spiroHelper.layerToggleVisibility(this);
 			});
 			
-			//moves the canvasContainer (inside which our canvas tag resides) to the center of the screen
-			$("#canvasContainer").center();
-			
 			//makes the <UL> in layersPanel selectable
 			$("#layersPanelSelectable").sortable
 			({
-				containment: 'document', 
+				containment: '#layersPanel', 
 				update: function(event, ui)
 				{
 					var arr	=	$(this).sortable('toArray');
@@ -189,15 +211,9 @@ SpiroCanvas.spiroCanvasUI = (function()
 					spiroHelper.calcObjectOrder();				//update the order array
 				}
 			});	
-			
-			//hides the preview layer. This will be shown during mouse over on Draw button
-			$('#previewCanvas').hide();
-	
-			$("#sliderPanel").css("top", 20);
-			
-			$(".toolPanel").css("left", "-" + ($(".toolPanel").width() - 15) + "px" );
-			$(".toolPanelRight").offset({ top: 10, left: ($(document).width() - $(".toolPanelRight").width() + 10) });
 
+			//on clicking the left tool box header,
+			//slide the panel inside/outside the document
 			$(".toolBoxHeader").click
 			(
 				function()
@@ -213,6 +229,9 @@ SpiroCanvas.spiroCanvasUI = (function()
 					}
 				}
 			);
+			
+			//on clicking the right tool box header,
+			//slide the panel inside/outside the document
 			$(".toolBoxHeaderRight").click
 			(
 				function()
@@ -332,8 +351,8 @@ SpiroCanvas.spiroCanvasUI = (function()
 									}
 			});
 			
-			$("#colorPanel").css("top", ($("#sliderPanel").offset().top + $("#sliderPanel").height() + 10) );
-			
+			//make the 'foregroundColorDiv' a eyeCon color picker
+			//with some basic event handlers
 			$( "#foregroundColorDiv" ).ColorPicker
 			({
 				color: '#ffffff',
@@ -350,6 +369,8 @@ SpiroCanvas.spiroCanvasUI = (function()
 				}
 			});
 			
+			//make the 'backgroundColorDiv' a eyeCon color picker
+			//with some basic event handlers
 			$( "#backgroundColorDiv" ).ColorPicker
 			({
 				color: '#000000',
@@ -367,26 +388,45 @@ SpiroCanvas.spiroCanvasUI = (function()
 				}
 			});
 			
-			$("#playPanel").css("top", ($("#colorPanel").offset().top + $("#colorPanel").height() + 10) );
-			
+			//creates a progress bar out of 'progressBar' div
 			$( "#progressBar" ).progressbar
 			({
 				value: 0
 			});
-			$( "#progressBar" ).center();
-			$( "#progressBar" ).css("top", ($("#canvasContainer").offset().top + $("#canvasContainer").height() - 40) );
-			$( "#progressBar" ).hide();
 			
 			
-			$('#colorBox').hover
+			
+			//show the playbox if the mouse is over the canvas
+			$( "#canvasContainer" ).mouseover
 			(
-				function()
-				{  
-					 $("#colorBox", this).stop().animate({top:'200px'},{queue:false,duration:160});  
-				},
-				function()
-				{  
-					 $("#colorBox", this).stop().animate({top:'295px'},{queue:false,duration:160});  
+				function(e)
+				{
+					$( "#playBox" ).show();
+					//$( "#playBox" ).fadeIn(500);
+				}
+			);
+			//hides the playbox if the mouse is out of the canvas
+			$( "#canvasContainer" ).mouseout
+			(
+				function(e)
+				{
+					$( "#playBox" ).hide();
+					//$( "#playBox" ).fadeOut(500);
+				}
+			);
+			
+			$( "#playBox" ).mouseover
+			(
+				function(e)
+				{
+					$( "#playBox" ).show();
+				}
+			);
+			$( "#playBox" ).mouseout
+			(
+				function(e)
+				{
+					$( "#playBox" ).hide();
 				}
 			);
 

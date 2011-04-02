@@ -32,7 +32,63 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 	
 	var spiroMain			=	new SpiroCanvas.spiroCanvasCore();
 	var spiroInstant		=	new SpiroCanvas.spiroCanvasCore();
-
+	
+	this.init				=	function()
+	{
+		//disable the scroll bars
+		$( "body" ).css("overflow", "hidden");
+			
+		//moves the canvasContainer (inside which our canvas tag resides) to the center of the screen
+		$("#canvasContainer").center();
+		
+		//hides the preview layer. This will be shown during mouse over on Draw button
+		$('#previewCanvas').hide();
+		
+		//position the slider panel (toolbox)
+		$("#sliderPanel").css("top", 20);
+		
+		//positions the color box
+		$("#colorPanel").css("top", ($("#sliderPanel").offset().top + $("#sliderPanel").height() + 10) );
+		
+		//layouts the progress bar and hides it
+		$( "#progressBar" ).center();
+		$( "#progressBar" ).css("top", ($("#canvasContainer").offset().top + $("#canvasContainer").height() - 40) );
+		$( "#progressBar" ).hide();
+		
+		//layouts the play box and hides it
+		$( "#playBox" ).css("position", "absolute" );
+		$( "#playBox" ).css("left", ( ($("#canvasContainer").width() - $("#playBox").width()) / 2 ) );
+		$( "#playBox" ).css("top", ($("#canvasContainer").height() - 20) );
+		$( "#playBox" ).hide();
+		
+		//position the x value of all the '.toolPanel' objects
+		$(".toolPanel").css("left", "-" + ($(".toolPanel").width() - 15) + "px" );
+		$(".toolPanelRight").offset({ top: 10, left: ($(document).width() - $(".toolPanelRight").width()) });
+		
+		//draws the black background
+		this.drawBG('canvasBG', { r:0, g:0, b:0});
+	}
+	
+	this.reset				=	function()
+	{
+		for ( var i = 0; i < layerCount; i++)
+		{
+			var ele;
+			var no			=	orderArray[i];
+			var canvasid	=	"canvasSpiro" + no;
+			var layerid		=	"layerWidget" + no;
+			
+			ele				=	document.getElementById(canvasid);
+			ele.parentNode.removeChild(ele);
+			ele				=	document.getElementById(layerid);
+			ele.parentNode.removeChild(ele);
+		}
+	
+		layerCount			=	0;
+		currentLayerID		=	-1;
+		layersArray			=	{};
+		orderArray;
+	}
 
 	this.saveAsPNG			=	function()
 	{
@@ -216,6 +272,7 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 			spiroMain.angle	=	0.0;
 			
 			$( "#progressBar" ).hide();
+			$("#drawButton").html("Draw");
 		}
 	}
 	
