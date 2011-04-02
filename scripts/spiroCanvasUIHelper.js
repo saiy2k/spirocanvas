@@ -45,11 +45,8 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		$('#previewCanvas').hide();
 		
 		//position the slider panel (toolbox)
-		$("#sliderPanel").css("top", 20);
-		
-		//positions the color box
-		$("#colorPanel").css("top", ($("#sliderPanel").offset().top + $("#sliderPanel").height() + 10) );
-		
+		$("#advancedHeader").css("top", 50);
+			
 		//layouts the progress bar and hides it
 		$( "#progressBar" ).center();
 		$( "#progressBar" ).css("top", ($("#canvasContainer").offset().top + $("#canvasContainer").height() - 40) );
@@ -62,9 +59,11 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		$( "#playBox" ).hide();
 		
 		//position the x value of all the '.toolPanel' objects
-		$(".toolPanel").css("left", "-" + ($(".toolPanel").width() - 15) + "px" );
-		$(".toolPanelRight").offset({ top: 10, left: ($(document).width() - $(".toolPanelRight").width()) });
-		
+		$(".toolPanel").css("left", "-" + ($(".toolPanel").width() - 50) + "px" );
+		$(".toolPanel").css("top", "100px" );
+		$(".toolPanelRight").offset({ top: 100, left: ($(document).width() - $(".toolPanelRight").width())});
+		$(".toolBoxHeader").offset({ top: 100 });
+
 		//draws the black background
 		this.drawBG('canvasBG', { r:0, g:0, b:0});
 	}
@@ -250,7 +249,7 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 			'<li class="ui-widget-content" style="background: #000000; border: none; color: #aaaaaa" id="layerWidget' + layerCount + '">' + 
 			'Layer ' +  layerCount + ' ' +
 			'<a href="#" id="removeLayerWidget" border="2"><img src="images/closeIcon.png"></a> &nbsp;' +
-			'<a href="#" id="hideLayerWidget" border="2"><img src="images/eyeIcon.gif"></a>' +
+			'<a href="#" id="hideLayerWidget" border="2"><img src="images/eyeIcon.png"></a>' +
 			'</li>'
 		);
 		
@@ -441,6 +440,12 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		else
 			$(canvasid).css('display', 'none');
 		return false;
+	}
+	
+	this.updateCenter			=	function(cx, cy)
+	{
+		console.log(cx + ',' + cy);
+		spiroMain.updateCenterPoint({x: cx, y: cy});
 	}
 	
 	function removeByElement(arrayName,arrayElement)

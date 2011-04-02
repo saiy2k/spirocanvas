@@ -35,6 +35,7 @@ SpiroCanvas.spiroCanvasCore = function()
 	var angleStep;					//amount of angle to increment on each loop (derived from Points/Curve)
 	var currentPointID;				//keeps track of the number of points drawn	
 	var oldPoint	=	{x:0, y:0}; //previous point of the spirograph
+	var centerPoint = 	{x:0, y:0};	//point around which the graph is drawn
 	
 	var strokeColor;
 	var shadowColor;
@@ -49,16 +50,16 @@ SpiroCanvas.spiroCanvasCore = function()
 	//Parametric equation of Hypotrochoid is given by
 	//	x(t) = (R-r)*cos(t) + p*cos(((R-r)/r)t)
 	//	y(t) = (R-r)*sin(t) - p*cos(((R-r)/r)t)
-	this.drawH 		=	function (ct, R, r, p, maxPoints, originPoint)
+	this.drawH 		=	function (ct, R, r, p, maxPoints)
 	{
 		var newPoint=	{x:0, y:0};		
 		this.angle 		+=	angleStep;
 		
 		//calculates the point using updated angle and Hypotrochoid formula
-		newPoint.x 	=	originPoint.x + aMinusb * Math.cos(this.angle) + p * Math.cos(this.angle * aMinusbOverb);
-		newPoint.y 	=	originPoint.y + aMinusb * Math.sin(this.angle) - p * Math.sin(this.angle * aMinusbOverb);
+		newPoint.x 	=	centerPoint.x + aMinusb * Math.cos(this.angle) + p * Math.cos(this.angle * aMinusbOverb);
+		newPoint.y 	=	centerPoint.y + aMinusb * Math.sin(this.angle) - p * Math.sin(this.angle * aMinusbOverb);
 		
-		this.drawCircles(originPoint, newPoint, R, r, true);
+		this.drawCircles(centerPoint, newPoint, R, r, true);
 		
 		//draw a shadow behind the spirograph line
 		drawShadowLine(ct, oldPoint, newPoint);
@@ -86,16 +87,16 @@ SpiroCanvas.spiroCanvasCore = function()
 	//Parametric equation of Hypotrochoid is given by
 	//	x(t) = (R+r)*cos(t) - p*cos(((R+r)/r)t)
 	//	y(t) = (R+r)*sin(t) - p*cos(((R+r)/r)t)
-	this.drawE 		=	function (ct, R, r, p, maxPoints, originPoint)
+	this.drawE 		=	function (ct, R, r, p, maxPoints)
 	{
 		var newPoint=	{x:0, y:0};
 		this.angle += angleStep;
 		
 		//calculates the point using updated angle and Epitrochoid formula
-		newPoint.x	=	originPoint.x + aPlusb * Math.cos(this.angle) - p * Math.cos(this.angle * aPlusbOverb);
-		newPoint.y	=	originPoint.y + aPlusb * Math.sin(this.angle) - p * Math.sin(this.angle * aPlusbOverb);
+		newPoint.x	=	centerPoint.x + aPlusb * Math.cos(this.angle) - p * Math.cos(this.angle * aPlusbOverb);
+		newPoint.y	=	centerPoint.y + aPlusb * Math.sin(this.angle) - p * Math.sin(this.angle * aPlusbOverb);
 	
-		this.drawCircles(originPoint, newPoint, R, r, false);
+		this.drawCircles(centerPoint, newPoint, R, r, false);
 		
 		//draw a shadow behind the spirograph line
 		drawShadowLine(ct, oldPoint, newPoint);
@@ -138,7 +139,6 @@ SpiroCanvas.spiroCanvasCore = function()
 		currentPointID		=	0;
 		var NumRevolutions	=	0;
 		var NumPoints		=	0;
-		var centerPoint		=	{x:0, y:0};
 		var curveType		=	"";
 		canvasBase			=	document.getElementById(canvasSpiroID);
 		ct					=	canvasBase.getContext('2d');
@@ -201,7 +201,6 @@ SpiroCanvas.spiroCanvasCore = function()
 		this.angle			=	0;
 		var NumRevolutions	=	0;
 		var NumPoints		=	0;
-		var centerPoint		=	{x:0, y:0};
 		var canvasBase		=	document.getElementById(canvasID);
 		var ct				=	canvasBase.getContext('2d');
 		
@@ -325,6 +324,11 @@ SpiroCanvas.spiroCanvasCore = function()
 		ct.lineTo(newPoint.x, newPoint.y);
 		ct.stroke();
 		ct.closePath();
+	};
+	
+	this.updateCenterPoint		=	function(pt)
+	{
+		centerPoint			=	pt;
 	};
 	
 	function drawShadowLine(ct, point1, point2)

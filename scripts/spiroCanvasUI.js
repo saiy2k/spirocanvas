@@ -34,6 +34,8 @@ SpiroCanvas.spiroCanvasUI = (function()
 	var flickrWrapper		=	new SpiroCanvas.FlickrWrapper(spiroHelper);
 	var twitterWrapper		=	new SpiroCanvas.TwitterWrapper(spiroHelper);
 	
+	var isDrawingByMouse	=	false;
+	
 	my.initUI 		=	function ()
 	{
 		jQuery(function()
@@ -203,7 +205,7 @@ SpiroCanvas.spiroCanvasUI = (function()
 			//makes the <UL> in layersPanel selectable
 			$("#layersPanelSelectable").sortable
 			({
-				containment: '#layersPanel', 
+				containment: '#layersBox', 
 				update: function(event, ui)
 				{
 					var arr	=	$(this).sortable('toArray');
@@ -221,7 +223,7 @@ SpiroCanvas.spiroCanvasUI = (function()
 					var ele		=	$(this).parent();
 					if (ele.css("left") == "-5px")
 					{
-						ele.animate( {left: "-" + (ele.width() - 15) + "px"}, 250);
+						ele.animate( {left: "-" + (ele.width() - 50) + "px"}, 250);
 					}
 					else
 					{
@@ -237,11 +239,11 @@ SpiroCanvas.spiroCanvasUI = (function()
 				function()
 				{
 					var ele		=	$(this).parent();
-					var pos		=	$(window).width() - ele.width() + 10;
+					var pos		=	$(window).width() - ele.width();
 					
 					if (ele.offset().left == pos)
 					{
-						ele.animate( {left: ($(window).width() - 16) + "px"}, 250);
+						ele.animate( {left: ($(window).width() - 46) + "px"}, 250);
 					}
 					else
 					{
@@ -355,6 +357,7 @@ SpiroCanvas.spiroCanvasUI = (function()
 			//with some basic event handlers
 			$( "#foregroundColorDiv" ).ColorPicker
 			({
+				eventName: 'click',
 				color: '#ffffff',
 				onShow: function (colpkr) {
 					$(colpkr).fadeIn(500);
@@ -429,7 +432,38 @@ SpiroCanvas.spiroCanvasUI = (function()
 					$( "#playBox" ).hide();
 				}
 			);
-
+			
+			$( "#canvasContainer" ).mousedown
+			(
+				function()
+				{
+					spiroHelper.drawSpirograph();		//draw a spirograph based on currect slider values
+					spiroHelper.calcObjectOrder();		//update the order array
+					
+					isDrawingByMouse	=	true;
+				}
+			);
+			
+			$( "#canvasContainer" ).mouseup
+			(
+				function()
+				{
+					spiroHelper.stopSpiroDrawing();
+					
+					isDrawingByMouse	=	false;
+				}
+			);
+			
+			$('#canvasContainer').mousemove
+			(
+				function(event)
+				{
+					if(isDrawingByMouse)
+					{
+						spiroHelper.updateCenter(event.pageX - parseInt($("#canvasContainer").css("left")), event.pageY - parseInt($("#canvasContainer").css("top")));
+					}
+				}
+			);
 		});
 	};
 

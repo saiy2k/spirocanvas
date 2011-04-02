@@ -87,15 +87,6 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	</div>
 </div>
 
-<div id="layersPanel" class="toolPanelRight" style="width: 177px">
-	<div class="toolBoxHeaderRight">
-		<b>L A Y E R S</b>
-	</div>
-	<div id="layersBox" class="toolBoxRight">
-		<ul id="layersPanelSelectable"></ul>
-	</div>
-</div>
-
 <div id="statusDiv" style="text-align:center">
 	<div style="margin:auto; width:360px">
 		<div id="statusLeftPanel">
@@ -110,8 +101,9 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	</div>
 </div>
 
-<div id="sliderPanel" class="toolPanel">
-	<div id="sliderBox" class="toolBox">
+<div class="toolPanel">
+	<div class="toolBox" style="padding:10px 0px 0px 12px;">
+		<div class="toolBoxHorizontalHeader"> Sliders </div>
 		<div class="toolBoxHorizontalPanel">
 			<div id="circle1RadiusSlider" style="width:100px; float:left;"></div>
 			<div id="circle1RadiusLabel" style="border:0; color:#f6931f; font-weight:bold; float:right">60</div>
@@ -137,19 +129,38 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 			<div id="speedLabel" style="border:0; color:#f6931f; font-weight:bold; float:right">20</div>
 			<br> Animation Speed
 		</div>
+		<div class="toolBoxHorizontalPanel" style="border-bottom:1px solid #265a67"></div>
 	</div>
-	<div class="toolBoxHeader">
-		<b>T O O L B O X</b>
+	
+	<div class="toolBox" style="padding:10px 0px 0px 12px;">
+		<div class="toolBoxHorizontalHeader"> Color </div>
+		<div class="toolBoxHorizontalPanel">
+			<div id="foregroundColorDiv" style="width:126px; height:20px; background-color:#ffffff;"></div>
+		</div>
+		<div class="toolBoxHorizontalPanel">
+			<div id="backgroundColorDiv" style="width:126px; height:24px; background-color:#000000;"></div>
+		</div>
+		<div class="toolBoxHorizontalPanel" style="border-bottom:1px solid #265a67"></div>
 	</div>
+	
+	<div class="toolBox" style="padding:10px 0px 0px 12px;">
+		<div class="toolBoxHorizontalHeader"> Credits </div>
+		<div class="toolBoxHorizontalPanel" style="font: 12px arial">
+			Copyright 2011 Saiyasodharan. <br> <br>
+			This program is released under GNU GPL V3. To know your rights, click here.
+		</div>
+		<div class="toolBoxHorizontalPanel" style="border-bottom:1px solid #265a67"></div>
+	</div>
+	
+	<div class="toolBox" style="padding:10px 0px 0px 32px;"></div>
+	
+	<div class="toolBoxHeader" id="advancedHeader"></div>
 </div>
 
-<div id="colorPanel" class="toolPanel">
-	<div id="colorBox" class="toolBox">
-		<div id="foregroundColorDiv" style="width:140px; height:24px; background-color:#ffffff; margin:2px; border:1px solid #ffffff"></div>
-		<div id="backgroundColorDiv" style="width:140px; height:24px; background-color:#000000; margin:2px; border:1px solid #ffffff"></div>
-	</div>
-	<div class="toolBoxHeader">
-		<b>C O L O R B O X</b>
+<div class="toolPanelRight">
+	<div class="toolBoxHeaderRight" id="layersHeader"></div>
+	<div class="toolBox" id="layersBox" style="height: 490px">
+		<ul id="layersPanelSelectable"></ul>
 	</div>
 </div>
 

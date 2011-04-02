@@ -50,55 +50,63 @@ a
 {
 	float:					left;
 	width:					150px;
-	background-color:		#090909;
-	border:					1px solid #333;
 	padding:				4px;
+	background-color:		#062129;
+	text-align:				center;
 }
 .toolBoxRight
 {
 	float:					right;
-	width:					150px;
-	background-color:		#090909;
-	border:					1px solid #333;
+	width:					140px;
 	padding:				4px;
 }
 
 .toolBoxHorizontalPanel
 {
-	height: 				40px;
-	margin:					2px;
-	padding:				2px;
+	color:					#aaa;
+	width:					129px;
+	margin:					0px 2px 0px 2px;
+	border-left:			1px solid #265a67;
+	border-right:			1px solid #265a67;
+	padding:				10px 2px 0px 2px;
+	background-color:		#0a323c;
+}
+
+.toolBoxHorizontalHeader
+{
+	color:					#ddd;
+	width:					134px
+	height: 				25px;
+	margin:					0px 2px 0px 2px;
+	padding:				0px 2px 0px 2px;;
+	background-image:		url('images/toolHeader.png');
+	background-repeat:		no-repeat;
+	font-weight:			bold;
 }
 
 .toolPanel
 {
 	position:				absolute;
+	width:					206px;
+	z-index:				100;
 }
 .toolPanelRight
 {
 	position:				absolute;
+	width:					206px;
+	z-index:				100;
 }
 
 .toolBoxHeader
 {
-	margin-left:			-1px;
-	float:					left;
-	border:					2px solid #333;
-	//border-left: 			none;
-	width: 					1em;				
-	background-color:		#090909;
+	float:					right;
 	padding: 				1px;
 	font:					12px arial;
 }
 
 .toolBoxHeaderRight
 {
-	margin-right:			-1px;
 	float:					left;
-	border:					2px solid #333;
-	//border-left: 			none;
-	width: 					1em;				
-	background-color:		#090909;
 	padding: 				1px;
 	font:					12px arial;
 }
@@ -180,4 +188,25 @@ a
 #shareButton:hover
 {
 	background-image:		url('images/button3S.png');
+}
+
+#advancedHeader
+{
+	width:					46px;
+	height:					499px;
+	background-image:		url('images/advancedHeader.png');
+	background-repeat:		no-repeat;
+}
+
+#layersHeader
+{
+	width:					46px;
+	height:					499px;
+	background-image:		url('images/layersHeader.png');
+	background-repeat:		no-repeat;
+}
+
+.ui-widget-content
+{
+	font:					14px arial;
 }
