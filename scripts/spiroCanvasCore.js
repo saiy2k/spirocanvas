@@ -45,6 +45,8 @@ SpiroCanvas.spiroCanvasCore = function()
 	var aPlusb;						//=(R + r), pre-calculated to optimize performance
 	var aPlusbOverb;				//=(R + r) / r, pre-calculated to optimize performance
 	
+	var parent;
+	
 	
 	//This Hypotrochoid function will be invoked repeatedly at a rate set by the user.
 	//Parametric equation of Hypotrochoid is given by
@@ -71,11 +73,7 @@ SpiroCanvas.spiroCanvasCore = function()
 		currentPointID++;
 		if(currentPointID >= maxPoints)
 		{
-			ct.closePath();
-			self.clearInterval(this.loopID);
-			this.loopID 	=	-1;
-			$( "#progressBar" ).hide();
-			$("#drawButton").html("Draw");
+			this.stopDrawing();
 		}
 		
 		$( "#progressBar" ).progressbar("value", currentPointID/maxPoints * 100.0);
@@ -108,11 +106,7 @@ SpiroCanvas.spiroCanvasCore = function()
 		currentPointID++;
 		if(currentPointID >= maxPoints)
 		{
-			ct.closePath();
-			self.clearInterval(this.loopID);
-			this.loopID 	=	-1;
-			$( "#progressBar" ).hide();
-			$("#drawButton").html("Draw");
+			this.stopDrawing();
 		}
 		
 		$( "#progressBar" ).progressbar("value", currentPointID/maxPoints * 100.0);
@@ -126,8 +120,7 @@ SpiroCanvas.spiroCanvasCore = function()
 		//if a curve is being drawn, stop it
 		if(this.loopID != -1)
 		{
-			self.clearInterval(this.loopID);
-			this.loopID			=	-1;
+			this.stopDrawing();
 		}
 		
 		var R				=	curveData.R;
@@ -159,8 +152,6 @@ SpiroCanvas.spiroCanvasCore = function()
 		angleStep			=	(Math.PI * 2) / curveData.res;
 		NumRevolutions		=	r / MMath.HCF (R, r);
 		NumPoints			=	curveData.res * NumRevolutions;
-		centerPoint.x		=	canvasBase.width / 2;
-		centerPoint.y		=	canvasBase.height / 2;
 		
 		//pre-calculation of frequently required terms
 		aMinusb				=	R - r;
@@ -272,10 +263,7 @@ SpiroCanvas.spiroCanvasCore = function()
 		//if a curve is being drawn, stop it
 		if(this.loopID != -1)
 		{
-			$( "#progressBar" ).hide();
-			$("#drawButton").html("Draw");
-			self.clearInterval(this.loopID);
-			this.loopID			=	-1;
+			this.stopDrawing();
 		}
 		
 		var	ctx				=	document.getElementById(canvasID).getContext('2d');
@@ -326,9 +314,27 @@ SpiroCanvas.spiroCanvasCore = function()
 		ct.closePath();
 	};
 	
-	this.updateCenterPoint		=	function(pt)
+	//to stop the current drawing, if any
+	this.stopDrawing		=	function()
+	{
+		if(this.loopID != -1)
+		{
+			ct.closePath();
+			self.clearInterval(this.loopID);
+			this.loopID 	=	-1;
+			this.angle		=	0.0;
+			parent.onDrawStop();
+		}
+	}
+	
+	this.updateCenterPoint	=	function(pt)
 	{
 		centerPoint			=	pt;
+	};
+	
+	this.setDelegate		=	function(obj)
+	{
+		parent				=	obj;
 	};
 	
 	function drawShadowLine(ct, point1, point2)

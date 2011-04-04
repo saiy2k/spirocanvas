@@ -28,6 +28,7 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 	var layerCount			=	0;
 	var currentLayerID		=	-1;
 	var layersArray			=	{};
+	var centerPoint			=	{x:0, y:0};
 	var orderArray;
 	
 	var spiroMain			=	new SpiroCanvas.spiroCanvasCore();
@@ -66,6 +67,10 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 
 		//draws the black background
 		this.drawBG('canvasBG', { r:0, g:0, b:0});
+		
+		this.updateCenter(400, 300);
+		
+		spiroMain.setDelegate(this);
 	}
 	
 	this.reset				=	function()
@@ -86,7 +91,7 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		layerCount			=	0;
 		currentLayerID		=	-1;
 		layersArray			=	{};
-		orderArray;
+		orderArray			=	{};
 	}
 
 	this.saveAsPNG			=	function()
@@ -210,7 +215,7 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		var tmpSpiro	=	new SpiroCanvas.spiroGraph();
 		var cc			=	new SpiroCanvas.colorConversion();
 		
-		$( "#progressBar" ).show();
+		this.prepareForDrawing();
 		
 		//initiating the new object with vales from the controls
 		tmpSpiro.R		=	$('#circle1RadiusSlider').slider('value');
@@ -264,37 +269,37 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 	this.stopSpiroDrawing		=	function()
 	{
 		//if any cruve is being drawn, stop it
-		if ( spiroMain.loopID != -1 )
+		if(this.loopID != -1)
 		{
-			clearInterval(spiroMain.loopID);
-			spiroMain.loopID	=	-1;
-			spiroMain.angle	=	0.0;
-			
 			$( "#progressBar" ).hide();
 			$("#drawButton").html("Draw");
+			spiroMain.stopDrawing();
 		}
+	}
+	
+	this.onDrawStop				=	function()
+	{
+		this.stopSpiroDrawing();
+	}
+	
+	this.prepareForDrawing		=	function()
+	{
+		$( "#progressBar" ).show();
+		$("#drawButton").html("Stop");
 	}
 	
 	this.updateDrawingCircle	=	function()
 	{
 		//if any cruve is being drawn, stop it
-		if ( spiroMain.loopID != -1 )
-		{
-			clearInterval(spiroMain.loopID);
-			spiroMain.loopID	=	-1;
-			spiroMain.angle	=	0.0;
-		}
+		//this.stopSpiroDrawing();
 		
 		//retrieve the details required to draw the drawing circles
 		//and ask spiroCanvasCore to draw them
 		var canvasCircle=	document.getElementById('canvasCircle');
-		var centerPoint	=	{x:0, y:0};
 		var newPoint	=	{x:0, y:0};
 		var R			=	$("#circle1RadiusSlider").slider("value");
 		var r			=	$("#circle2RadiusSlider").slider("value");
 		var p			=	$("#pointDistanceSlider").slider("value");
-		centerPoint.x	=	canvasCircle.width  / 2;
-		centerPoint.y	=	canvasCircle.height / 2;
 		
 		if ( r < 0 )
 		{
@@ -444,7 +449,7 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 	
 	this.updateCenter			=	function(cx, cy)
 	{
-		console.log(cx + ',' + cy);
+		centerPoint		=	{x: cx, y: cy};
 		spiroMain.updateCenterPoint({x: cx, y: cy});
 	}
 	

@@ -158,9 +158,10 @@ SpiroCanvas.spiroCanvasUI = (function()
 				{
 					if  ($("#drawButton").html() == "Draw")
 					{
+						spiroHelper.updateCenter(400, 300);
 						spiroHelper.drawSpirograph();		//draw a spirograph based on currect slider values
 						spiroHelper.calcObjectOrder();		//update the order array
-						$("#drawButton").html("Stop");
+
 					}
 					else
 					{
@@ -169,24 +170,15 @@ SpiroCanvas.spiroCanvasUI = (function()
 				}
 			);
 			
-			//stop the current spiro drawing
-			$( "#stopButton" ).click
-			(
-				function()
-				{
-					spiroHelper.stopSpiroDrawing();
-				}
-			);
-			
 			//handler for Random Button
 			$( "#randomButton" ).click
 			(
 				function()
 				{
+					spiroHelper.updateCenter(400, 300);
 					spiroHelper.randomize();			//randomize the slider values
 					spiroHelper.drawSpirograph();		//draw a spirograph based on currect slider values
 					spiroHelper.calcObjectOrder();		//update the order array
-					$("#drawButton").html("Stop");
 				}
 			);
 			
@@ -435,8 +427,14 @@ SpiroCanvas.spiroCanvasUI = (function()
 			
 			$( "#canvasContainer" ).mousedown
 			(
-				function()
+				function(event)
 				{
+					if(event.pageY - parseInt($("#canvasContainer").css("top")) - parseInt($("#canvasContainer").css("height")) > -30)
+					{
+						return;
+					}
+				
+					spiroHelper.updateCenter(event.pageX - parseInt($("#canvasContainer").css("left")), event.pageY - parseInt($("#canvasContainer").css("top")));
 					spiroHelper.drawSpirograph();		//draw a spirograph based on currect slider values
 					spiroHelper.calcObjectOrder();		//update the order array
 					
@@ -446,8 +444,13 @@ SpiroCanvas.spiroCanvasUI = (function()
 			
 			$( "#canvasContainer" ).mouseup
 			(
-				function()
+				function(event)
 				{
+					if(event.pageY - parseInt($("#canvasContainer").css("top")) - parseInt($("#canvasContainer").css("height")) > -30)
+					{
+						return;
+					}
+				
 					spiroHelper.stopSpiroDrawing();
 					
 					isDrawingByMouse	=	false;
@@ -458,9 +461,21 @@ SpiroCanvas.spiroCanvasUI = (function()
 			(
 				function(event)
 				{
+					if(event.pageY - parseInt($("#canvasContainer").css("top")) - parseInt($("#canvasContainer").css("height")) > -30)
+					{
+						return;
+					}
+				
 					if(isDrawingByMouse)
 					{
 						spiroHelper.updateCenter(event.pageX - parseInt($("#canvasContainer").css("left")), event.pageY - parseInt($("#canvasContainer").css("top")));
+					}
+					else
+					{
+						/*
+						spiroHelper.updateCenter(event.pageX - parseInt($("#canvasContainer").css("left")), event.pageY - parseInt($("#canvasContainer").css("top")));
+						spiroHelper.updateDrawingCircle();
+						*/
 					}
 				}
 			);
