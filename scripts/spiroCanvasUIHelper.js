@@ -25,6 +25,8 @@ spiroCanvasCore.
 SpiroCanvas.spiroCanvasUIHelper = function()
 {
 	var tmpCore;
+	var realLayerCount		=	0;
+	var maxLayers			=	17;
 	var layerCount			=	0;
 	var currentLayerID		=	-1;
 	var layersArray			=	{};
@@ -57,7 +59,6 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		$( "#playBox" ).css("position", "absolute" );
 		$( "#playBox" ).css("left", ( ($("#canvasContainer").width() - $("#playBox").width()) / 2 ) );
 		$( "#playBox" ).css("top", ($("#canvasContainer").height() - 20) );
-		$( "#playBox" ).hide();
 		
 		//position the x value of all the '.toolPanel' objects
 		$(".toolPanel").css("left", "-" + ($(".toolPanel").width() - 50) + "px" );
@@ -83,11 +84,15 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 			var layerid		=	"layerWidget" + no;
 			
 			ele				=	document.getElementById(canvasid);
-			ele.parentNode.removeChild(ele);
-			ele				=	document.getElementById(layerid);
-			ele.parentNode.removeChild(ele);
+			if(ele != null)
+			{
+				ele.parentNode.removeChild(ele);
+				ele				=	document.getElementById(layerid);
+				ele.parentNode.removeChild(ele);
+			}
 		}
-	
+		
+		realLayerCount		=	0;
 		layerCount			=	0;
 		currentLayerID		=	-1;
 		layersArray			=	{};
@@ -114,7 +119,6 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 			{
 				var ctz			=	canvasele.getContext('2d');
 				ctx.drawImage(ctz.canvas, 0, 0);
-				//console.log("canvas ID: " + canvasid);
 			}
 		}
 		
@@ -124,93 +128,13 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		return resultCanvas.toDataURL("image/png");
 	};
 	
-	this.saveAsJPG			=	function()
+	this.drawSpirograph		=	function(isFullSpeed)
 	{
-		var resultCanvas	=	document.getElementById("canvasResult");
-		var bgCanvas		=	document.getElementById("canvasBG");
-		var ctx				=	resultCanvas.getContext('2d');
-		var cty				=	bgCanvas.getContext('2d');
-		
-		var bgImg 			= 	Canvas2Image.saveAsPNG(bgCanvas, true);
-		ctx.drawImage(cty.canvas, 0, 0);
-		
-		//for ( var key in layersArray )
-		for ( var i = 0; i < layerCount; i++)
+		if(realLayerCount >= maxLayers)
 		{
-			var no			=	orderArray[i];
-			var canvasid	=	"canvasSpiro" + no;
-			var canvasele	=	document.getElementById(canvasid);
-			if(canvasele && canvasele.style.display != "none")
-			{
-				var ctz			=	canvasele.getContext('2d');
-				ctx.drawImage(ctz.canvas, 0, 0);
-				//console.log("canvas ID: " + canvasid);
-			}
+			return;
 		}
-		
-		//window.location.href     = resultCanvas.toDataURL("image/png");
-		//window.open(resultCanvas.toDataURL("image/png"));
-		//Canvas2Image.saveAsPNG(resultCanvas);
-		return resultCanvas.toDataURL("image/jpeg");
-	};
 	
-	this.showPreview		=	function(e)
-	{
-		//creating a new Spirograph object
-		var tmpSpiro	=	new SpiroCanvas.spiroGraph();
-		var cc			=	new SpiroCanvas.colorConversion();
-		
-		//initiating the new object with vales from the controls
-		//all the pixels values are divided by 4 to make the preview
-		//4 times smaller. Also, the resolution is divided by 4 to speed
-		//up the process ( this will result in inaccurate, but quick preview )
-		tmpSpiro.R		=	$('#circle1RadiusSlider').slider('value') / 4;
-		tmpSpiro.r 		=	$('#circle2RadiusSlider').slider('value') / 4;
-		tmpSpiro.p 		=	$('#pointDistanceSlider').slider('value') / 4;
-		var hexCol		= 	$('#foregroundColorDiv').css('background-color');
-		hexCol			=	cc.colorToHex(hexCol);
-		var rgbCol		=	cc.HexToRGB(hexCol);
-		tmpSpiro.color	=	cc.rgbToHsv(rgbCol.r, rgbCol.g, rgbCol.b);
-		
-		hexCol			= 	$('#backgroundColorDiv').css('background-color');
-		hexCol			=	cc.colorToHex(hexCol);
-		rgbCol			=	cc.HexToRGB(hexCol);
-		var bgColor		=	cc.rgbToHsv(rgbCol.r, rgbCol.g, rgbCol.b);
-		
-		tmpSpiro.speed	=	$('#speedSlider').slider('value');
-		tmpSpiro.res	=	$('#resolutionSlider').slider('value') / 4;
-		
-		if(tmpSpiro.res < 8)
-		{
-			tmpSpiro.res*=	2;
-		}
-		
-		if(tmpSpiro.r < 0)
-		{
-			tmpSpiro.r	=	-tmpSpiro.r;
-			tmpSpiro.isEpi	=	false;
-		}
-		else
-		{
-			tmpSpiro.isEpi	=	true;
-		}
-		
-		//set the position of the preview canvas
-		$('#previewCanvas').css( 'top',  (e.pageY - 250) + "px");
-		$('#previewCanvas').css( 'left', (e.pageX + 10) + "px");
-		
-		//show the canvas
-		$('#previewCanvas').fadeIn();
-		
-		//clear the canvas first
-		spiroInstant.clearSpiro('previewCanvas', bgColor);
-		
-		//invoke the instant draw function to draw the graph
-		spiroInstant.drawInstantSpiro('previewCanvas', tmpSpiro);
-	};
-	
-	this.drawSpirograph		=	function()
-	{
 		//creating a new Spirograph object
 		var tmpSpiro	=	new SpiroCanvas.spiroGraph();
 		var cc			=	new SpiroCanvas.colorConversion();
@@ -228,20 +152,19 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		tmpSpiro.speed	=	$('#speedSlider').slider('value');
 		tmpSpiro.res	=	$('#resolutionSlider').slider('value');
 		
+		if(isFullSpeed)
+		{
+			tmpSpiro.speed	=	25;
+		}
+		
 		hexCol			= 	$('#backgroundColorDiv').css('background-color');
 		hexCol			=	cc.colorToHex(hexCol);
-		rgbCol		=	cc.HexToRGB(hexCol);
+		rgbCol			=	cc.HexToRGB(hexCol);
 		this.drawBG('canvasBG', rgbCol);
-		
-		/*
-		var hexCol		= 	$('#foregroundColorDiv').css('background-color');
-		hexCol			=	colorToHex(hexCol);
-		var rgbCol		=	HexToRGB(hexCol);
-		var bgColor		=	rgbToHsv(rgbCol.r, rgbCol.g, rgbCol.b);
-		*/
 		
 		layerCount		=	layerCount + 1;
 		currentLayerID	=	layerCount - 1;
+		realLayerCount++;
 		
 		//creates a new Canvas
 		$("#canvasContainer").append('<canvas id="canvasSpiro' + layerCount + '" '
@@ -251,7 +174,7 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		
 		//make an entry to the layers panel
 		$("#layersPanelSelectable").append(
-			'<li class="ui-widget-content" style="background: #000000; border: none; color: #aaaaaa" id="layerWidget' + layerCount + '">' + 
+			'<li class="ui-widget-content layerBox" style="background: #000000; border: none; color: #aaaaaa" id="layerWidget' + layerCount + '">' + 
 			'Layer ' +  layerCount + ' ' +
 			'<a href="#" id="removeLayerWidget" border="2"><img src="images/closeIcon.png"></a> &nbsp;' +
 			'<a href="#" id="hideLayerWidget" border="2"><img src="images/eyeIcon.png"></a>' +
@@ -260,9 +183,7 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		
 		tmpSpiro.id							=	"canvasSpiro" + layerCount;
 		layersArray["canvasSpiro" + layerCount]	=	tmpSpiro;
-		
-		console.log(layersArray);
-		
+				
 		spiroMain.drawSpiro('canvasSpiro' + layerCount, 'canvasBG', tmpSpiro);
 	};
 	
@@ -284,15 +205,13 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 	
 	this.prepareForDrawing		=	function()
 	{
+		this.stopSpiroDrawing();
 		$( "#progressBar" ).show();
 		$("#drawButton").html("Stop");
 	}
 	
 	this.updateDrawingCircle	=	function()
-	{
-		//if any cruve is being drawn, stop it
-		//this.stopSpiroDrawing();
-		
+	{	
 		//retrieve the details required to draw the drawing circles
 		//and ask spiroCanvasCore to draw them
 		var canvasCircle=	document.getElementById('canvasCircle');
@@ -324,7 +243,7 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		$('#circle1RadiusSlider').slider('value', Math.random() * 195 + 1);
 		$('#circle2RadiusSlider').slider('value', Math.random() * 98 + 1);
 		$('#pointDistanceSlider').slider('value', Math.random() * 98 + 1);
-		$('#speedSlider').slider('value', 25);
+		//$('#speedSlider').slider('value', 25);	//dont randomize speed
 		$('#resolutionSlider').slider('value', Math.random() *  $('#circle1RadiusSlider').slider('value') / 2);
 		
 		var rh		=	cc.toHex(Math.random() * 255);
@@ -332,12 +251,6 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		var bh		=	cc.toHex(Math.random() * 255);
 		var hex		=	'#' + rh + gh + bh;
 		$('#foregroundColorDiv').css('background-color', hex);
-		
-		rh		=	cc.toHex(Math.random() * 255);
-		gh		=	cc.toHex(Math.random() * 255);
-		bh		=	cc.toHex(Math.random() * 255);
-		hex		=	'#' + rh + gh + bh;
-		//$('#backgroundColorDiv').css('background-color', hex);
 		
 		$( "#circle1RadiusLabel" ).html( $('#circle1RadiusSlider').slider('value') );
 		$( "#circle2RadiusLabel" ).html( $('#circle2RadiusSlider').slider('value') );
@@ -355,8 +268,7 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		$(ele).parent().remove();							//remove the <li> element
 		
 		removeByElement(layersArray, "canvasSpiro" + no);
-		
-		console.log(layersArray);
+		realLayerCount--;
 
 		//stop the drawing if the current drawing layer is being removed
 		if((currentLayerID+1) == no)
@@ -445,6 +357,30 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		else
 			$(canvasid).css('display', 'none');
 		return false;
+	}
+	
+	this.selectSpiroFromLayer	=	function(e)
+	{
+		var cc			=	new SpiroCanvas.colorConversion();
+	
+		var itemID		=	e.id;						//gets the id of <li> element
+		var no			=	itemID.substring(11, 13);		//retrieves the number at the end
+		var spiroid		=	"canvasSpiro" + no;
+		var tmpSpiro	=	layersArray[spiroid];
+		var hex			=	'#' + cc.HSVToHex(tmpSpiro.color);
+		
+		$('#circle1RadiusSlider').slider('value', tmpSpiro.R);
+		$('#circle2RadiusSlider').slider('value', tmpSpiro.r);
+		$('#pointDistanceSlider').slider('value', tmpSpiro.p);
+		$('#speedSlider').slider('value', tmpSpiro.speed);	
+		$('#resolutionSlider').slider('value', tmpSpiro.res);
+		$('#foregroundColorDiv').css('background-color', hex);
+		
+		$( "#circle1RadiusLabel" ).html( $('#circle1RadiusSlider').slider('value') );
+		$( "#circle2RadiusLabel" ).html( $('#circle2RadiusSlider').slider('value') );
+		$( "#pointDistanceLabel" ).html( $('#pointDistanceSlider').slider('value') );
+		$( "#speedLabel" ).html( $('#speedSlider').slider('value') );
+		$( "#resolutionLabel" ).html( $('#resolutionSlider').slider('value') );
 	}
 	
 	this.updateCenter			=	function(cx, cy)

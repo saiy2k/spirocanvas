@@ -17,10 +17,12 @@ You should have received a copy of the GNU General Public License
 along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
+<!DOCTYPE html>
+
 <html>
 <head>
 	<link type="text/css" href="styleUI.css" rel="Stylesheet" />
-	<link type="text/css" href="scripts/jqueryui/css/ui-lightness/jquery-ui-1.8.9.custom.css" rel="Stylesheet" />
+	<link type="text/css" href="scripts/jqueryui/css/ui-darkness/jquery-ui-1.8.11.custom.css" rel="Stylesheet" />
 	<link type="text/css" href="scripts/eyeConColorPicker/css/colorpicker.css" rel="Stylesheet" />
 	
 	<script type="text/javascript" src="scripts/base64.js"></script>
@@ -28,7 +30,7 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	<script type="text/javascript" src="scripts/canvas2image.js"></script>
 	<script type="text/javascript" src="scripts/jquery.js"></script>
 	<script type="text/javascript" src="scripts/jqueryui/js/jquery-1.4.4.min.js"></script>
-	<script type="text/javascript" src="scripts/jqueryui/js/jquery-ui-1.8.9.custom.min.js"></script>
+	<script type="text/javascript" src="scripts/jqueryui/js/jquery-ui-1.8.11.custom.min.js"></script>
 	<script type="text/javascript" src="scripts/eyeConColorPicker/js/colorpicker.js"></script>
 	<script type="text/javascript" src="scripts/MMath.js"></script>
 	<script type="text/javascript" src="scripts/spiroCanvas.js"></script>
@@ -40,10 +42,6 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	<script type="text/javascript" src="scripts/spiroCanvasCore.js"></script>
 	<script type="text/javascript" src="scripts/spiroCanvasUIHelper.js"></script>
 	<script type="text/javascript" src="scripts/spiroCanvasUI.js"></script>
-	
-	<!--Importing Facebook's Javascript SDK - Begin-->
-	
-	<!--Importing Facebook's Javascript SDK - End-->
 	
 	<script language="javascript">
 		(function( $ )
@@ -75,6 +73,8 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 </head>
 
 <body onload="init()"> 
+
+<div id="preLoader" style="position:absolute; z-index:1000; width:100%; height: 100%; background-color:#aaa; margin:0px; top:0px; left: 0px; text-align: center; v-align:center"> LOADING... </div>
 
 <div id="canvasContainer" style="position:absolute; z-index: 1; width:800; height:600;">
 	<canvas id="canvasBG" 		width="800" height="600" style="position:absolute; left:0px; top:0px; z-index:0; background-color:#000"></canvas>
@@ -146,8 +146,8 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	<div class="toolBox" style="padding:10px 0px 0px 12px;">
 		<div class="toolBoxHorizontalHeader"> Copyright </div>
 		<div class="toolBoxHorizontalPanel" style="font: 12px arial">
-			Copyright 2011 Saiyasodharan. <br> <br>
-			This program is released under GNU GPL V3. To know your rights, click here.
+			This program is released under GNU GPL V3. To know your rights, <a href="License.txt" target="_blank">click here</a>
+			<br> <br> <a href="">CREDITS</a> <br> <br>
 		</div>
 		<div class="toolBoxHorizontalPanel" style="border-bottom:1px solid #265a67"></div>
 	</div>
@@ -170,12 +170,12 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 
 <div id="shareDialog" title="Basic modal dialog">
 	<fb:login-button autologoutlink="true" perms="publish_stream, offline_access, photo_upload, share_item, user_photos"></fb:login-button> <a href="#" id="shareFacebook" style="display:inline">Upload</a> <br> <br>
-	<a href="#" style="text-decoration:none"><div id="flickrLogin" style="width:80px; height:20px; padding-left:4px; padding-right:4px; font-weight:bold; background-color:#ccccee; display:inline; border:1px solid">Flickr Login</div></a> <a href="#" id="shareFlickr" style="display:inline">Upload</a> <br>
+	<a href="#" style="text-decoration:none"><div id="flickrLogin" style="width:80px; height:20px; padding-left:4px; padding-right:4px; font-weight:bold; background-color:#444466; display:inline; border:1px solid #6666aa; color: #ddd">Flickr Login</div></a> <a href="#" id="shareFlickr" style="display:inline">Upload</a> <br>
 </div>
 
 
 
-<!--div for Facebook Javascript SDK-->
+<!--Importing Facebook's Javascript SDK - Begin-->
 <div id="fb-root"></div>
 <script type="text/javascript">
     window.fbAsyncInit = function() {
@@ -190,7 +190,7 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
         document.getElementById('fb-root').appendChild(e);
     }());
 </script>
-
+<!--Importing Facebook's Javascript SDK - End-->
 
 </body>
 </html>

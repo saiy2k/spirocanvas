@@ -35,6 +35,14 @@ SpiroCanvas.colorConversion			=	function()
 		return digits[1] + '#' + rgb.toString(16);
 	};
 	
+	this.HSVToHex					=	function(hsv)
+	{
+		var rgb		=	this.hsvToRgb(hsv.h, hsv.s, hsv.v);
+		var hex		=	this.RGBtoHex(rgb.r, rgb.g, rgb.b);
+		
+		return			hex;
+	}
+	
 	this.rgbToHsv					=	function(r, g, b)
 	{
 		r = r/255, g = g/255, b = b/255;
@@ -99,9 +107,27 @@ SpiroCanvas.colorConversion			=	function()
 	
 	this.HexToRGB					=	function(hex)
 	{
-		return	{	r: HexToR(hex),
-					g: HexToG(hex),
-					b: HexToB(hex)
+		var		_r, _g, _b;
+		_r		=	HexToR(hex);
+		_g		=	HexToG(hex);
+		_b		=	HexToB(hex);
+		
+		if( !(_r >= 0 && _r <= 255) )
+		{
+			_r = 0;
+		}
+		if( !(_g >= 0 && _g <= 255) )
+		{
+			_g = 0;
+		}
+		if( !(_b >= 0 && _b <= 255) )
+		{
+			_b = 0;
+		}
+		
+		return	{	r: _r,
+					g: _g,
+					b: _b
 				};
 	}
 	

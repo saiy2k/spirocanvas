@@ -126,6 +126,7 @@ SpiroCanvas.spiroCanvasCore = function()
 		var R				=	curveData.R;
 		var r				=	curveData.r;
 		var p				=	curveData.p;
+		var cc				=	new SpiroCanvas.colorConversion();
 		
 		//declare and reset all the variables
 		this.angle			=	0;
@@ -161,7 +162,7 @@ SpiroCanvas.spiroCanvasCore = function()
 		
 		//sets the context colors
 		ct.strokeStyle		=	prepareLinearGradient(ct, curveData.color);
-		var rgbColor		=	hsvToRgb(curveData.color.h, curveData.color.s, curveData.color.v);
+		var rgbColor		=	cc.hsvToRgb(curveData.color.h, curveData.color.s, curveData.color.v);
 		shadowColor			=	'rgba(' + (255 - rgbColor.r) + ', ' + (255 - rgbColor.g) + ', ' + (255 - rgbColor.b) + ', ' + 0.2 + ')';
 		
 		//based on the curveType, call corresponding functions repeatedly
@@ -187,6 +188,7 @@ SpiroCanvas.spiroCanvasCore = function()
 		var R				=	curveData.R;
 		var r				=	curveData.r;
 		var p				=	curveData.p;
+		var cc				=	new SpiroCanvas.colorConversion();
 		
 		//declare and reset all the variables
 		this.angle			=	0;
@@ -201,7 +203,7 @@ SpiroCanvas.spiroCanvasCore = function()
 		NumPoints			=	curveData.res * NumRevolutions;
 		centerPoint.x		=	canvasBase.width / 2;
 		centerPoint.y		=	canvasBase.height / 2;
-		ct.strokeStyle		=	"#" + HSVToHex(curveData.color);
+		ct.strokeStyle		=	"#" + cc.HSVToHex(curveData.color);
 		
 		if (!curveData.isEpi)
 		{
@@ -267,9 +269,10 @@ SpiroCanvas.spiroCanvasCore = function()
 		}
 		
 		var	ctx				=	document.getElementById(canvasID).getContext('2d');
+		var cc				=	new SpiroCanvas.colorConversion();
 		
 		var rgb				=	hsvToRgb(color.h, color.s, color.v);
-		ctx.fillStyle		=	'#' + RGBtoHex(rgb.r, rgb.g, rgb.b);
+		ctx.fillStyle		=	'#' + cc.RGBtoHex(rgb.r, rgb.g, rgb.b);
 		ctx.fillRect(0, 0, 800, 600);
 	};
 	
@@ -361,71 +364,24 @@ SpiroCanvas.spiroCanvasCore = function()
 		
 	function prepareLinearGradient(ct, color)
 	{
-		var foreRGB1		=	hsvToRgb(color.h, color.s, color.v);
+		var cc				=	new SpiroCanvas.colorConversion();
+		var foreRGB1		=	cc.hsvToRgb(color.h, color.s, color.v);
 		var foreRGB2;
 		if (color.v - 0.2 < 0)
 		{
-			foreRGB2		=	hsvToRgb(color.h, color.s, color.v + 0.2);
+			foreRGB2		=	cc.hsvToRgb(color.h, color.s, color.v + 0.2);
 		}
 		else
 		{
-			foreRGB2		=	hsvToRgb(color.h, color.s, color.v - 0.2);
+			foreRGB2		=	cc.hsvToRgb(color.h, color.s, color.v - 0.2);
 		}
 		
-		var foreHEX1		=	"#" + RGBtoHex(foreRGB1.r, foreRGB1.g, foreRGB1.b);
-		var foreHEX2		=	"#" + RGBtoHex(foreRGB2.r, foreRGB2.g, foreRGB2.b);
+		var foreHEX1		=	"#" + cc.RGBtoHex(foreRGB1.r, foreRGB1.g, foreRGB1.b);
+		var foreHEX2		=	"#" + cc.RGBtoHex(foreRGB2.r, foreRGB2.g, foreRGB2.b);
 		var lingrad 		=	ct.createLinearGradient(0,0,300,600);
 			lingrad.addColorStop(0,		foreHEX1);
 			lingrad.addColorStop(0.7,	foreHEX2);
 		
 		return lingrad;
-	}
-	
-	function HSVToHex(hsv)
-	{
-		var rgb		=	hsvToRgb(hsv.h, hsv.s, hsv.v);
-		var hex		=	RGBtoHex(rgb.r, rgb.g, rgb.b);
-		
-		return			hex;
-	}
-	
-	function hsvToRgb(h, s, v)
-	{
-		var r, g, b;
-
-		var i = Math.floor(h * 6);
-		var f = h * 6 - i;
-		var p = v * (1 - s);
-		var q = v * (1 - f * s);
-		var t = v * (1 - (1 - f) * s);
-
-		switch(i % 6){
-			case 0: r = v, g = t, b = p; break;
-			case 1: r = q, g = v, b = p; break;
-			case 2: r = p, g = v, b = t; break;
-			case 3: r = p, g = q, b = v; break;
-			case 4: r = t, g = p, b = v; break;
-			case 5: r = v, g = p, b = q; break;
-		}
-
-		return { r:r * 255, g:g * 255, b:b * 255 };
-	}
-	
-	function RGBtoHex(R,G,B)
-	{
-		return toHex(R)+toHex(G)+toHex(B)
-	}
-	
-	function toHex(N)
-	{
-		if (N==null)
-			return "00";
-		N=parseInt(N);
-		if (N==0 || isNaN(N))
-			return "00";
-		N=Math.max(0,N);
-		N=Math.min(N,255);
-		N=Math.round(N);
-		return "0123456789ABCDEF".charAt((N-N%16)/16) + "0123456789ABCDEF".charAt(N%16);
 	}
 };
