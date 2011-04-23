@@ -21,6 +21,9 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 This class holds all the Flickr related functionalities
 */
 
+/**
+ * @class
+ */
 SpiroCanvas.FlickrWrapper			=	function(sH)
 {
 	var		spiroHelper				=	sH;

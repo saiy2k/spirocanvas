@@ -21,6 +21,9 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 This class holds all the facebook related functionalities
 */
 
+/**
+ * @class
+ */
 SpiroCanvas.FBWrapper				=	function(sH)
 {
 	var		spiroHelper				=	sH;

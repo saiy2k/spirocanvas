@@ -17,21 +17,19 @@ You should have received a copy of the GNU General Public License
 along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
-This class contains the core logic for drawing the spirographs.
-As of now, there are two types of curves supported:
-1. Epitrochoid
-2. Hypotrochoid
-There is a function named drawSpiro(), which will be invoked when
-the Redraw button is clicked, with all the required parameters.
-Then, based on the curveType, drawSpiro() calls either this.drawH() or
-this.drawE() in a loop to draw the curve.
-*/
-
+/**
+ * @class This class contains the core logic for drawing the spirographs. As of now, there are two types of curves supported: <br>
+		1. Epitrochoid <br>
+		2. Hypotrochoid <br>
+	To draw a curve, drawSpiro() need to be invoked with all the required parameters. Then, based on the curveType, drawSpiro() calls either this.drawH() or this.drawE() in a loop to draw the curve. <br>
+	
+ * @property {number}	loopID	keeps track of the ID of the Loop. It will be -1, if curve drawing is not happening
+ * @property {number}	angle	current drawing angle
+ */
 SpiroCanvas.spiroCanvasCore = function()
 {
-	this.loopID		=	-1;			//keeps track of the ID of the Loop. It will be -1, if curve drawing is not happening
-	this.angle		=	0.0;		//current angle	
+	this.loopID		=	-1;
+	this.angle		=	0.0;
 	var angleStep;					//amount of angle to increment on each loop (derived from Points/Curve)
 	var currentPointID;				//keeps track of the number of points drawn	
 	var oldPoint	=	{x:0, y:0}; //previous point of the spirograph
@@ -47,11 +45,17 @@ SpiroCanvas.spiroCanvasCore = function()
 	
 	var parent;
 	
-	
-	//This Hypotrochoid function will be invoked repeatedly at a rate set by the user.
-	//Parametric equation of Hypotrochoid is given by
-	//	x(t) = (R-r)*cos(t) + p*cos(((R-r)/r)t)
-	//	y(t) = (R-r)*sin(t) - p*cos(((R-r)/r)t)
+	/**
+		This Hypotrochoid function will be invoked repeatedly at a rate set by the user.<br>
+		Parametric equation of Hypotrochoid is given by<br>
+		x(t) = (R-r)*cos(t) + p*cos(((R-r)/r)t)<br>
+		y(t) = (R-r)*sin(t) - p*cos(((R-r)/r)t)<br>
+	 * @param {context}		ct		drawing 2D context of the canvas object
+	 * @param {number}		R		Radius of fixed circle
+	 * @param {number}		r		Radius of moving circle
+	 * @param {number}		p		distance of drawing point from moving circle
+	 * @param {number} 		maxPoints	the total number of points in this curve
+	*/
 	this.drawH 		=	function (ct, R, r, p, maxPoints)
 	{
 		var newPoint=	{x:0, y:0};		
@@ -81,10 +85,17 @@ SpiroCanvas.spiroCanvasCore = function()
 		oldPoint	=	newPoint;
 	};
 	
-	//This Epitrochoid function will be invoked repeatedly at a rate set by the user.
-	//Parametric equation of Hypotrochoid is given by
-	//	x(t) = (R+r)*cos(t) - p*cos(((R+r)/r)t)
-	//	y(t) = (R+r)*sin(t) - p*cos(((R+r)/r)t)
+	/**
+		This Epitrochoid function will be invoked repeatedly at a rate set by the user.
+		Parametric equation of Epitrochoid is given by<br>
+		x(t) = (R+r)*cos(t) - p*cos(((R+r)/r)t)<br>
+		y(t) = (R+r)*sin(t) - p*cos(((R+r)/r)t)<br><br>
+	 * @param {context}		ct		drawing 2D context of the canvas object
+	 * @param {number}		R		Radius of fixed circle
+	 * @param {number}		r		Radius of moving circle
+	 * @param {number}		p		distance of drawing point from moving circle
+	 * @param {number} 		maxPoints	the total number of points in this curve
+	*/
 	this.drawE 		=	function (ct, R, r, p, maxPoints)
 	{
 		var newPoint=	{x:0, y:0};
@@ -114,7 +125,12 @@ SpiroCanvas.spiroCanvasCore = function()
 		oldPoint	=	newPoint;
 	};
 
-	//This function is invoked when the Redraw button is pressed
+	/**
+		This function is invoked when a curve need to be drawn
+	 * @param {id}			canvasSpiroID		id of the canvas to draw to
+	 * @param {id}			canvasBGID			id of canvas to fill the Background color
+	 * @param {spiroGraph}	curveData			the curve to draw
+	*/
 	this.drawSpiro 	=	function (canvasSpiroID, canvasBGID, curveData)	
 	{
 		//if a curve is being drawn, stop it
@@ -182,8 +198,13 @@ SpiroCanvas.spiroCanvasCore = function()
 		}
 	};
 	
-	//This function is to draw the spirograph instantly, without the animation (for preview purposes)
-	this.drawInstantSpiro 	=	function (canvasID, curveData)	
+	/**
+		This function is to draw the spirograph instantly, without the animation.
+	 * @param {id}			canvasID			id of the canvas to draw to
+	 * @param {id}			canvasBGID			id of canvas to fill the Background color
+	 * @param {spiroGraph}	curveData			the curve to draw
+	*/
+	this.drawInstantSpiro 	=	function (canvasID, canvasBGID, curveData)	
 	{
 		var R				=	curveData.R;
 		var r				=	curveData.r;
@@ -259,7 +280,11 @@ SpiroCanvas.spiroCanvasCore = function()
 		}
 	};
 	
-	//clear the spirograph
+	/**
+		clears the given canvas
+	 * @param {id}			canvasID			id of the canvas to draw to
+	 * @param {color}		color				the color to fill with
+	*/
 	this.clearSpiro	=	function (canvasID, color)
 	{
 		//if a curve is being drawn, stop it
@@ -276,7 +301,14 @@ SpiroCanvas.spiroCanvasCore = function()
 		ctx.fillRect(0, 0, 800, 600);
 	};
 	
-	//draw the drawing circles
+	/**
+		draw the drawing circles
+	 * @param {point}		centerPoint			the point around which the curve is drawn
+	 * @param {point}		newPoint			current point of the curve
+	 * @param {number}		R					Radius of fixed circle
+	 * @param {number}		r					Raduys of moving circle
+	 * @param {Boolean}		inOrOut				Epi or Hypo
+	*/
 	this.drawCircles 	=	function(centerPoint, newPoint, R, r, inOrOut)
 	{
 		var canvasBG		=	document.getElementById('canvasCircle');
@@ -317,7 +349,8 @@ SpiroCanvas.spiroCanvasCore = function()
 		ct.closePath();
 	};
 	
-	//to stop the current drawing, if any
+
+	/**	stops the current drawing, if any */
 	this.stopDrawing		=	function()
 	{
 		if(this.loopID != -1)
@@ -330,16 +363,30 @@ SpiroCanvas.spiroCanvasCore = function()
 		}
 	}
 	
+	/**
+		updated the center point to given point
+	 * @param {point}		pt				the new center point
+	*/
 	this.updateCenterPoint	=	function(pt)
 	{
 		centerPoint			=	pt;
 	};
 	
+	/**
+		sets the parent(container) object
+	 * @param {Object}		obj				the container object of this
+	*/
 	this.setDelegate		=	function(obj)
 	{
 		parent				=	obj;
 	};
-	
+
+	/**
+		draws a transparent thick line between 2 given points
+	 * @param {context}		ct				drawing 2D context of the canvas object
+	 * @param {point}		point1			First point of line
+	 * @param {point}		point2			Second point of line
+	*/
 	function drawShadowLine(ct, point1, point2)
 	{	
 		ct.save();
@@ -353,6 +400,12 @@ SpiroCanvas.spiroCanvasCore = function()
 		ct.restore();
 	}
 	
+	/**
+		draws a line between 2 given points
+	 * @param {context}		ct				drawing 2D context of the canvas object
+	 * @param {point}		point1			First point of line
+	 * @param {point}		point2			Second point of line
+	*/
 	function drawLine(ct, point1, point2)
 	{			
 		ct.beginPath();
@@ -361,7 +414,13 @@ SpiroCanvas.spiroCanvasCore = function()
 		ct.stroke();
 		ct.closePath();
 	}
-		
+	
+	/**
+		creates and returns a line gradient based on the given color
+		@param		{context}	ct				drawing 2D context of the canvas object
+		@param		{color}		color			the base color to create the gradient from
+		@returns	{gradient}					returns linear gradient of 2 close shades of the given color
+	*/
 	function prepareLinearGradient(ct, color)
 	{
 		var cc				=	new SpiroCanvas.colorConversion();

@@ -67,14 +67,32 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 		
 		function init()
 		{
-			SpiroCanvas.spiroCanvasUI.initUI();
+			if($.browser.msie)
+			{
+				$("#loadingDiv").hide();
+				$("#browserDiv").show();
+			}
+			else
+			{
+				SpiroCanvas.spiroCanvasUI.initUI();
+			}
 		}
 	</script>
 </head>
 
 <body onload="init()"> 
 
-<div id="preLoader" style="position:absolute; z-index:1000; width:100%; height: 100%; background-color:#aaa; margin:0px; top:0px; left: 0px; text-align: center; v-align:center"> LOADING... </div>
+<div id="preLoader" style="position:absolute; z-index:99999; width:100%; height: 100%; background-color:#333; color:#888; top:0px; left:0px;">
+	<div id="loadingDiv" style="position:absolute; width:160px; height:50px; top:50%; left:50%; margin:-25px 0px 0px -80px; font: 32px 'arial'; border:0px solid; font-variant:small-caps;">
+		Loading...
+	</div>
+	<div ID="browserDiv" style="display:none; position:absolute; width:800px; height:280px; top:50%; left:50%; margin:-140px 0px 0px -400px; font: 32px 'arial'; border:0px solid; font-variant:small-caps;">
+		This application will run on all Modern browsers except Internet Explorer. If you are seeing this message, then you are using some version of IE. Please download and instal any of the following modern browsers to run this application:<br>
+		1. <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a> <br>
+		2. <a href="http://www.mozilla.com" target="_blank">Mozilla Firefox</a> <br>
+		3. <a href="http://www.opera.com/" target="_blank">Opera</a> <br>
+	</div>
+</div>
 
 <div id="canvasContainer" style="position:absolute; z-index: 1; width:800; height:600;">
 	<canvas id="canvasBG" 		width="800" height="600" style="position:absolute; left:0px; top:0px; z-index:0; background-color:#000"></canvas>
@@ -87,7 +105,7 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	</div>
 </div>
 
-<div id="statusDiv" style="text-align:center">
+<div id="statusDiv" style="text-align:center; z-index:9999">
 	<div style="margin:auto; width:360px">
 		<div id="statusLeftPanel">
 			<a href="#" style="text-decoration:none;"><div id="saveButton" class="statusButton"></div></a>
@@ -146,8 +164,8 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	<div class="toolBox" style="padding:10px 0px 0px 12px;">
 		<div class="toolBoxHorizontalHeader"> Copyright </div>
 		<div class="toolBoxHorizontalPanel" style="font: 12px arial">
-			This program is released under GNU GPL V3. To know your rights, <a href="License.txt" target="_blank">click here</a>
-			<br> <br> <a href="">CREDITS</a> <br> <br>
+			<br> This program is released under GNU GPL V3. To know your rights, <a href="License.txt" target="_blank">click here</a>
+			<br> <br> <br> <a href="#" id="creditsButton">CREDITS</a> <br> <br>
 		</div>
 		<div class="toolBoxHorizontalPanel" style="border-bottom:1px solid #265a67"></div>
 	</div>
@@ -168,11 +186,16 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 
 <canvas id="previewCanvas" width="320" height="240" style="position:absolute; background-color: #000; border:1px solid"> </canvas>
 
-<div id="shareDialog" title="Basic modal dialog">
+<div id="shareDialog" title="Share">
 	<fb:login-button autologoutlink="true" perms="publish_stream, offline_access, photo_upload, share_item, user_photos"></fb:login-button> <a href="#" id="shareFacebook" style="display:inline">Upload</a> <br> <br>
 	<a href="#" style="text-decoration:none"><div id="flickrLogin" style="width:80px; height:20px; padding-left:4px; padding-right:4px; font-weight:bold; background-color:#444466; display:inline; border:1px solid #6666aa; color: #ddd">Flickr Login</div></a> <a href="#" id="shareFlickr" style="display:inline">Upload</a> <br>
 </div>
 
+<div id="creditsDialog" title="Credits" style="text-align:center">
+	<br>Developed by <a href="saiy2k.blogspot.com">Saiyasodharan</a>
+	<br><br>Web Site: <a href="http://binarysaiy2k.blogspot.com/2011/02/spirocanvas.html">spirocanvas @ binarysaiy2k</a>
+	<br><br>Get source: <a href="http://code.google.com/p/spirocanvas/">spirocanvas @ code.google</a>
+</div>
 
 
 <!--Importing Facebook's Javascript SDK - Begin-->

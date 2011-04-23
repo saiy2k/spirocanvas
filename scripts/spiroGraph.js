@@ -26,19 +26,32 @@ For each and every layer drawn, an instance of this class will be created
 and saved in an array
 */
 
+/**
+   returns an instance of spiroGraph object.
+ * @class This class holds all the data necessary to draw a spiro curve.
+ * @property {number}	id		Unique ID of the SpiroGraph
+ * @property {number}	R		Radius of the fixed Circle
+ * @property {number}	r		Radius of the mobile Circle
+ * @property {number}	p		Distance of drawing point from the center of mobile Circle
+ * @property {number}	res		Number of points per curve
+ * @property {number}	speed	Speed of drawing the curve
+ * @property {hsv}		color	line color of the spirograph in HSV
+ * @property {boolean}	isEpi	is epitrochoid and not hypotrochoid
+ * @property {number}	zIndex	placement of the curve in z-axis
+ */
 SpiroCanvas.spiroGraph = function()
 {
-	this.id			=	"";				//unique id of this curve
-	this.R			=	0;				//Radius of the fixed Circle
-	this.r			=	0;				//Radius of the mobile Circle
-	this.p			=	0;				//Distance of drawing point from the center of mobile Circle
-	this.res		=	0;				//Number of points per curve
-	this.speed		=	0;				//Speed of drawing the curve
+	this.id			=	"";
+	this.R			=	0;
+	this.r			=	0;
+	this.p			=	0;
+	this.res		=	0;
+	this.speed		=	0;
 	this.color		=	{	
 							h:0,
 							s:0,
 							v:0
-						};				//line color of the spirograph in hsv format
-	this.isEpi		=	true;			//is epitrochoid and not hypotrochoid
-	this.zIndex		=	0;				//placement of the curve in z-axis
+						};
+	this.isEpi		=	true;
+	this.zIndex		=	0;
 };

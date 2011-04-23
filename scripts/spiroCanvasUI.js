@@ -18,20 +18,19 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /*
-This class does the magic of converting plain divs to jqueryui controls
-and thus setting up the application UI. One and only function in this class
-is initUI and it will be called, when the body is loaded.
 
-This class also holds the event handlers for the controls
 */
 
+/**
+ * @class This class does the magic of converting plain divs to jqueryui controls and thus setting up the application UI. One and only function in this class is initUI and it will be called, when the body is loaded. <br> <br>
+	This class also holds the event handlers for the controls <br> <br>
+ */
 SpiroCanvas.spiroCanvasUI = (function()
 {
 	var staticMembers		=	{};
 	var spiroHelper			=	new SpiroCanvas.spiroCanvasUIHelper();
 	var fbWrapper			=	new SpiroCanvas.FBWrapper(spiroHelper);
 	var flickrWrapper		=	new SpiroCanvas.FlickrWrapper(spiroHelper);
-	var twitterWrapper		=	new SpiroCanvas.TwitterWrapper(spiroHelper);
 	
 	var isDrawingByMouse	=	false;
 	
@@ -60,7 +59,16 @@ SpiroCanvas.spiroCanvasUI = (function()
 		$( "#shareDialog" ).dialog
 		({
 			autoOpen: false,
-			modal:	true
+			modal:	true,
+			resizable: false
+		});
+		
+		//make the creditsDialog div, a jquery modal dialog
+		$( "#creditsDialog" ).dialog
+		({
+			autoOpen: false,
+			modal:	true,
+			resizable: false
 		});
 		
 		//open the share dialog and reset controls in it
@@ -69,6 +77,12 @@ SpiroCanvas.spiroCanvasUI = (function()
 			$( "#shareDialog" ).dialog("open");
 			$( "#shareFacebook" ).html("Upload");
 			$( "#shareFlickr" ).html("Upload");
+		});
+		
+		//open the credits dialog
+		$( "#creditsButton" ).click(function()
+		{
+			$( "#creditsDialog" ).dialog("open");
 		});
 		
 		//share to facebook

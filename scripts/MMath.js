@@ -17,12 +17,15 @@ You should have received a copy of the GNU General Public License
 along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @namespace This namespace contains all the functions, that are Math-oriented
+ */
 var MMath = (function ()
 {
-	var my 			=	{};
-	
-	//calculates the Highest Common Factor of given two numbers
-	my.HCF			=	function HCF(a, b)
+	return 
+	{
+		/**calculates the Highest Common Factor of given two numbers*/
+		HCF			:	function HCF(a, b)
 						{
 							var i = 0;
 							var j = 0;
@@ -50,6 +53,7 @@ var MMath = (function ()
 							
 							return hcf;
 						};
+	};
 						
-	return my;
+
 }());

@@ -29,7 +29,7 @@ body
 }
 a
 {
-	color:					#ff0000;
+	color:					#ddddff;
 }
 
 #canvasContainer
@@ -166,6 +166,7 @@ a
 #saveButton
 {
 	background-image:		url('images/button1.png');
+	background-repeat:		no-repeat;
 }
 #saveButton:hover
 {
@@ -175,6 +176,7 @@ a
 #randomButton
 {
 	background-image:		url('images/button2.png');
+	background-repeat:		no-repeat;
 }
 #randomButton:hover
 {
@@ -184,6 +186,7 @@ a
 #shareButton
 {
 	background-image:		url('images/button3.png');
+	background-repeat:		no-repeat;
 }
 #shareButton:hover
 {

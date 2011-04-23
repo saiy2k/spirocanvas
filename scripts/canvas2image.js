@@ -4,6 +4,9 @@
  * MIT License [http://www.opensource.org/licenses/mit-license.php]
  */
 
+/**
+ * @class
+ */
 var Canvas2Image = (function() {
 
 	// check if we have canvas support

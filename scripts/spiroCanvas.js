@@ -22,4 +22,5 @@ This class just declares the Global Namespace "SpiroCanvas",
 under which all the other classes will be written/ported
 */
 
+/** @namespace */
 var SpiroCanvas		=	{};
