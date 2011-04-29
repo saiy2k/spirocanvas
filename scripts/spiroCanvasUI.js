@@ -17,15 +17,11 @@ You should have received a copy of the GNU General Public License
 along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
-
-*/
-
 /**
  * @class This class does the magic of converting plain divs to jqueryui controls and thus setting up the application UI. One and only function in this class is initUI and it will be called, when the body is loaded. <br> <br>
 	This class also holds the event handlers for the controls <br> <br>
  */
-SpiroCanvas.spiroCanvasUI = (function()
+SpiroCanvas.spiroCanvasUI 	= function()
 {
 	var staticMembers		=	{};
 	var spiroHelper			=	new SpiroCanvas.spiroCanvasUIHelper();
@@ -419,4 +415,4 @@ SpiroCanvas.spiroCanvasUI = (function()
 	};
 
 	return staticMembers;
-}());
+}();

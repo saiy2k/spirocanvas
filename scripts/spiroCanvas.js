@@ -23,4 +23,12 @@ under which all the other classes will be written/ported
 */
 
 /** @namespace */
-var SpiroCanvas		=	{};
+var SpiroCanvas	=	{
+	sprioCanvasUI			:	function(){},
+	sprioCanvasUIHelper		:	function(){},
+	spiroCanvasCore			:	function(){},
+	spiroGraph				:	function(){},
+	FlickrWrapper			:	function(){},
+	FBWrapper				:	function(){},
+	colorConversion			:	function(){}
+};

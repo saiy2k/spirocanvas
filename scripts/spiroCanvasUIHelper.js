@@ -35,6 +35,7 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 	var spiroMain			=	new SpiroCanvas.spiroCanvasCore();
 	var spiroInstant		=	new SpiroCanvas.spiroCanvasCore();
 	
+	/**	aligns all the controls in the application and runs the startup logic */
 	this.init				=	function()
 	{
 		//disable the scroll bars
@@ -73,6 +74,7 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		spiroMain.setDelegate(this);
 	}
 	
+	/**	deletes all the drawn canvases, layer buttons and reset every other variable */
 	this.reset				=	function()
 	{
 		for ( var i = 0; i < layerCount; i++)
@@ -98,6 +100,10 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		orderArray			=	{};
 	}
 
+	/**
+		copies all the individual layers(canvas) to a single canvas and return its data in PNG format
+		@returns	{image/png}			returns the PNG data of the all sprigraphs combined
+	*/
 	this.saveAsPNG			=	function()
 	{
 		var resultCanvas	=	document.getElementById("canvasResult");
@@ -121,12 +127,13 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 			}
 		}
 		
-		//window.location.href     = resultCanvas.toDataURL("image/png");
-		//window.open(resultCanvas.toDataURL("image/png"));
-		//Canvas2Image.saveAsPNG(resultCanvas);
 		return resultCanvas.toDataURL("image/png");
 	};
 	
+	/**
+		draws the spirograph with the help of spiroCanvasCore. Creates one spiroGraph object, creates one new canvas, creates an entry in layers panel and finally calls the spiro drawing function of spiroCanvasCore with appropriate parameters
+		@param		{Boolean}	isFullSpeed		if true, then curve is drawn at full speed
+	*/
 	this.drawSpirograph		=	function(isFullSpeed)
 	{
 		if(realLayerCount >= maxLayers)
@@ -186,9 +193,9 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		spiroMain.drawSpiro('canvasSpiro' + layerCount, 'canvasBG', tmpSpiro);
 	};
 	
+	/**	stops any cruve that are being drawn and updates the UI */
 	this.stopSpiroDrawing		=	function()
 	{
-		//if any cruve is being drawn, stop it
 		if(this.loopID != -1)
 		{
 			$( "#progressBar" ).hide();
@@ -197,11 +204,13 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		}
 	}
 	
+	/**	event handler that is invoked by the spiroCanvascore, when drawing is over */
 	this.onDrawStop				=	function()
 	{
 		this.stopSpiroDrawing();
 	}
 	
+	/**	updates the UI for a drawing session */
 	this.prepareForDrawing		=	function()
 	{
 		this.stopSpiroDrawing();
@@ -209,10 +218,10 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		$("#drawButton").html("Stop");
 	}
 	
+	/**	retrieve the details required to draw the drawing circles and pass them to spiroCanvasCore to draw them */
 	this.updateDrawingCircle	=	function()
 	{	
-		//retrieve the details required to draw the drawing circles
-		//and ask spiroCanvasCore to draw them
+		
 		var canvasCircle=	document.getElementById('canvasCircle');
 		var newPoint	=	{x:0, y:0};
 		var R			=	$("#circle1RadiusSlider").slider("value");
@@ -235,6 +244,7 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		}
 	}
 	
+	/**	randomizes the slider values */
 	this.randomize			=	function()
 	{
 		var cc			=	new SpiroCanvas.colorConversion();
@@ -258,6 +268,10 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		$( "#resolutionLabel" ).html( $('#resolutionSlider').slider('value') );
 	};
 	
+	/**
+		event handler for click event delete button of a layer entry in layers panel
+		@param		{}			ele				the clicked object
+	*/
 	this.removeLayer		=	function(ele)
 	{
 		var itemID		=	$(ele).parent()[0].id;			//gets the id of <li> element
@@ -274,11 +288,13 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		{
 			this.stopSpiroDrawing();
 		}
-		
-		return false;
 	}
 	
-	//function to fill the background with shades of selected color
+	/**
+		fills the background with shades of selected color
+		@param		{id}		canvasBGID		id of the canvas to draw to
+		@param		{color}		rgb				the base color to create the gradient from
+	*/
 	this.drawBG				=	function(canvasBGID, rgb)
 	{
 		var cc				=	new SpiroCanvas.colorConversion();
@@ -314,25 +330,11 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		//clear and fill the canvas
 		ct.fillRect(0, 0, canvasBG.width, canvasBG.height);
 	}
-	
-	this.moveObject			=	function(canvasid, newPos)
-	{
-		var ele		=	layersArray[canvasid];
-		delete	layersArray[canvasid];
-		layersArray.splice(newPos, 0, ele);
-	}
-	
-	this.calcObjectOrder		=	function()
-	{
-		var arr = $("#layersPanelSelectable").sortable("toArray");
 		
-		orderArray = new Array();
-		for (i = 0 ; i < arr.length; i++)
-		{
-			orderArray[i] = arr[i].substring(11,13);
-		}
-	}
-	
+	/**
+		arrange the canvases(by changing the z-index) in the order specified by the given array
+		@param		{array}		arr			array of layer entries as in the layers panel
+	*/
 	this.arrangeLayers			=	function(arr)
 	{
 		for ( var i = 0; i < arr.length; i++)
@@ -343,9 +345,21 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 			
 			$(canvasid).css('z-index' , i + 2);
 		}
-
 	}
 	
+	/**	updates the order array as in the layers panel */
+	this.calcObjectOrder		=	function()
+	{
+		var arr = $("#layersPanelSelectable").sortable("toArray");
+		
+		orderArray = new Array();
+		for (i = 0 ; i < arr.length; i++)
+		{
+			orderArray[i] = arr[i].substring(11,13);
+		}
+	}
+
+	/**	toggles the visibility of canvas associated with the given layer entry */
 	this.layerToggleVisibility	=	function(e)
 	{
 		var itemID		=	$(e).parent()[0].id;			//gets the id of <li> element
@@ -358,6 +372,10 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		return false;
 	}
 	
+	/**
+		sets the values of the sliders to match the values of the graph associated with the clicked layer entry
+		@param		{id}		e			id of the clicked layer entry
+	*/
 	this.selectSpiroFromLayer	=	function(e)
 	{
 		var cc			=	new SpiroCanvas.colorConversion();
@@ -382,12 +400,18 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		$( "#resolutionLabel" ).html( $('#resolutionSlider').slider('value') );
 	}
 	
+	/**
+		updates the point around which the curve is drawn
+		@param		{Number}		cx			x coordinate
+		@param		{Number}		cy			y coordinate
+	*/
 	this.updateCenter			=	function(cx, cy)
 	{
 		centerPoint		=	{x: cx, y: cy};
 		spiroMain.updateCenterPoint({x: cx, y: cy});
 	}
 	
+	/**	deletes the given element from the given arrray	*/
 	function removeByElement(arrayName,arrayElement)
 	{
 		delete arrayName[arrayElement];

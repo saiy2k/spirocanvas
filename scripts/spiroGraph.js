@@ -27,31 +27,56 @@ and saved in an array
 */
 
 /**
-   returns an instance of spiroGraph object.
- * @class This class holds all the data necessary to draw a spiro curve.
- * @property {number}	id		Unique ID of the SpiroGraph
- * @property {number}	R		Radius of the fixed Circle
- * @property {number}	r		Radius of the mobile Circle
- * @property {number}	p		Distance of drawing point from the center of mobile Circle
- * @property {number}	res		Number of points per curve
- * @property {number}	speed	Speed of drawing the curve
- * @property {hsv}		color	line color of the spirograph in HSV
- * @property {boolean}	isEpi	is epitrochoid and not hypotrochoid
- * @property {number}	zIndex	placement of the curve in z-axis
- */
-SpiroCanvas.spiroGraph = function()
-{
+	returns an instance of spiroGraph object.
+	@class This class holds all the data necessary to draw a spiro curve.	
+*/
+SpiroCanvas.spiroGraph = function() {
+	/**	Unique ID of the SpiroGraph
+		@type Number
+    */
 	this.id			=	"";
+	
+	/**	Radius of the fixed Circle
+		@type Number
+    */
 	this.R			=	0;
+	
+	/**	Radius of the mobile Circle
+		@type Number
+    */
 	this.r			=	0;
+	
+	/**	Distance of drawing point from the center of mobile Circle
+		@type Number
+    */
 	this.p			=	0;
+	
+	/**	Number of points per curve
+		@type Number
+    */
 	this.res		=	0;
+	
+	/**	Speed of drawing the curve
+		@type Number
+    */
 	this.speed		=	0;
+	
+	/**	line color of the spirograph in HSV
+		@type HSV
+    */
 	this.color		=	{	
 							h:0,
 							s:0,
 							v:0
 						};
+						
+	/**	is epitrochoid and not hypotrochoid
+		@type Boolean
+    */
 	this.isEpi		=	true;
+	
+	/**	placement of the curve in z-axis
+		@type Number
+    */
 	this.zIndex		=	0;
 };

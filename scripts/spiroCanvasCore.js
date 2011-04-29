@@ -18,18 +18,23 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
- * @class This class contains the core logic for drawing the spirographs. As of now, there are two types of curves supported: <br>
+	@class This class contains the core logic for drawing the spirographs. As of now, there are two types of curves supported: <br>
 		1. Epitrochoid <br>
 		2. Hypotrochoid <br>
 	To draw a curve, drawSpiro() need to be invoked with all the required parameters. Then, based on the curveType, drawSpiro() calls either this.drawH() or this.drawE() in a loop to draw the curve. <br>
-	
- * @property {number}	loopID	keeps track of the ID of the Loop. It will be -1, if curve drawing is not happening
- * @property {number}	angle	current drawing angle
- */
+*/
 SpiroCanvas.spiroCanvasCore = function()
 {
+	/**	keeps track of the ID of the Loop. It will be -1, if curve drawing is not happening
+		@type Number
+    */
 	this.loopID		=	-1;
+	
+	/**	current drawing angle
+		@type Number
+    */
 	this.angle		=	0.0;
+	
 	var angleStep;					//amount of angle to increment on each loop (derived from Points/Curve)
 	var currentPointID;				//keeps track of the number of points drawn	
 	var oldPoint	=	{x:0, y:0}; //previous point of the spirograph
@@ -167,7 +172,7 @@ SpiroCanvas.spiroCanvasCore = function()
 		
 		//calculates the necessary variable to draw the curve
 		angleStep			=	(Math.PI * 2) / curveData.res;
-		NumRevolutions		=	r / MMath.HCF (R, r);
+		NumRevolutions		=	r / MMath.HCF(R, r);
 		NumPoints			=	curveData.res * NumRevolutions;
 		
 		//pre-calculation of frequently required terms

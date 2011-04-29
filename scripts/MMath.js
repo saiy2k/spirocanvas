@@ -20,13 +20,10 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 /**
  * @namespace This namespace contains all the functions, that are Math-oriented
  */
-var MMath = (function ()
-{
-	return 
-	{
-		/**calculates the Highest Common Factor of given two numbers*/
-		HCF			:	function HCF(a, b)
-						{
+var MMath = function() {
+	return {
+		/** @function calculates the Highest Common Factor of given two numbers*/
+		HCF			:	function(a, b) {
 							var i = 0;
 							var j = 0;
 							var hcf = 0;
@@ -52,8 +49,6 @@ var MMath = (function ()
 							} while (j != 0);
 							
 							return hcf;
-						};
+						}
 	};
-						
-
-}());
+}();
