@@ -18,9 +18,9 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
-   returns an instance of spiroCanvasUIHelper object.
- * @class This class is an intermediate helper layer between spiroCanvasUI and  spiroCanvasCore.
- */
+	returns an instance of spiroCanvasUIHelper object.
+	@class This class is an intermediate helper layer between spiroCanvasUI and  spiroCanvasCore.
+*/
 SpiroCanvas.spiroCanvasUIHelper = function()
 {
 	var tmpCore;
@@ -111,7 +111,6 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		var ctx				=	resultCanvas.getContext('2d');
 		var cty				=	bgCanvas.getContext('2d');
 		
-		var bgImg 			= 	Canvas2Image.saveAsPNG(bgCanvas, true);
 		ctx.drawImage(cty.canvas, 0, 0);
 		
 		//for ( var key in layersArray )
@@ -380,7 +379,7 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 	{
 		var cc			=	new SpiroCanvas.colorConversion();
 	
-		var itemID		=	e.id;						//gets the id of <li> element
+		var itemID		=	e.id;							//gets the id of <li> element
 		var no			=	itemID.substring(11, 13);		//retrieves the number at the end
 		var spiroid		=	"canvasSpiro" + no;
 		var tmpSpiro	=	layersArray[spiroid];

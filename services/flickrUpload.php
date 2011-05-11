@@ -18,10 +18,11 @@ You should have received a copy of the GNU General Public License
 along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-$cl = curl_init('http://api.flickr.com/services/upload/');
+require 'config.php';
 
+$cl = curl_init($FLICKR_UPLOAD_URL);
 
-$data	=	array(	"api_key" => "c6c3f471e99860ba35dae1dea6389faa",
+$data	=	array(	"api_key" => FLICKR_API_KEY,
 					"auth_token" => $_POST['token']);
 
 //get the base64 data from POST arguments

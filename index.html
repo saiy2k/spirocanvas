@@ -25,6 +25,7 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	<link type="text/css" href="scripts/jqueryui/css/ui-darkness/jquery-ui-1.8.11.custom.css" rel="Stylesheet" />
 	<link type="text/css" href="scripts/eyeConColorPicker/css/colorpicker.css" rel="Stylesheet" />
 	
+	<script type="text/javascript" src="scripts/config.js"></script>
 	<script type="text/javascript" src="scripts/base64.js"></script>
 	<script type="text/javascript" src="scripts/md5.js"></script>
 	<script type="text/javascript" src="scripts/jquery.js"></script>
@@ -35,7 +36,6 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	<script type="text/javascript" src="scripts/MMath.js"></script>
 	<script type="text/javascript" src="scripts/FBWrapper.js"></script>
 	<script type="text/javascript" src="scripts/FlickrWrapper.js"></script>
-	<script type="text/javascript" src="scripts/TwitterWrapper.js"></script>
 	<script type="text/javascript" src="scripts/colorConversion.js"></script>
 	<script type="text/javascript" src="scripts/spiroGraph.js"></script>
 	<script type="text/javascript" src="scripts/spiroCanvasCore.js"></script>
@@ -68,8 +68,8 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 		{
 			if($.browser.msie)
 			{
-				$("#loadingDiv").hide();
 				$("#browserDiv").show();
+				$("#loadingDiv").hide();
 			}
 			else
 			{
@@ -163,7 +163,7 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	<div class="toolBox" style="padding:10px 0px 0px 12px;">
 		<div class="toolBoxHorizontalHeader"> Copyright </div>
 		<div class="toolBoxHorizontalPanel" style="font: 12px arial">
-			<br> This program is released under GNU GPL V3. To know your rights, <a href="License.txt" target="_blank">click here</a>
+			This program is released under GNU GPL V3. To know your rights, <a href="License.txt" target="_blank">click here</a>
 			<br> <br> <br> <a href="#" id="creditsButton">CREDITS</a> <br> <br>
 		</div>
 		<div class="toolBoxHorizontalPanel" style="border-bottom:1px solid #265a67"></div>

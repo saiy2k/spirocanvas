@@ -20,11 +20,12 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 require 'fbsdk/facebook.php';				//including facebook SDK
+require 'config.php';
 
 //initialize facebook object
 $facebook = new Facebook(array(
-                           'appId'  => '145439352170764',
-                           'secret' => '27cfc1e11bdb9e63f9479edd91cf5599',
+                           'appId'  => $FACEBOOK_APPID,
+                           'secret' => $FACEBOOK_SECRET,
                           'fileUpload' => true, 
                            'cookie' => true,));
 $facebook->setFileUploadSupport(true);  
@@ -47,6 +48,9 @@ $args	=	array('message' => '');
 $args['image']	=	'@' . realpath($FILE_PATH);
 $data = $facebook->api('/me/photos', 'post', $args);
 
+//to delete the file
 unlink($FILE_PATH);
+
+echo 'success';
 
 ?>

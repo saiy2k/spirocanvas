@@ -28,9 +28,9 @@ SpiroCanvas.FlickrWrapper			=	function(sH)
 {
 	var		spiroHelper				=	sH;
 
-	var auth_url 		=	'http://flickr.com/services/auth/?';
-	var key				=	'c6c3f471e99860ba35dae1dea6389faa';
-	var shared_secret	=	'47ccedfd3e857f83';
+	var auth_url 		=	FLICKR_AUTH_URL;
+	var key				=	FLICKR_KEY;
+	var shared_secret	=	FLICKR_SHARED_SECRET;
 	var perms			=	'write';
 	var token			=	null;
 	
@@ -41,13 +41,15 @@ SpiroCanvas.FlickrWrapper			=	function(sH)
 		
 		_url			+=	"api_key=" + key + "&perms=" + perms + "&api_sig=" + getSig(perms);		
 				
-		var win 		=	window.open(_url, "thePop", "");
+		var win 		=	window.open(_url, "windowname1", 'width=200, height=77'); 
+
 		
 		var pollTimer	=	window.setInterval(function()
 		{
 			if (win.closed)
 			{
 				window.clearInterval(pollTimer);
+				console.log(win);
 				var frb	=	gup(win.document.URL, 'frob');			
 				var	api_sig	= hex_md5(shared_secret + 'api_key' + key + 'formatjson' + 'frob' + frb + 'jsoncallbackgotToken' + 'methodflickr.auth.getToken');
 				_url	=	'http://flickr.com/services/rest/?' + '&api_key=' + key + '&format=json' + '&frob=' + frb + '&method=flickr.auth.getToken' + '&api_sig=' + api_sig;
