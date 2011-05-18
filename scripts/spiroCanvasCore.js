@@ -35,6 +35,18 @@ SpiroCanvas.spiroCanvasCore = function()
     */
 	this.angle		=	0.0;
 	
+	/**	should use rainbow colors
+		@type Boolean
+    */
+	this.isRainbow	=	false;
+	
+	/**	should use line gradient
+		@type Boolean
+    */
+	this.isGradient	=	false;
+	
+	var rainbowDel	=	0.01;
+	
 	var angleStep;					//amount of angle to increment on each loop (derived from Points/Curve)
 	var currentPointID;				//keeps track of the number of points drawn	
 	var oldPoint	=	{x:0, y:0}; //previous point of the spirograph
@@ -42,6 +54,7 @@ SpiroCanvas.spiroCanvasCore = function()
 	
 	var strokeColor;
 	var shadowColor;
+	var hsvColor;
 		
 	var aMinusb;					//=(R - r), pre-calculated to optimize performance
 	var aMinusbOverb;				//=(R - r) / r, pre-calculated to optimize performance
@@ -66,6 +79,8 @@ SpiroCanvas.spiroCanvasCore = function()
 		var newPoint=	{x:0, y:0};		
 		this.angle 		+=	angleStep;
 		
+		this.updateColors();
+		
 		//calculates the point using updated angle and Hypotrochoid formula
 		newPoint.x 	=	centerPoint.x + aMinusb * Math.cos(this.angle) + p * Math.cos(this.angle * aMinusbOverb);
 		newPoint.y 	=	centerPoint.y + aMinusb * Math.sin(this.angle) - p * Math.sin(this.angle * aMinusbOverb);
@@ -73,7 +88,7 @@ SpiroCanvas.spiroCanvasCore = function()
 		this.drawCircles(centerPoint, newPoint, R, r, true);
 		
 		//draw a shadow behind the spirograph line
-		drawShadowLine(ct, oldPoint, newPoint);
+		this.drawShadowLine(ct, oldPoint, newPoint);
 		
 		//plot a line to the new point
 		drawLine(ct, oldPoint, newPoint);
@@ -106,6 +121,8 @@ SpiroCanvas.spiroCanvasCore = function()
 		var newPoint=	{x:0, y:0};
 		this.angle += angleStep;
 		
+		this.updateColors();
+		
 		//calculates the point using updated angle and Epitrochoid formula
 		newPoint.x	=	centerPoint.x + aPlusb * Math.cos(this.angle) - p * Math.cos(this.angle * aPlusbOverb);
 		newPoint.y	=	centerPoint.y + aPlusb * Math.sin(this.angle) - p * Math.sin(this.angle * aPlusbOverb);
@@ -113,7 +130,7 @@ SpiroCanvas.spiroCanvasCore = function()
 		this.drawCircles(centerPoint, newPoint, R, r, false);
 		
 		//draw a shadow behind the spirograph line
-		drawShadowLine(ct, oldPoint, newPoint);
+		this.drawShadowLine(ct, oldPoint, newPoint);
 		
 		//plot a line to the new point
 		drawLine(ct, oldPoint, newPoint);
@@ -182,9 +199,25 @@ SpiroCanvas.spiroCanvasCore = function()
 		aPlusbOverb			=	aPlusb / r;
 		
 		//sets the context colors
-		ct.strokeStyle		=	prepareLinearGradient(ct, curveData.color);
-		var rgbColor		=	cc.hsvToRgb(curveData.color.h, curveData.color.s, curveData.color.v);
-		shadowColor			=	'rgba(' + (255 - rgbColor.r) + ', ' + (255 - rgbColor.g) + ', ' + (255 - rgbColor.b) + ', ' + 0.2 + ')';
+		if(this.isRainbow)
+		{
+			hsvColor		=	cc.rgbToHsv(255, 255, 255);
+			strokeColor		=	'#' + cc.HSVToHex(hsvColor);
+			rainbowDel		=	(1.0 / curveData.res);
+		}
+		else if(this.isGradient)
+		{
+			hsvColor		=	curveData.color;
+			strokeColor		=	cc.HSVToHex(curveData.color);
+			//rainbowDel		=	(1.0 / curveData.res) * 4.0;
+			rainbowDel		=	1.0/NumRevolutions;
+		}
+		else
+		{
+			strokeColor		=	prepareLinearGradient(ct, curveData.color);
+			var rgbColor	=	cc.hsvToRgb(curveData.color.h, curveData.color.s, curveData.color.v);
+			shadowColor		=	'rgba(' + (255 - rgbColor.r) + ', ' + (255 - rgbColor.g) + ', ' + (255 - rgbColor.b) + ', ' + 0.2 + ')';
+		}
 		
 		//based on the curveType, call corresponding functions repeatedly
 		if (curveType == "hypotrochoid")
@@ -392,8 +425,12 @@ SpiroCanvas.spiroCanvasCore = function()
 	 * @param {point}		point1			First point of line
 	 * @param {point}		point2			Second point of line
 	*/
-	function drawShadowLine(ct, point1, point2)
+	this.drawShadowLine		=	function(ct, point1, point2)
 	{	
+		if(this.isRainbow || this.isGradient)
+		{
+			return;
+		}
 		ct.save();
 		ct.strokeStyle		=	shadowColor;
 		ct.lineWidth		=	3;
@@ -413,6 +450,7 @@ SpiroCanvas.spiroCanvasCore = function()
 	*/
 	function drawLine(ct, point1, point2)
 	{			
+		ct.strokeStyle		=	strokeColor;
 		ct.beginPath();
 		ct.moveTo(point1.x, point1.y);
 		ct.lineTo(point2.x, point2.y);
@@ -447,5 +485,42 @@ SpiroCanvas.spiroCanvasCore = function()
 			lingrad.addColorStop(0.7,	foreHEX2);
 		
 		return lingrad;
+	}
+	
+	this.updateColors		=	function()
+	{
+		var cc				=	new SpiroCanvas.colorConversion();
+		if(this.isRainbow)
+		{
+			//var rgb			=	cc.HexToRGB(strokeColor);
+			var hsv			=	hsvColor;//cc.rgbToHsv(rgb.r, rgb.g, rgb.b);
+			
+			hsv.h			=	hsv.h + rainbowDel;
+			hsv.s			=	0.5;
+			hsv.v			=	1.0;
+			strokeColor		=	'#' + cc.HSVToHex(hsv);
+			hsvColor		=	hsv;
+		}
+		else if(this.isGradient)
+		{
+			//var rgb			=	cc.HexToRGB(strokeColor);
+			var hsv			=	hsvColor;//cc.rgbToHsv(rgb.r, rgb.g, rgb.b);
+			
+			hsv.s			=	1.0;
+			
+			if(hsv.v + rainbowDel >= 0.9 || hsv.v + rainbowDel <= 0.1)
+			{
+				rainbowDel	*=	-1;
+				hsv.v		=	hsv.v + rainbowDel;
+			}
+			else
+			{
+				hsv.v		=	hsv.v + rainbowDel;
+			}
+			strokeColor		=	'#' + cc.HSVToHex(hsv);
+			hsvColor		=	hsv;
+			
+			console.log(hsv.h + ',' + hsv.s + ',' + hsv.v);
+		}
 	}
 };

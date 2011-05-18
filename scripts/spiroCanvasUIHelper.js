@@ -98,6 +98,8 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		currentLayerID		=	-1;
 		layersArray			=	{};
 		orderArray			=	{};
+		
+		$('#canvasCircle').hide();
 	}
 
 	/**
@@ -162,6 +164,28 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 			tmpSpiro.speed	=	25;
 		}
 		
+		var isSimple	=	document.getElementById('colorSimpleRadio');
+		var isRain		=	document.getElementById('colorRainbowRadio');
+		var isGrad 		=	document.getElementById('colorGradientRadio');
+		
+		if(isSimple.checked)
+		{
+			spiroMain.isRainbow		=	false;
+			spiroMain.isGradient	=	false;
+		}
+		if(isRain.checked)
+		{
+			spiroMain.isRainbow		=	true;
+			spiroMain.isGradient	=	false;
+		}
+		else if(isGrad.checked)
+		{
+			spiroMain.isGradient	=	true;
+			spiroMain.isRainbow		=	false;
+		}
+
+
+		
 		hexCol			= 	$('#backgroundColorDiv').css('background-color');
 		hexCol			=	cc.colorToHex(hexCol);
 		rgbCol			=	cc.HexToRGB(hexCol);
@@ -188,6 +212,8 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		
 		tmpSpiro.id							=	"canvasSpiro" + layerCount;
 		layersArray["canvasSpiro" + layerCount]	=	tmpSpiro;
+		
+		$('#canvasCircle').show();
 				
 		spiroMain.drawSpiro('canvasSpiro' + layerCount, 'canvasBG', tmpSpiro);
 	};
@@ -207,6 +233,7 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 	this.onDrawStop				=	function()
 	{
 		this.stopSpiroDrawing();
+		$('#canvasCircle').hide();
 	}
 	
 	/**	updates the UI for a drawing session */
@@ -220,8 +247,6 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 	/**	retrieve the details required to draw the drawing circles and pass them to spiroCanvasCore to draw them */
 	this.updateDrawingCircle	=	function()
 	{	
-		
-		var canvasCircle=	document.getElementById('canvasCircle');
 		var newPoint	=	{x:0, y:0};
 		var R			=	$("#circle1RadiusSlider").slider("value");
 		var r			=	$("#circle2RadiusSlider").slider("value");
