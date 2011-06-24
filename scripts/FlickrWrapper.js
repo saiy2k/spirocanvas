@@ -74,8 +74,9 @@ SpiroCanvas.FlickrWrapper			=	function(sH)
 	
 	this.sharePhoto					=	function()
 	{
+		var _url = 'http://' + document.domain + FLICKR_UPLOAD_SERVICE;
 		$.ajax({
-			url: FLICKR_UPLOAD_SERVICE,
+			url: _url,
 			type: "POST",
 			data: "data=" + spiroHelper.saveAsPNG() + "&token=" + token,
 			success: function(data, textStatus, jqXHR)

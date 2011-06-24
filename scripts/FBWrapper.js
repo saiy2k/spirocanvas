@@ -32,8 +32,10 @@ SpiroCanvas.FBWrapper				=	function(sH)
 	//hosted on our server, which decodes the data and shares in facebook
 	this.sharePhoto					=	function()
 	{
+		var _url = 'http://' + document.domain + FACEBOOK_UPLOAD_SERVICE;
+		console.log(_url);
 		$.ajax({
-			url: FACEBOOK_UPLOAD_SERVICE,
+			url: _url,
 			type: "POST",
 			data: "data=" + spiroHelper.saveAsPNG() + "&uid=" + FB._session.uid,
 			success: function(data, textStatus, jqXHR)
