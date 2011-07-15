@@ -116,7 +116,7 @@ SpiroCanvas.spiroCanvasUI 	= function()
 			//check if the previous share is done. here the text can
 			//have values "Upload|Uploading|Uploaded" that denotes the status
 			//of current sharing.
-			if ( $( "#shareFacebook" ).html() == "Upload" )
+			if ( $( "#shareFlickr" ).html() == "Upload" )
 			{
 				//update status and start sharing
 				$( "#shareFlickr" ).html("Uploading...");

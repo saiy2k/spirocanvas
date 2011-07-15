@@ -42,19 +42,13 @@ SpiroCanvas.FlickrWrapper			=	function(sH)
 		_url			+=	"api_key=" + key + "&perms=" + perms + "&api_sig=" + getSig(perms);		
 				
 		var win 		=	window.open(_url, "windowname1", 'width=200, height=77'); 
-
 		
 		var pollTimer	=	window.setInterval(function()
-		{
-			console.log(win.document.URL.substr(0, 20));
-			
-			if (win.document.URL.substr(0, 20) == "http://gethugames.in")
+		{			
+			if (win.document.URL.indexOf("http://www.gethugames.in") != -1)
 			{
 				window.clearInterval(pollTimer);
-				console.log(win);
-				console.log("got frob1");
 				var frb	=	gup(win.document.URL, 'frob');			
-				console.log("got frob2");
 				var	api_sig	= hex_md5(shared_secret + 'api_key' + key + 'formatjson' + 'frob' + frb + 'jsoncallbackgotToken' + 'methodflickr.auth.getToken');
 				_url	=	'http://flickr.com/services/rest/?' + '&api_key=' + key + '&format=json' + '&frob=' + frb + '&method=flickr.auth.getToken' + '&api_sig=' + api_sig;
 				
@@ -74,7 +68,7 @@ SpiroCanvas.FlickrWrapper			=	function(sH)
 	
 	this.sharePhoto					=	function()
 	{
-		var _url = 'http://' + document.domain + FLICKR_UPLOAD_SERVICE;
+		var _url = FLICKR_UPLOAD_SERVICE;
 		$.ajax({
 			url: _url,
 			type: "POST",

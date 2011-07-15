@@ -519,8 +519,6 @@ SpiroCanvas.spiroCanvasCore = function()
 			}
 			strokeColor		=	'#' + cc.HSVToHex(hsv);
 			hsvColor		=	hsv;
-			
-			console.log(hsv.h + ',' + hsv.s + ',' + hsv.v);
 		}
 	}
 };
