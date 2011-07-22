@@ -43,6 +43,7 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	<script type="text/javascript" src="scripts/spiroCanvasUI.js"></script>
 	
 	<script language="javascript">
+		
 		(function( $ )
 		{
 			//a jquery extension to move an element to the center of the screen
@@ -64,6 +65,13 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 			};
 		})( jQuery );
 		
+		function preload(arrayOfImages) {
+			$(arrayOfImages).each(function() {
+				$('<img/>')[0].src = this;
+				// (new Image()).src = this;
+    		});
+		}
+		
 		function init()
 		{
 			if($.browser.msie)
@@ -75,6 +83,14 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 			{
 				SpiroCanvas.spiroCanvasUI.initUI();
 			}
+			
+			
+			preload([
+				'images/button1S.png',
+				'images/button2S.png',
+				'images/button3S.png'
+			]);
+			
 		}
 	</script>
 </head>
@@ -196,9 +212,9 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 </div>
 
 <div id="creditsDialog" title="Credits" style="text-align:center">
-	<br>Developed by <a href="saiy2k.blogspot.com">Saiyasodharan</a>
-	<br><br>Web Site: <a href="http://binarysaiy2k.blogspot.com/2011/02/spirocanvas.html">spirocanvas @ binarysaiy2k</a>
-	<br><br>Get source: <a href="http://code.google.com/p/spirocanvas/">spirocanvas @ code.google</a>
+	<br>Developed by <a href="http://saiy2k.blogspot.com" target="_blank">Saiyasodharan</a>
+	<br><br>Web Site: <a href="http://binarysaiy2k.blogspot.com/2011/02/spirocanvas.html" target="_blank">spirocanvas @ binarysaiy2k</a>
+	<br><br>Get source: <a href="http://code.google.com/p/spirocanvas/" target="_blank">spirocanvas @ code.google</a>
 </div>
 
 

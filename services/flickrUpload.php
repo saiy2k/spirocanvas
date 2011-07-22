@@ -38,12 +38,10 @@ $clean  =       substr($b64, 22);
 $clean = str_replace(' ','+',$clean);
 
 //decode the raw data and save it in a file
-$FILE_PATH = 'tmp.png';
+$FILE_PATH = $_POST['token'].'.png';
 file_put_contents($FILE_PATH, base64_decode($clean));
                                         
 $data['photo'] = '@' . realpath($FILE_PATH);
-
-echo($FILE_PATH);
 
 $sig = '47ccedfd3e857f83api_keyc6c3f471e99860ba35dae1dea6389faa';
 $sig = $sig . 'auth_token' . $_POST['token'];
@@ -57,7 +55,7 @@ curl_setopt($cl, CURLOPT_RETURNTRANSFER, true);
 $resp = curl_exec($cl);
 curl_close($cl);
 
-
-print_r($resp);
+//to delete the file
+unlink($FILE_PATH);
 
 ?>

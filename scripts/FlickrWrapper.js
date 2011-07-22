@@ -99,7 +99,6 @@ SpiroCanvas.FlickrWrapper			=	function(sH)
 			jsonpCallback: 'gotToken',
 			success: function(data)
 			{
-				console.log('got token');
 				token = data.auth.token._content;
 				$("#flickrLogin").html("Flickr Logout");
 				$( "#shareFlickr" ).html("Upload");
