@@ -38,8 +38,6 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 	/**	aligns all the controls in the application and runs the startup logic */
 	this.init				=	function()
 	{
-		//disable the scroll bars
-		$( "body" ).css("overflow", "hidden");
 			
 		//moves the canvasContainer (inside which our canvas tag resides) to the center of the screen
 		$("#canvasContainer").center();
@@ -65,6 +63,11 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		$(".toolPanel").css("top", "100px" );
 		$(".toolPanelRight").offset({ top: 100, left: ($(document).width() - $(".toolPanelRight").width())});
 		$(".toolBoxHeader").offset({ top: 100 });
+		
+		//position the social dialog
+		$( "#socialDialog" ).css("left", $(window).width() - $( "#socialDialog" ).width() - 15 );
+		$( "#socialDialog" ).css("top", $(window).height() - $( "#socialDialog" ).height() - 15 );
+		$( "#socialDialog" ).css("zIndex", 9999);
 
 		//draws the black background
 		this.drawBG('canvasBG', { r:0, g:0, b:0});
