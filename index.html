@@ -24,17 +24,16 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	<meta property="og:title" content="SpiroCanvas" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="http://www.gethugames.in/spirocanvas/" />
-	<meta property="og:image" content="http://icons.iconarchive.com/icons/enhancedlabs/the-real-christmas-05/128/Star-icon.png" />
+	<meta property="og:image" content="https://lh5.googleusercontent.com/-UV__GZ-xeTM/Tmho-72dHRI/AAAAAAAAAcQ/LDezwfyCnI0/s800/spiroGraph128.png" />
 	<meta property="og:site_name" content="SpiroCanvas" />
 	<meta property="fb:admins" content="100000655597076" />
-	<meta property="og:description" content="Creative HTML5 App to draw awesome spirographs"/>
+	<meta property="og:description" content="Creative HTML5 App to draw colorful vibrant spirographs"/>
 		  
 	<!-- Update your html tag to include the itemscope and itemtype attributes -->
 	<html itemscope itemtype="http://schema.org/Product">
-
 	<!-- Add the following three tags inside head -->
 	<meta itemprop="name" content="SpiroCanvas">
-	<meta itemprop="description" content="Creative HTML5 App to draw awesome spirographs">
+	<meta itemprop="description" content="Creative HTML5 App to draw colorful vibrant spirographs">
 
 	<link type="text/css" href="styleUI.css" rel="Stylesheet" />
 	<link type="text/css" href="scripts/jqueryui/css/ui-darkness/jquery-ui-1.8.11.custom.css" rel="Stylesheet" />
@@ -83,7 +82,6 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 		function preload(arrayOfImages) {
 			$(arrayOfImages).each(function() {
 				$('<img/>')[0].src = this;
-				// (new Image()).src = this;
     		});
 		}
 		
@@ -141,11 +139,6 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	<canvas id="canvasBG" 		width="800" height="600" style="position:absolute; left:0px; top:0px; z-index:0; background-color:#000"></canvas>
 	<canvas id="canvasCircle" 	width="800" height="600" style="position:absolute; left:0px; top:0px; z-index:1;"></canvas>
 	<canvas id="canvasResult" 	width="800" height="600" style="display:none;"></canvas>
-	
-	<div id="playBox" style="height: 20px; text-align: center; z-index: 50;">
-		<a href="#" style="text-decoration:none;"><div id="drawButton" class="controlButton">Draw</div></a>	
-		<a href="#" style="text-decoration:none;"><div id="resetButton" class="controlButton">Clear</div></a>	
-	</div>
 </div>
 
 <div id="statusDiv" style="text-align:center; z-index:9999">
@@ -226,7 +219,11 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 <div class="toolPanelRight">
 	<div class="toolBoxHeaderRight" id="layersHeader"></div>
 	<div class="toolBox" id="layersBox" style="height: 490px">
-		<ul id="layersPanelSelectable"></ul>
+		<ul id="layersPanelSelectable">
+			
+		</ul>
+		<div class="controlButton" style="position:absolute; top:480px; left: 64px;  padding: 2px; width:50px" id="layerHideAllButton">Hide All</div>
+		<div class="controlButton" style="position:absolute; top:480px; left: 126px; padding: 2px; width:60px" id="layerDeleteAllButton">Delete All</div>
 	</div>
 </div>
 

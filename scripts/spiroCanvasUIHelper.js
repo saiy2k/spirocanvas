@@ -35,7 +35,9 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 	var spiroMain			=	new SpiroCanvas.spiroCanvasCore();
 	var spiroInstant		=	new SpiroCanvas.spiroCanvasCore();
 	
-	/**	aligns all the controls in the application and runs the startup logic */
+	/**
+		aligns all the controls in the application and runs the startup logic
+	*/
 	this.init				=	function()
 	{
 			
@@ -77,7 +79,9 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		spiroMain.setDelegate(this);
 	}
 	
-	/**	deletes all the drawn canvases, layer buttons and reset every other variable */
+	/**
+		deletes all the drawn canvases, layer buttons and reset every other variable
+	*/
 	this.reset				=	function()
 	{
 		for ( var i = 0; i < layerCount; i++)
@@ -135,11 +139,34 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 	};
 	
 	/**
+		this function hides all the layers by hiding all the canvases updated the layers panel appropriately
+	*/
+	this.hideAllLayers		=	function() {
+		for ( var i = 0; i < layerCount; i++)
+		{
+			var no			=	orderArray[i];			
+			var canvasid	=	"#canvasSpiro" + no;
+			$(canvasid).css('display', 'none');
+		}
+	}
+
+	/**
+		this function displays all the layers
+	*/
+	this.showAllLayers		=	function() {
+		for ( var i = 0; i < layerCount; i++)
+		{
+			var no			=	orderArray[i];			
+			var canvasid	=	"#canvasSpiro" + no;
+			$(canvasid).css('display', 'block');
+		}
+	}
+	
+	/**
 		draws the spirograph with the help of spiroCanvasCore. Creates one spiroGraph object, creates one new canvas, creates an entry in layers panel and finally calls the spiro drawing function of spiroCanvasCore with appropriate parameters
 		@param		{Boolean}	isFullSpeed		if true, then curve is drawn at full speed
 	*/
-	this.drawSpirograph		=	function(isFullSpeed)
-	{
+	this.drawSpirograph		=	function(isFullSpeed) {
 		if(realLayerCount >= maxLayers)
 		{
 			return;
@@ -206,12 +233,14 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		
 		//make an entry to the layers panel
 		$("#layersPanelSelectable").append(
-			'<li class="ui-widget-content layerBox" style="background: #000000; border: none; color: #aaaaaa" id="layerWidget' + layerCount + '">' + 
+			'<li class="ui-widget-content layerBox" style="background: #000000; border: none; color: #aaaaaa; display:block" id="layerWidget' + layerCount + '">' + 
+			'<a href="#" id="hideLayerWidget" border="2"><img src="images/eyeIcon.png"></a> &nbsp;' + 
 			'Layer ' +  layerCount + ' ' +
 			'<a href="#" id="removeLayerWidget" border="2"><img src="images/closeIcon.png"></a> &nbsp;' +
-			'<a href="#" id="hideLayerWidget" border="2"><img src="images/eyeIcon.png"></a>' +
 			'</li>'
 		);
+		
+		$('a', '#layerWidget' + layerCount).fadeTo("slow", 0.4);
 		
 		tmpSpiro.id							=	"canvasSpiro" + layerCount;
 		layersArray["canvasSpiro" + layerCount]	=	tmpSpiro;
@@ -221,9 +250,10 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		spiroMain.drawSpiro('canvasSpiro' + layerCount, 'canvasBG', tmpSpiro);
 	};
 	
-	/**	stops any cruve that are being drawn and updates the UI */
-	this.stopSpiroDrawing		=	function()
-	{
+	/**
+		stops any cruve that are being drawn and updates the UI
+	*/
+	this.stopSpiroDrawing		=	function() {
 		if(this.loopID != -1)
 		{
 			$( "#progressBar" ).hide();
@@ -232,24 +262,27 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		}
 	}
 	
-	/**	event handler that is invoked by the spiroCanvascore, when drawing is over */
-	this.onDrawStop				=	function()
-	{
+	/**
+		event handler that is invoked by the spiroCanvascore, when drawing is over
+	*/
+	this.onDrawStop				=	function() {
 		this.stopSpiroDrawing();
 		$('#canvasCircle').hide();
 	}
 	
-	/**	updates the UI for a drawing session */
-	this.prepareForDrawing		=	function()
-	{
+	/**
+		updates the UI for a drawing session
+	*/
+	this.prepareForDrawing		=	function() {
 		this.stopSpiroDrawing();
 		$( "#progressBar" ).show();
 		$("#drawButton").html("Stop");
 	}
 	
-	/**	retrieve the details required to draw the drawing circles and pass them to spiroCanvasCore to draw them */
-	this.updateDrawingCircle	=	function()
-	{	
+	/**
+		retrieve the details required to draw the drawing circles and pass them to spiroCanvasCore to draw them
+	*/
+	this.updateDrawingCircle	=	function() {	
 		var newPoint	=	{x:0, y:0};
 		var R			=	$("#circle1RadiusSlider").slider("value");
 		var r			=	$("#circle2RadiusSlider").slider("value");
@@ -271,13 +304,26 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		}
 	}
 	
-	/**	randomizes the slider values */
-	this.randomize			=	function()
-	{
+	/**
+		randomizes the slider values		
+	*/
+	this.randomize			=	function() {
 		var cc			=	new SpiroCanvas.colorConversion();
+		var	circle1R;
+		var circle2R;
 		
-		$('#circle1RadiusSlider').slider('value', Math.random() * 195 + 1);
-		$('#circle2RadiusSlider').slider('value', Math.random() * 98 + 1);
+		circle1R		=	Math.round(Math.random() * 20) * 10;
+		
+		//randomly decides between epitrochoid or hypotrochoid.
+		if (Math.random() < 0.5)
+			// sets as multiples of 5 in the range (0 to 100) for epitrochoid
+			circle2R	=	Math.round(Math.random() * 20) * 5;
+		else
+			// sets as multiples of 5 in the range (0 to -circle1R) for hypotrochoid
+			circle2R	=	Math.round(Math.random() * (circle1R/5)) * -5;
+		
+		$('#circle1RadiusSlider').slider('value', circle1R);	//set as multipes of 10 in the range (0 to 200)
+		$('#circle2RadiusSlider').slider('value', circle2R);
 		$('#pointDistanceSlider').slider('value', Math.random() * 98 + 1);
 		//$('#speedSlider').slider('value', 25);	//dont randomize speed
 		$('#resolutionSlider').slider('value', Math.random() *  $('#circle1RadiusSlider').slider('value') / 2);
@@ -288,8 +334,8 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		var hex		=	'#' + rh + gh + bh;
 		$('#foregroundColorDiv').css('background-color', hex);
 		
-		$( "#circle1RadiusLabel" ).html( $('#circle1RadiusSlider').slider('value') );
-		$( "#circle2RadiusLabel" ).html( $('#circle2RadiusSlider').slider('value') );
+		$( "#circle1RadiusLabel" ).html( circle1R );
+		$( "#circle2RadiusLabel" ).html( circle2R );
 		$( "#pointDistanceLabel" ).html( $('#pointDistanceSlider').slider('value') );
 		$( "#speedLabel" ).html( $('#speedSlider').slider('value') );
 		$( "#resolutionLabel" ).html( $('#resolutionSlider').slider('value') );
@@ -374,7 +420,9 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		}
 	}
 	
-	/**	updates the order array as in the layers panel */
+	/**
+		updates the order array as in the layers panel
+	*/
 	this.calcObjectOrder		=	function()
 	{
 		var arr = $("#layersPanelSelectable").sortable("toArray");
@@ -386,7 +434,9 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		}
 	}
 
-	/**	toggles the visibility of canvas associated with the given layer entry */
+	/**
+		toggles the visibility of canvas associated with the given layer entry
+	*/
 	this.layerToggleVisibility	=	function(e)
 	{
 		var itemID		=	$(e).parent()[0].id;			//gets the id of <li> element
@@ -403,8 +453,7 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		sets the values of the sliders to match the values of the graph associated with the clicked layer entry
 		@param		{id}		e			id of the clicked layer entry
 	*/
-	this.selectSpiroFromLayer	=	function(e)
-	{
+	this.selectSpiroFromLayer	=	function(e) {
 		var cc			=	new SpiroCanvas.colorConversion();
 	
 		var itemID		=	e.id;							//gets the id of <li> element
@@ -438,7 +487,9 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		spiroMain.updateCenterPoint({x: cx, y: cy});
 	}
 	
-	/**	deletes the given element from the given arrray	*/
+	/**
+		deletes the given element from the given arrray
+	*/
 	function removeByElement(arrayName,arrayElement)
 	{
 		delete arrayName[arrayElement];

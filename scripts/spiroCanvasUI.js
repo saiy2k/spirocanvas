@@ -41,16 +41,6 @@ SpiroCanvas.spiroCanvasUI 	= function()
 			window.open(spiroHelper.saveAsPNG());
 		});
 		
-		//on save, clear the canvas and delete all the layers
-		$( "#resetButton" ).click(function()
-		{
-			if  ($("#drawButton").html() == "Stop")
-			{
-				spiroHelper.stopSpiroDrawing();
-			}
-			spiroHelper.reset();
-		});
-
 		//make the shareDialog div, a jquery modal dialog
 		$( "#shareDialog" ).dialog
 		({
@@ -138,23 +128,6 @@ SpiroCanvas.spiroCanvasUI 	= function()
 				flickrWrapper.logout();
 			}
 		});
-
-		//click handler for Draw Button. Calls the the drawSpiro function
-		//to draw a new spirograph with appropriate parameters
-		$( "#drawButton" ).click(function()
-		{
-			if  ($("#drawButton").html() == "Draw")
-			{
-				spiroHelper.updateCenter(400, 300);
-				spiroHelper.drawSpirograph(false);	//draw a spirograph based on currect slider values
-				spiroHelper.calcObjectOrder();		//update the order array
-
-			}
-			else
-			{
-				spiroHelper.stopSpiroDrawing();
-			}
-		});
 		
 		//handler for Random Button
 		$( "#randomButton" ).click(function()
@@ -166,25 +139,32 @@ SpiroCanvas.spiroCanvasUI 	= function()
 		});
 		
 		//will get invoked, if the close button on any of the layers is pressed
-		$('#removeLayerWidget').live('click', function()
-		{
+		$('#removeLayerWidget').live('click', function() {
 			return spiroHelper.removeLayer(this);
 		});
 		
 		//will get invoked, if the hide button on any of the layers is pressed
-		$('#hideLayerWidget').live('click', function()
-		{
+		$('#hideLayerWidget').live('click', function() {
 			spiroHelper.layerToggleVisibility(this);
 		});
 		
-		$('.layerBox').live('click', function()
-		{
+		//updates the sliders with the currently selected spirograph
+		$('.layerBox').live('click', function() {
 			spiroHelper.selectSpiroFromLayer(this);
 		});
 		
+		//shows the hide and delete button of the currently hovered layer
+		$('.layerBox').live('mouseenter', function() {
+			$('a',this).fadeTo("fast", 1.0);
+		});
+		
+		//hides the hide and delete button of the currently hovered out layer
+		$('.layerBox').live('mouseleave', function() {
+			$('a',this).fadeTo("slow", 0.4);
+		});
+		
 		//makes the <UL> in layersPanel selectable
-		$("#layersPanelSelectable").sortable
-		({
+		$("#layersPanelSelectable").sortable ({
 			containment: '#layersBox', 
 			update: function(event, ui)
 			{
@@ -192,7 +172,34 @@ SpiroCanvas.spiroCanvasUI 	= function()
 				spiroHelper.arrangeLayers(arr);				//arrange the layers in order
 				spiroHelper.calcObjectOrder();				//update the order array
 			}
-		});	
+		});
+		
+		//cancels current drawing if clicked on the progress bar
+		$("#progressBar").click(function()
+		{
+			spiroHelper.stopSpiroDrawing();
+		});
+		
+		//shows / hides the visibility of all layers
+		$("#layerHideAllButton").click(function()
+		{			
+			if ( $("#layerHideAllButton").html() == "Hide All" ) {
+				$("#layerHideAllButton").html("Show All");
+				spiroHelper.hideAllLayers();
+			}
+			else if ( $("#layerHideAllButton").html() == "Show All" ) {
+				$("#layerHideAllButton").html("Hide All");
+				spiroHelper.showAllLayers();
+			}
+			
+		});
+		
+		//deletes all the layers clearing the canvas
+		$("#layerDeleteAllButton").click(function()
+		{
+			spiroHelper.stopSpiroDrawing();
+			spiroHelper.reset();
+		});
 		
 		//on clicking the left tool box header,
 		//slide the panel inside/outside the document
@@ -392,8 +399,6 @@ SpiroCanvas.spiroCanvasUI 	= function()
 			{
 				return;
 			}
-		
-			spiroHelper.stopSpiroDrawing();
 			
 			isDrawingByMouse	=	false;
 		});
@@ -403,11 +408,6 @@ SpiroCanvas.spiroCanvasUI 	= function()
 			if(event.pageY - parseInt($("#canvasContainer").css("top")) - parseInt($("#canvasContainer").css("height")) > -30)
 			{
 				return;
-			}
-		
-			if(isDrawingByMouse)
-			{
-				spiroHelper.updateCenter(event.pageX - parseInt($("#canvasContainer").css("left")), event.pageY - parseInt($("#canvasContainer").css("top")));
 			}
 		});
 		

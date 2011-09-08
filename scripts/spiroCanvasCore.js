@@ -95,8 +95,7 @@ SpiroCanvas.spiroCanvasCore = function()
 		
 		//check if all the points are drawn. if yes, it clears the loop.
 		currentPointID++;
-		if(currentPointID >= maxPoints)
-		{
+		if(currentPointID >= maxPoints)	{
 			this.stopDrawing();
 		}
 		
@@ -156,8 +155,7 @@ SpiroCanvas.spiroCanvasCore = function()
 	this.drawSpiro 	=	function (canvasSpiroID, canvasBGID, curveData)	
 	{
 		//if a curve is being drawn, stop it
-		if(this.loopID != -1)
-		{
+		if(this.loopID != -1) {
 			this.stopDrawing();
 		}
 		
