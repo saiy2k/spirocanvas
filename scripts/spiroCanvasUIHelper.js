@@ -175,9 +175,11 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		//creating a new Spirograph object
 		var tmpSpiro	=	new SpiroCanvas.spiroGraph();
 		var cc			=	new SpiroCanvas.colorConversion();
-		
+
+//console.log('DRAWSPIROGRAPH: preparing');
 		this.prepareForDrawing();
-		
+
+//console.log('DRAWSPIROGRAPH: read from controls');
 		//initiating the new object with vales from the controls
 		tmpSpiro.R		=	$('#circle1RadiusSlider').slider('value');
 		tmpSpiro.r 		=	$('#circle2RadiusSlider').slider('value');
@@ -224,7 +226,8 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		layerCount		=	layerCount + 1;
 		currentLayerID	=	layerCount - 1;
 		realLayerCount++;
-		
+
+//console.log('DRAWSPIROGRAPH: creates new canvas');		
 		//creates a new Canvas
 		$("#canvasContainer").append('<canvas id="canvasSpiro' + layerCount + '" '
 			+ 'width="800" height="600" '
@@ -247,7 +250,9 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		
 		$('#canvasCircle').show();
 				
+//console.log('DRAWSPIROGRAPH: do actual draw');
 		spiroMain.drawSpiro('canvasSpiro' + layerCount, 'canvasBG', tmpSpiro);
+//console.log('DRAWSPIROGRAPH: drawing went fine');
 	};
 	
 	/**
@@ -288,6 +293,8 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		var r			=	$("#circle2RadiusSlider").slider("value");
 		var p			=	$("#pointDistanceSlider").slider("value");
 		
+		$('#canvasCircle').show();
+		
 		if ( r < 0 )
 		{
 			newPoint.x	=	centerPoint.x + R - r + p;
@@ -312,15 +319,15 @@ SpiroCanvas.spiroCanvasUIHelper = function()
 		var	circle1R;
 		var circle2R;
 		
-		circle1R		=	Math.round(Math.random() * 20) * 10;
+		circle1R		=	Math.round(Math.random() * 20) * 10 + 1;
 		
 		//randomly decides between epitrochoid or hypotrochoid.
 		if (Math.random() < 0.5)
 			// sets as multiples of 5 in the range (0 to 100) for epitrochoid
-			circle2R	=	Math.round(Math.random() * 20) * 5;
+			circle2R	=	Math.round(Math.random() * 20) * 5 + 1;
 		else
 			// sets as multiples of 5 in the range (0 to -circle1R) for hypotrochoid
-			circle2R	=	Math.round(Math.random() * (circle1R/5)) * -5;
+			circle2R	=	Math.round(Math.random() * (circle1R/5)) * -5 + 1;
 		
 		$('#circle1RadiusSlider').slider('value', circle1R);	//set as multipes of 10 in the range (0 to 200)
 		$('#circle2RadiusSlider').slider('value', circle2R);

@@ -132,10 +132,15 @@ SpiroCanvas.spiroCanvasUI 	= function()
 		//handler for Random Button
 		$( "#randomButton" ).click(function()
 		{
+			//console.log('RANDOM: updating center');
 			spiroHelper.updateCenter(400, 300);
+			//console.log('RANDOM: randomizing');
 			spiroHelper.randomize();			//randomize the slider values
+			//console.log('RANDOM: drawing');
 			spiroHelper.drawSpirograph(false);	//draw a spirograph based on currect slider values
+			//console.log('RANDOM: obj ordering');
 			spiroHelper.calcObjectOrder();		//update the order array
+			//console.log('RANDOM: over');
 		});
 		
 		//will get invoked, if the close button on any of the layers is pressed

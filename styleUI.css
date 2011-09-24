@@ -146,17 +146,17 @@ a
 .controlButton
 {
 	margin-top:				-3px;
-	width:					50px;
+	width:					55px;
 	font:					12px arial;
 	color:					#7fdcff;
 	background-color:		#023A4F;
 	display:				inline-block;
 	text-align:				center;
-	padding:				4px;
-	padding-left:			10px;
-	padding-right:			10px;
+	padding:				2px;
 	border:					1px solid #09698d;
 	border-bottom:			none;
+	position:				absolute;
+	top:					480px;
 }
 
 .controlButton:hover

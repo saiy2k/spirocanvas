@@ -172,7 +172,7 @@ SpiroCanvas.spiroCanvasCore = function()
 		var curveType		=	"";
 		canvasBase			=	document.getElementById(canvasSpiroID);
 		ct					=	canvasBase.getContext('2d');
-		
+
 		//if r is negative, set curveType as hypotrochoid
 		//otherwise, make it as epitrochoid.
 		if ( r < 0 )
@@ -195,7 +195,7 @@ SpiroCanvas.spiroCanvasCore = function()
 		aMinusbOverb		=	aMinusb / r;
 		aPlusb				=	R + r;
 		aPlusbOverb			=	aPlusb / r;
-		
+
 		//sets the context colors
 		if(this.isRainbow)
 		{
