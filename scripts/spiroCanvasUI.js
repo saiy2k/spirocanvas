@@ -21,8 +21,7 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
  * @class This class does the magic of converting plain divs to jqueryui controls and thus setting up the application UI. One and only function in this class is initUI and it will be called, when the body is loaded. <br> <br>
 	This class also holds the event handlers for the controls <br> <br>
  */
-SpiroCanvas.spiroCanvasUI 	= function()
-{
+SpiroCanvas.spiroCanvasUI 	= function() {
 	var staticMembers		=	{};
 	var spiroHelper			=	new SpiroCanvas.spiroCanvasUIHelper();
 	var fbWrapper			=	new SpiroCanvas.FBWrapper(spiroHelper);
@@ -30,28 +29,24 @@ SpiroCanvas.spiroCanvasUI 	= function()
 	
 	var isDrawingByMouse	=	false;
 	
-	staticMembers.initUI 	=	function ()
-	{
+	staticMembers.initUI 	=	function ()	{
 		//initialize spiro helper
 		spiroHelper.init();
 		
 		//on save, get the PNG base64 encoded data and show it in new tab
-		$( "#saveButton" ).click(function()
-		{
+		$( "#saveButton" ).click(function()	{
 			window.open(spiroHelper.saveAsPNG());
 		});
 		
 		//make the shareDialog div, a jquery modal dialog
-		$( "#shareDialog" ).dialog
-		({
+		$( "#shareDialog" ).dialog ({
 			autoOpen: false,
 			modal:	true,
 			resizable: false
 		});
 		
 		//make the creditsDialog div, a jquery modal dialog
-		$( "#creditsDialog" ).dialog
-		({
+		$( "#creditsDialog" ).dialog ({
 			autoOpen: false,
 			modal:	true,
 			resizable: false
@@ -383,35 +378,32 @@ SpiroCanvas.spiroCanvasUI 	= function()
 			value: 0
 		});
 		
-		$( "#canvasContainer" ).mousedown(function(event)
-		{
-			if(event.pageY - parseInt($("#canvasContainer").css("top")) - parseInt($("#canvasContainer").css("height")) > -30)
-			{
+		$( "#canvasContainer" ).mousedown(function(event) {
+			if(event.which != 1) {
+				return;
+			}
+		
+			if(event.pageY - parseInt($("#canvasContainer").css("top")) - parseInt($("#canvasContainer").css("height")) > -30) {
 				return;
 			}
 		
 			spiroHelper.updateCenter(event.pageX - parseInt($("#canvasContainer").css("left")), event.pageY - parseInt($("#canvasContainer").css("top")));
-			//spiroHelper.randomize();
 			spiroHelper.drawSpirograph(true);		//draw a spirograph based on currect slider values
-			spiroHelper.calcObjectOrder();		//update the order array
+			spiroHelper.calcObjectOrder();			//update the order array
 			
 			isDrawingByMouse	=	true;
 		});
 		
-		$( "#canvasContainer" ).mouseup(function(event)
-		{
-			if(event.pageY - parseInt($("#canvasContainer").css("top")) - parseInt($("#canvasContainer").css("height")) > -30)
-			{
+		$( "#canvasContainer" ).mouseup(function(event)	{
+			if(event.pageY - parseInt($("#canvasContainer").css("top")) - parseInt($("#canvasContainer").css("height")) > -30) {
 				return;
 			}
 			
 			isDrawingByMouse	=	false;
 		});
 		
-		$('#canvasContainer').mousemove(function(event)
-		{
-			if(event.pageY - parseInt($("#canvasContainer").css("top")) - parseInt($("#canvasContainer").css("height")) > -30)
-			{
+		$('#canvasContainer').mousemove(function(event)	{
+			if(event.pageY - parseInt($("#canvasContainer").css("top")) - parseInt($("#canvasContainer").css("height")) > -30) {
 				return;
 			}
 		});
