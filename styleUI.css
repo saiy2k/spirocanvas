@@ -103,6 +103,7 @@ a
 	float:					right;
 	padding: 				1px;
 	font:					12px arial;
+	cursor				:	pointer;
 }
 
 .toolBoxHeaderRight
@@ -110,6 +111,7 @@ a
 	float:					left;
 	padding: 				1px;
 	font:					12px arial;
+	cursor				:	pointer;
 }
 
 #statusDiv

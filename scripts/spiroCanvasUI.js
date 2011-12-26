@@ -32,6 +32,13 @@ SpiroCanvas.spiroCanvasUI 	= function() {
 	staticMembers.initUI 	=	function ()	{
 		//initialize spiro helper
 		spiroHelper.init();
+
+$('#canvasContainer').bind('contextmenu', function(e){
+    e.preventDefault();
+    //code
+    return false;
+});
+
 		
 		//on save, get the PNG base64 encoded data and show it in new tab
 		$( "#saveButton" ).click(function()	{
@@ -379,14 +386,13 @@ SpiroCanvas.spiroCanvasUI 	= function() {
 		});
 		
 		$( "#canvasContainer" ).mousedown(function(event) {
-			if(event.which != 1) {
-				return;
-			}
-		
 			if(event.pageY - parseInt($("#canvasContainer").css("top")) - parseInt($("#canvasContainer").css("height")) > -30) {
 				return;
 			}
-		
+console.log(event);		
+			if(event.which == 3) {
+				spiroHelper.randomize();
+			}
 			spiroHelper.updateCenter(event.pageX - parseInt($("#canvasContainer").css("left")), event.pageY - parseInt($("#canvasContainer").css("top")));
 			spiroHelper.drawSpirograph(true);		//draw a spirograph based on currect slider values
 			spiroHelper.calcObjectOrder();			//update the order array
