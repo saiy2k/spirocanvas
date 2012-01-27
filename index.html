@@ -19,13 +19,20 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 
 <!DOCTYPE html>
 
-<html>
-<head>
+<html manifest="./offline.appcache" itemscope itemtype="http://schema.org/Product">
+<head profile="http://www.w3.org/2005/10/profile">
+    <title> Spirocanvas </title>
 
-	<meta name="description" content="A HTML5 application to draw amazing spirographs" />
-	<meta name="keywords" content="HTML5, web, application, draw, spirographs" />
+	<meta name="description" content="A HTML5 web application to generate colorful vibrant spirographs that draws both epicycloid and/or hypocycloids." />
+	<meta name="keywords" content="HTML5, web, application, draw, spirograph, online, free, draw, color, vibrant, epicycloid, hypocloid, generate, picture, vista, visual, export, share, layer" />
 	<meta name="author" content="Saiyasodharan" />
 	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="apple-touch-icon" href="http://www.gethugames.in/spirocanvas/images/spiroCanvasIcon64.png"/>
+    <link rel="icon" type="image/png" href="http://www.gethugames.in/tictactoe/images/spiroCanvasIcon64.png" />
+	<link type="text/css" href="styleUI.css" rel="Stylesheet" />
+	<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-darkness/jquery-ui.css" rel="Stylesheet" />
+	<link type="text/css" href="scripts/eyeConColorPicker/css/colorpicker.css" rel="Stylesheet" />
 	
 	<meta property="og:title" content="SpiroCanvas" />
 	<meta property="og:type" content="website" />
@@ -33,34 +40,31 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 	<meta property="og:image" content="https://lh5.googleusercontent.com/-UV__GZ-xeTM/Tmho-72dHRI/AAAAAAAAAcQ/LDezwfyCnI0/s800/spiroGraph128.png" />
 	<meta property="og:site_name" content="SpiroCanvas" />
 	<meta property="fb:admins" content="100000655597076" />
-	<meta property="og:description" content="Creative HTML5 App to draw colorful vibrant spirographs"/>
+	<meta property="og:description" content="A HTML5 web application to generate colorful vibrant spirographs that draws both epicycloid and/or hypocycloids."/>
 		  
-	<html itemscope itemtype="http://schema.org/Product">
 	<meta itemprop="name" content="SpiroCanvas">
-	<meta itemprop="description" content="Creative HTML5 App to draw colorful vibrant spirographs">
+	<meta itemprop="url" content="http://www.gethugames.in/spirocanvas/">
+	<meta itemprop="image" content="http://www.gethugames.in/spirocanvas/images/spiroCanvasIcon128.png">
+	<meta itemprop="description" content="A HTML5 web application to generate colorful vibrant spirographs that draws both epicycloid and/or hypocycloids.">
 
-	<link type="text/css" href="styleUI.css" rel="Stylesheet" />
-	<link type="text/css" href="scripts/jqueryui/css/ui-darkness/jquery-ui-1.8.11.custom.css" rel="Stylesheet" />
-	<link type="text/css" href="scripts/eyeConColorPicker/css/colorpicker.css" rel="Stylesheet" />
-	
-	<script type="text/javascript" src="scripts/config.js"></script>
-	<script type="text/javascript" src="scripts/base64.js"></script>
-	<script type="text/javascript" src="scripts/md5.js"></script>
-	<script type="text/javascript" src="scripts/jquery.js"></script>
-	<script type="text/javascript" src="scripts/jqueryui/js/jquery-1.4.4.min.js"></script>
-	<script type="text/javascript" src="scripts/jqueryui/js/jquery-ui-1.8.11.custom.min.js"></script>
-	<script type="text/javascript" src="scripts/eyeConColorPicker/js/colorpicker.js"></script>
-	<script type="text/javascript" src="scripts/spiroCanvas.js"></script>
-	<script type="text/javascript" src="scripts/MMath.js"></script>
-	<script type="text/javascript" src="scripts/FBWrapper.js"></script>
-	<script type="text/javascript" src="scripts/FlickrWrapper.js"></script>
-	<script type="text/javascript" src="scripts/colorConversion.js"></script>
-	<script type="text/javascript" src="scripts/spiroGraph.js"></script>
-	<script type="text/javascript" src="scripts/spiroCanvasCore.js"></script>
-	<script type="text/javascript" src="scripts/spiroCanvasUIHelper.js"></script>
-	<script type="text/javascript" src="scripts/spiroCanvasUI.js"></script>
-	
-	<script language="javascript">
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"></script>
+    <script type="text/javascript">
+        if (typeof jQuery == 'undefined')
+        {
+            document.write(unescape("%3Cscript src='../libs/jquery.js' type='text/javascript'%3E%3C/script%3E"));
+            document.write(unescape("%3Cscript src='../libs/jqueryui.js' type='text/javascript'%3E%3C/script%3E"));
+        }
+    </script>
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-24593968-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
 		
 		(function( $ )
 		{
@@ -91,16 +95,12 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 		
 		function init()
 		{
-			if($.browser.msie)
-			{
+			if($.browser.msie) {
 				$("#browserDiv").show();
 				$("#loadingDiv").hide();
-			}
-			else
-			{
+			} else {
 				SpiroCanvas.spiroCanvasUI.initUI();
 			}
-			
 			
 			preload([
 				'images/button1S.png',
@@ -109,20 +109,20 @@ along with SpiroCanvas.  If not, see <http://www.gnu.org/licenses/>.
 			]);
 			
 		}
-	</script>
-	
-	<script type="text/javascript">
-		  var _gaq = _gaq || [];
-		  _gaq.push(['_setAccount', 'UA-24593968-2']);
-		  _gaq.push(['_trackPageview']);
-		
-		  (function() {
-			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		  })();
-
-	</script>
+    </script>
+	<script type="text/javascript" src="scripts/config.js"></script>
+	<script type="text/javascript" src="scripts/base64.js"></script>
+	<script type="text/javascript" src="scripts/md5.js"></script>
+	<script type="text/javascript" src="scripts/eyeConColorPicker/js/colorpicker.js"></script>
+	<script type="text/javascript" src="scripts/spiroCanvas.js"></script>
+	<script type="text/javascript" src="scripts/MMath.js"></script>
+	<script type="text/javascript" src="scripts/FBWrapper.js"></script>
+	<script type="text/javascript" src="scripts/FlickrWrapper.js"></script>
+	<script type="text/javascript" src="scripts/colorConversion.js"></script>
+	<script type="text/javascript" src="scripts/spiroGraph.js"></script>
+	<script type="text/javascript" src="scripts/spiroCanvasCore.js"></script>
+	<script type="text/javascript" src="scripts/spiroCanvasUIHelper.js"></script>
+	<script type="text/javascript" src="scripts/spiroCanvasUI.js"></script>
 </head>
 
 <body onload="init()"> 
